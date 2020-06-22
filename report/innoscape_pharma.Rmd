@@ -1,0 +1,263 @@
+---
+output: 
+   html_document:
+      css: style.css
+runtime: shiny
+fig_caption: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(ggplot2)
+library(xtable)
+library(DT)
+library(viridis)
+library(RColorBrewer)
+library(knitr)
+library(png)
+library(cowplot)
+library(plotly)
+library(viridis)
+library(autoimage)
+library(shinyWidgets)
+library(plyr)
+```
+
+<head>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-71167447-1');
+</script>
+</head>
+
+```{r, echo = F}
+# Load data
+
+dat_ii <- readRDS("num_pat_16.rds") 
+dat_ii <- data.frame(dat_ii) %>% mutate(abs_rel = "abs")
+dat_ii_2 <- mutate(dat_ii, share_inv = 1/share_inv, abs_rel = "rel")
+dat_ii <- rbind.fill(dat_ii, dat_ii_2)
+dat_ii <- data.frame(dat_ii)
+# dat_ii_world <- readRDS("world_class_pat_16.rds") 
+
+
+```
+
+
+<br>
+
+[![Foo](cieb_logo.jpg){ width=18% }](http://cieb.unibas.ch/)&nbsp;&nbsp;
+
+## <font color="grey"> **Innoscape: Descriptive Analysis of Pharma Innovations** </font>
+
+*June 2020* <a href="https://cieb.unibas.ch/de/team/dragan-filimonovic/" target = "_blank">Dragan Filimonovic</a>, <a href="https://cieb.unibas.ch/de/team/matthias-niggli/" target = "_blank">Matthias Niggli</a> and <a href="https://cieb.unibas.ch/de/team/dr-christian-rutzer/" target = "_blank">Christian Rutzer</a>
+
+
+<br>
+
+<br>
+
+#### <font color='grey'> **Development of the Pharma Sector in Switzerland ** </font>
+
+
+<br>
+<br>
+
+```{r, echo = F}
+## define the input panel for countries and IPCs: -------------------------------------------------------------------------
+
+   # selectInput(
+   #    "REGIO", "Choose regional level",
+   #    c(Continent = "continent",
+   #      Country = "country",
+   #      Region = "region"
+   #      ))
+
+   selectInput(
+      "REGIO", "Choose regional level",
+      c(Continent = "continent", Country = "country", Region = "region"))
+
+conditionalPanel(condition = "input.REGIO == 'continent'",
+   pickerInput(
+   inputId = "CONTI_NAME",
+   label = "Choose continents",
+   choices = unique(na.omit(dat_ii$conti)),
+   selected = unique(na.omit(dat_ii$conti)),
+   options = list(
+     `actions-box` = TRUE,
+     size = 10,
+     `selected-text-format` = "count > 3",
+     `count-selected-text` = "All",
+     `deselect-all-text` = "Discard all",
+     `select-all-text` = "Select all",
+     `none-selected-text` = 'No country selected'),
+   multiple = TRUE))
+
+
+conditionalPanel(condition = "input.REGIO == 'country'",
+   pickerInput(
+   inputId = "CTRY_NAME",
+   label = "Choose countries",
+   choices = unique(na.omit(dat_ii$ctry_name)),
+   selected = c("Switzerland", "Germany"),
+   options = list(
+     `actions-box` = TRUE,
+     size = 10,
+     `selected-text-format` = "count > 3",
+     `count-selected-text` = "All",
+     `deselect-all-text` = "Discard all",
+     `select-all-text` = "Select all",
+     `none-selected-text` = 'No country selected'),
+   multiple = TRUE))
+
+
+
+conditionalPanel(condition = "input.REGIO == 'region'",
+   pickerInput(
+   inputId = "REGIO_NAME",
+   label = "Choose regions",
+   choices = unique(na.omit(dat_ii$Up_reg_label)),
+   selected = c("Northwestern Switzerland", "Massachusetts", "Rheinhessen-Pfalz"),
+   options = list(
+     `actions-box` = TRUE,
+     size = 10,
+     `selected-text-format` = "count > 3",
+     `count-selected-text` = "All",
+     `deselect-all-text` = "Discard all",
+     `select-all-text` = "Select all",
+     `none-selected-text` = 'No country selected'),
+   multiple = TRUE))
+
+
+```
+
+```{r, echo = F}
+
+pickerInput(
+   inputId = "ABS_REL",
+   label = "Choose absolut or relative",
+   choices = c("absolute", "relative"),
+   selected = "relative",
+   options = list(
+     `actions-box` = TRUE,
+     size = 10,
+     `selected-text-format` = "count > 3",
+     `count-selected-text` = "All",
+     `deselect-all-text` = "Discard all",
+     `select-all-text` = "Select all",
+     `none-selected-text` = 'No country selected'),
+   multiple = F)
+
+
+
+ pickerInput(
+   inputId = "IPC",
+   label = "Choose IPC",
+   choices = unique(dat_ii$ipc_main),
+   selected = "all",
+   options = list(
+     `actions-box` = TRUE,
+     size = 10,
+     `selected-text-format` = "count > 3",
+     `count-selected-text` = "All",
+     `deselect-all-text` = "Discard all",
+     `select-all-text` = "Select all",
+     `none-selected-text` = 'No country selected'),
+   multiple = TRUE)
+
+```
+
+```{r, echo = F}
+# define the output panel : -------------------------------------------------------------------------
+renderPlotly({
+
+         # subset the data according to the input:
+         if(input$REGIO == "continent"){
+                              plot2_data <- subset(dat_ii,
+                              conti %in% input$CONTI_NAME &
+                              ipc_main %in% input$IPC)
+         } else if(input$REGIO == "country"){
+                              plot2_data <- subset(dat_ii,
+                              ctry_name %in% input$CTRY_NAME &
+                              ipc_main %in% input$IPC)
+         } else if(input$REGIO == "region"){
+                              plot2_data <- subset(dat_ii,
+                              Up_reg_label %in% input$REGIO_NAME &
+                              ipc_main %in% input$IPC)
+         }
+   
+     
+
+         # make the plot
+                 abs <- ggplotly(
+                 ggplot(data = plot2_data, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+                 geom_point(alpha = 0.7) +
+                 geom_line() +
+                 # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
+                 xlab("Priority Year")+
+                 ylab("Number of patents")+
+                 guides(color = FALSE)+
+                 # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()
+                       ),
+                 dynamicTicks = FALSE) %>%
+                 config(displayModeBar = F) %>%
+                 layout(xaxis = list(fixedrange=TRUE)) %>%
+                 layout(yaxis = list(fixedrange=TRUE))
+        
+       if(input$ABS_REL == "absolute"){
+                 world <- ggplotly(
+                 ggplot(data = plot2_data, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+                 geom_point(alpha = 0.7) +
+                 geom_line() +
+                 xlab("\nPriority Year")+
+                 ylab("\nNumber of patents")+
+                 guides(color = FALSE)+
+                 facet_wrap(~ abs_rel) +
+                 # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()                       ),
+                 dynamicTicks = FALSE) %>%
+                 config(displayModeBar = F) %>%
+                 layout(xaxis = list(fixedrange=TRUE)) %>%
+                 layout(yaxis = list(fixedrange=TRUE))
+                 
+                 } else {
+                   
+                 world <- ggplotly(
+                 ggplot(data = plot2_data, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_main)) +
+                 geom_point(alpha = 0.7) +
+                 geom_line() +
+                 # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
+                 xlab("\nPriority Year")+
+                 ylab("\nNumber of patents")+
+                 guides(color = FALSE)+
+                 # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()
+                       ),
+                 dynamicTicks = FALSE) %>%
+                 config(displayModeBar = F) %>%
+                 layout(xaxis = list(fixedrange=TRUE)) %>%
+                 layout(yaxis = list(fixedrange=TRUE)) 
+                 }
+
+               
+                 
+        # subplot(abs, world, nrows = 1)
+        
+         })
+```
+# <span style="font-size:0.8em">*Source: Own estimations of <a href="http://cieb.unibas.ch/" target = "_blank">CIEB</a> based on data.  All the data is available on [GitHub](https://github.com/matthnig/green-potential).*</span>
+
+
+
