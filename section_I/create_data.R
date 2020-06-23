@@ -9,7 +9,7 @@ library(countrycode)
 library(viridis)
 library(read.csv2)
 rm(list = ls())
-
+# test
 ###################################################################
 #a. Data for long term plot of emplyoment / section Brief history #
 ###################################################################
