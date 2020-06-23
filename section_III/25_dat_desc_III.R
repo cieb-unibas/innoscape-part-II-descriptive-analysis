@@ -49,6 +49,8 @@ col_acd_cmp <- function(geo_level, p_year_start, tech_field_start, uni){
       firm_reg <- distinct(firm_reg, reg_code, uni, p_key, .keep_all = T)  
     } else if(geo_level == "Up_reg_code"){
       firm_reg <- distinct(firm_reg, Up_reg_code, uni, p_key, .keep_all = T)  
+    } else if(geo_level == "conti"){
+      firm_reg <- distinct(firm_reg, conti, p_key, .keep_all = T)
     }
   print(p_year_start)
   ## pairwise geographic locations per patent
@@ -71,31 +73,57 @@ col_acd_cmp <- function(geo_level, p_year_start, tech_field_start, uni){
 }
 
 
+
+
+# Calculations for continent-pairs 
+## academia / companies
+collab_conti <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) col_acd_cmp("conti", x, 16, "yes")))
+collab_conti <- mutate(collab_conti, geo = "conti", collab = "uni_firm")
+collab_conti %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/uni_firm_conti_16.rds")
+## all
+collab_conti <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) col_acd_cmp("conti", x, 16, "no")))
+collab_conti <- mutate(collab_conti, geo = "conti", collab = "all")
+collab_conti %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/firm_firm_conti_16.rds")
+
+
 # Calculations for country-pairs 
 ## academia / companies
 collab_ctry <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) col_acd_cmp("ctry_code", x, 16, "yes")))
-collab_ctry <- mutate(collab_ctry, ctry_1 = countrycode(reg_code_1, "iso2c", "country.name.en"), ctry_2 = countrycode(reg_code_2, "iso2c", "country.name.en"))
-collab_ctry %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/uni_firm_ctry_16.rds")
+collab_ctry <- mutate(collab_ctry, reg_code_1 = countrycode(reg_code_1, "iso2c", "country.name.en"), reg_code_2 = countrycode(reg_code_2, "iso2c", "country.name.en"), geo = "ctry", collab = "uni_firm")
+collab_ctry %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/uni_firm_ctry_16.rds")
 ## all
 collab_ctry <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) col_acd_cmp("ctry_code", x, 16, "no")))
-collab_ctry <- mutate(collab_ctry, ctry_1 = countrycode(reg_code_1, "iso2c", "country.name.en"), ctry_2 = countrycode(reg_code_2, "iso2c", "country.name.en"))
-collab_ctry %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/firm_firm_ctry_16.rds")
+collab_ctry <- mutate(collab_ctry, reg_code_1 = countrycode(reg_code_1, "iso2c", "country.name.en"), reg_code_2 = countrycode(reg_code_2, "iso2c", "country.name.en"), geo = "ctry", collab = "all")
+collab_ctry %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/firm_firm_ctry_16.rds")
 
 ## Calculations for region-pairs
 ## academia / companies
 collab_reg <- rbind.fill(lapply(seq(1990, 2018, 1), function(x) col_acd_cmp("Up_reg_code", x, 16, "yes")))
 regio <- read.csv2(paste0(mainDir1, "/raw data/REGPAT_REGIONS.txt"), sep = "|") %>% dplyr::select(-Ctry_code) %>% distinct(Up_reg_code, Up_reg_label)
-collab_reg <- left_join(collab_reg, regio, by = c("reg_code_1" = "Up_reg_code")) %>% dplyr::rename(reg_lab_1 = Up_reg_label)
-collab_reg <- left_join(collab_reg, regio, by = c("reg_code_2" = "Up_reg_code")) %>% dplyr::rename(reg_lab_2 = Up_reg_label)
-collab_reg %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/uni_firm_reg_16.rds")
+collab_reg <- left_join(collab_reg, regio, by = c("reg_code_1" = "Up_reg_code")) 
+collab_reg <- left_join(collab_reg, regio, by = c("reg_code_2" = "Up_reg_code"))
+collab_reg <- mutate(collab_reg, geo = "regio", collab = "uni_firm") %>% dplyr::select(-reg_code_1, -reg_code_2) %>%  dplyr::rename(reg_code_1 = Up_reg_label.x, reg_code_2 = Up_reg_label.y)
+collab_reg %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/uni_firm_reg_16.rds")
 ## all
 collab_reg <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) col_acd_cmp("Up_reg_code", x, 16, "no")))
 regio <- read.csv2(paste0(mainDir1, "/raw data/REGPAT_REGIONS.txt"), sep = "|") %>% dplyr::select(-Ctry_code) %>% distinct(Up_reg_code, Up_reg_label)
-collab_reg <- left_join(collab_reg, regio, by = c("reg_code_1" = "Up_reg_code")) %>% dplyr::rename(reg_lab_1 = Up_reg_label)
-collab_reg <- left_join(collab_reg, regio, by = c("reg_code_2" = "Up_reg_code")) %>% dplyr::rename(reg_lab_2 = Up_reg_label)
-collab_reg %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/firm_firm_reg_16.rds")
-print("part III_ii_b. done")
+collab_reg <- left_join(collab_reg, regio, by = c("reg_code_1" = "Up_reg_code")) 
+collab_reg <- left_join(collab_reg, regio, by = c("reg_code_2" = "Up_reg_code")) 
+collab_reg <- mutate(collab_reg, geo = "regio", collab = "all") %>% dplyr::select(-reg_code_1, -reg_code_2) %>%  dplyr::rename(reg_code_1 = Up_reg_label.x, reg_code_2 = Up_reg_label.y)
+collab_reg %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/firm_firm_reg_16.rds")
 
+## Combine continent, region and country to create data set used in report
+uni_firm_conti  <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/uni_firm_conti_16.rds") 
+firm_firm_conti <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/firm_firm_conti_16.rds") 
+
+uni_firm_ctry  <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/uni_firm_ctry_16.rds") 
+firm_firm_ctry <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/firm_firm_ctry_16.rds") 
+
+uni_firm_reg  <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/uni_firm_reg_16.rds") 
+firm_firm_reg <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/firm_firm_reg_16.rds")
+
+rbind.fill(uni_firm_conti, firm_firm_conti, uni_firm_ctry, firm_firm_ctry, uni_firm_reg, firm_firm_reg) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/collab_uni_firm_16.rds")
+print("part III_ii_b. done")
 
 
 ### Some ideas to find out whether multiple assigness of a patent belong to the same company or not -> could add firm name and location of headquarter from orbis
