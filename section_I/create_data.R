@@ -1,5 +1,5 @@
 print("Create economic indicators for intro to part II descriptive analysis")
-# Last modified 23.6.2020 / CR
+# Last modified 23.6.2020 / DF
 
 require(data.table)
 require(plyr)
@@ -7,7 +7,7 @@ library(dplyr)
 require(ggplot2)
 library(countrycode)
 library(viridis)
-
+library(read.csv2)
 rm(list = ls())
 
 ###################################################################
@@ -42,7 +42,7 @@ dev.off()
 
 
 ##Employment > 1990 -> consider to download the latest data from BFS webpage?
-setwd("C:/Arbeit/Forschungsstelle/Projekte/Projekt HKBB/Daten/BFS")
+setwd("/scicore/home/weder/GROUP/Innovation/01_patent_data/raw data/econ_indicators")
 bfs_emp<-read.csv2("emp_total_vza.csv",header=T,sep=";",stringsAsFactors = FALSE,dec=".")
 x<-regmatches(bfs_emp$Wirtschaftsabteilung, gregexpr("[[:digit:]]+",bfs_emp$Wirtschaftsabteilung))		 
 t<-data.frame(start=sapply(x,function(m)m[1]),stop=sapply(x,function(m)m[2]))
