@@ -1,5 +1,5 @@
 print("Create economic indicators for intro to part II descriptive analysis")
-# Last modified 23.6.2020 / DF
+# Last modified 24.6.2020 / DF
 
 require(data.table)
 require(plyr)
@@ -7,7 +7,7 @@ library(dplyr)
 require(ggplot2)
 library(countrycode)
 library(viridis)
-library(read.csv2)
+library(reshape2)
 rm(list = ls())
 # test
 ###################################################################
@@ -16,19 +16,19 @@ rm(list = ls())
 ## CR: Code snippet from a project on de-industrialization. The data is used to create plots at the aggregate sectoral level. So other subsets should be used-> at the industry rather the sectoral level.
 
 ##Employment 1888-1990
-emp_old <-read.csv2("C:/Arbeit/Forschungsstelle/Projekte/Projekt HKBB/Daten/BFS/emp_lange_zeitreihe_long.csv",header=T,sep=";",stringsAsFactors = FALSE,dec=".")
-emp_old <- mutate(emp_old,sek=paste0(Branche1,Branche2,Branche3))
-emp_old <- mutate(emp_old,sek=gsub("-", "", emp_old$sek)) 
-emp_old <- dplyr::select(emp_old,-Branche1,-Branche2,-Branche3)
-emp_old <- melt(emp_old,id=c("sek","Sektor", "code"))
+emp_old <-read.csv2("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/emp_lange_zeitreihe_long.csv",header=T,sep=";",stringsAsFactors = FALSE,dec=".")
+emp_old <- mutate(emp_old,sek=paste0(Branche1,Branche2,Branche3)) # Creates sek variable (paste) from combining branche1, branche2, branche3 
+emp_old <- mutate(emp_old,sek=gsub("-", "", emp_old$sek)) # removes - simbol (substitutes it with empty space) for sek var
+emp_old <- dplyr::select(emp_old,-Branche1,-Branche2,-Branche3) # drops branche1-branche3 vars
+emp_old <- melt(emp_old,id=c("sek","Sektor", "code")) # reshaping data from wide to long format
 emp_old <- mutate(emp_old,jahr=substr(variable,2,5))
-setDT(emp_old)[,rel.emp:=value/value[sek=="total"],list(jahr)]
-emp_old <- subset(emp_old,sek!="Total")
+setDT(emp_old)[,rel.emp:=value/value[sek=="total"],list(jahr)] # share in total emp for each sector by given year
+emp_old <- subset(emp_old,sek!="Total") # subset of data where sek does not equal total (droping values for total)
 emp_old <- mutate(emp_old, jahr = as.numeric(as.character(jahr)))
 
 
 ## Plot of change of sector structure
-pdf("C:/Users/christian rutzer/Dropbox/De-Industrialisierung/Text_Rolf/plot/sektor_struk_1888_1990.pdf",width=20,height=15)
+pdf("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/sektor_struk_1888_1990.pdf",width=20,height=15)
 ggplot(data = filter(emp_old, !(sek %in% c("total", "Sonstige Industrie")) & Sektor %in% c("2. Sektor")), aes( y = rel.emp, x = reorder(jahr, -jahr), fill = sek)) + 
 	geom_bar(stat = "identity", width = 0.8, position = "fill", size = 2) +
 	coord_flip(expand = F) +
