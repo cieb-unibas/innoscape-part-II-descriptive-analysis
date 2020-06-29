@@ -33,7 +33,7 @@ ggplot(data = filter(emp_old, !(sek %in% c("total", "Sonstige Industrie")) & Sek
 	geom_bar(stat = "identity", width = 0.8, position = "fill", size = 2) +
 	coord_flip(expand = F) +
 	scale_fill_viridis(option="D", begin = 0, end = 1, discrete=T, alpha = 0.9) + 
-	scale_y_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
 	xlab("Jahr") +
 	ylab("Prozent des 2. Sektors") +
 	theme(axis.text.y = element_text(size = 35),axis.text.x = element_text(size = 30),axis.title.x=element_text(size=30), axis.title.y=element_text(size=35), strip.background = element_blank(), strip.text.x = element_blank(), panel.spacing = unit(2, "lines"), legend.text = element_text(size = 30), legend.title = element_blank(), aspect.ratio = 0.8/1, plot.margin=grid::unit(c(0,0,0,0), "mm"))
@@ -42,12 +42,12 @@ dev.off()
 
 
 ##Employment > 1990 -> consider to download the latest data from BFS webpage?
-setwd("/scicore/home/weder/GROUP/Innovation/01_patent_data/raw data/econ_indicators")
-bfs_emp<-read.csv2("emp_total_vza.csv",header=T,sep=";",stringsAsFactors = FALSE,dec=".")
-x<-regmatches(bfs_emp$Wirtschaftsabteilung, gregexpr("[[:digit:]]+",bfs_emp$Wirtschaftsabteilung))		 
-t<-data.frame(start=sapply(x,function(m)m[1]),stop=sapply(x,function(m)m[2]))
-t$start<-as.character(t$start)
-t$stop<-as.character(t$stop)
+setwd("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I")
+bfs_emp<-read.csv2("emp_total_vza.csv",header=T,sep=";",stringsAsFactors = FALSE,dec=".",fileEncoding="latin1")
+x<-regmatches(bfs_emp$Wirtschaftsabteilung, gregexpr("[[:digit:]]+",bfs_emp$Wirtschaftsabteilung)) # create a list vector containing codes characters		 
+t<-data.frame(start=sapply(x,function(m)m[1]),stop=sapply(x,function(m)m[2])) # separate two parts of the character in list
+t$start<-as.character(t$start) # define start as string in t list
+t$stop<-as.character(t$stop) # define stop as string in t list
 t$start<-ifelse(nchar(t$start)==1,paste0(0,t$start),t$start)										 
 t$stop<-ifelse(nchar(t$stop)==1,paste0(0,t$stop),t$stop)	
 t$start<-ifelse(is.na(t$start),"",t$start)
