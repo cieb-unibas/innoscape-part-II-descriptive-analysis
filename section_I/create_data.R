@@ -1,5 +1,5 @@
 print("Create economic indicators for intro to part II descriptive analysis")
-# Last modified 24.6.2020 / DF
+# Last modified 29.6.2020 / DF
 
 require(data.table)
 require(plyr)
