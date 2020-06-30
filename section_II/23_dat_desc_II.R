@@ -127,7 +127,7 @@ world_class_16_4 <- setDT(world_class_16_3)[, share_inv := share_inv/share_inv[g
 
 ## Add all data together
 world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
-world_class_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
+world_class_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
 
 
 
