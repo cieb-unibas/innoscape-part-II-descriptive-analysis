@@ -101,9 +101,11 @@ dat_conti <- cbind(geo = "world", aggregate(share_inv ~ p_year + ipc_main, FUN =
 num_pat_16_3  <- rbind.fill(num_pat_16, dat_conti) 
 num_pat_16_3 <- setDT(num_pat_16_3)[, share_inv := share_inv/share_inv[ipc_main == "all"], .(geo, p_year)]  %>% mutate(abs_rel = "share_all")
 num_pat_16_4 <- setDT(num_pat_16_3)[, share_inv := share_inv/share_inv[geo == "world"], .(geo, p_year)]  %>% mutate(abs_rel = "rca")
+num_pat_16_3 <- filter(num_pat_16_3, geo != "world")
+num_pat_16_4 <- filter(num_pat_16_4, geo != "world")
 
 ## Add all data together
-num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
+num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_3, num_pat_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
 num_pat_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
 
 ##################################################
@@ -124,9 +126,11 @@ world_class_conti <- cbind(geo = "world", aggregate(share_inv ~ p_year + ipc_mai
 world_class_16_3  <- rbind.fill(world_class_16, world_class_conti) 
 world_class_16_3 <- setDT(world_class_16_3)[, share_inv := share_inv/share_inv[ipc_main == "all"], .(geo, p_year)]  %>% mutate(abs_rel = "share_all")
 world_class_16_4 <- setDT(world_class_16_3)[, share_inv := share_inv/share_inv[geo == "world"], .(geo, p_year)]  %>% mutate(abs_rel = "rca")
+world_class_16_3 <- filter(world_class_16_3, geo != "world")
+world_class_16_4 <- filter(world_class_16_4, geo != "world")
 
 ## Add all data together
-world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
+world_class_16 <- rbind.fill(world_class_16, world_class_16_3, world_class_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
 world_class_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
 
 
