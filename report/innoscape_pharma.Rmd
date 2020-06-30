@@ -42,7 +42,6 @@ library(data.table)
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame()
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
-
 ```
 
 
