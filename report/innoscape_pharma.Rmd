@@ -87,8 +87,8 @@ dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 pickerInput(
    inputId = "CONTI_ABS_REL",
    label = "Choose absolut or relative",
-   choices = c("absolute", "relative"),
-   selected = "relative",
+   choices = unique(na.omit(dat_ii$abs_rel)),
+   selected = "rel_1990",
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -123,7 +123,8 @@ renderPlotly({
          # subset the data according to the input:
                               plot2_data_conti <- subset(dat_ii,
                               conti %in% input$CONTI_NAME &
-                              ipc_main %in% input$CONTI_IPC)
+                              ipc_main %in% input$CONTI_IPC &
+                              abs_rel %in%  input$CONTI_ABS_REL)
        
      
 
@@ -136,6 +137,7 @@ renderPlotly({
                  xlab("Priority Year")+
                  ylab("Number of patents")+
                  guides(color = FALSE)+
+                facet_wrap(~ abs_rel) +
                  # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
@@ -146,44 +148,44 @@ renderPlotly({
                  layout(xaxis = list(fixedrange=TRUE)) %>%
                  layout(yaxis = list(fixedrange=TRUE))
         
-       if(input$CONTI_ABS_REL == "absolute"){
-                 world <- ggplotly(
-                 ggplot(data = plot2_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
-                 geom_point(alpha = 0.7) +
-                 geom_line() +
-                 xlab("\nPriority Year")+
-                 ylab("\nNumber of patents")+
-                 guides(color = FALSE)+
-                 facet_wrap(~ abs_rel) +
-                 # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
-                 theme(axis.title = element_text(face="bold",size = 10),
-                       panel.background = element_blank(),
-                       axis.line = element_line()                       ),
-                 dynamicTicks = FALSE) %>%
-                 config(displayModeBar = F) %>%
-                 layout(xaxis = list(fixedrange=TRUE)) %>%
-                 layout(yaxis = list(fixedrange=TRUE))
-                 
-                 } else {
-                   
-                 world <- ggplotly(
-                 ggplot(data = plot2_data_conti, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_main)) +
-                 geom_point(alpha = 0.7) +
-                 geom_line() +
-                 # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-                 xlab("\nPriority Year")+
-                 ylab("\nNumber of patents")+
-                 guides(color = FALSE)+
-                 # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
-                 theme(axis.title = element_text(face="bold",size = 10),
-                       panel.background = element_blank(),
-                       axis.line = element_line()
-                       ),
-                 dynamicTicks = FALSE) %>%
-                 config(displayModeBar = F) %>%
-                 layout(xaxis = list(fixedrange=TRUE)) %>%
-                 layout(yaxis = list(fixedrange=TRUE)) 
-                 }
+       # if(input$CONTI_ABS_REL == "rel_1990"){
+       #           world <- ggplotly(
+       #           ggplot(data = plot2_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+       #           geom_point(alpha = 0.7) +
+       #           geom_line() +
+       #           xlab("\nPriority Year")+
+       #           ylab("\nNumber of patents")+
+       #           guides(color = FALSE)+
+       #           facet_wrap(~ abs_rel) +
+       #           # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
+       #           theme(axis.title = element_text(face="bold",size = 10),
+       #                 panel.background = element_blank(),
+       #                 axis.line = element_line()                       ),
+       #           dynamicTicks = FALSE) %>%
+       #           config(displayModeBar = F) %>%
+       #           layout(xaxis = list(fixedrange=TRUE)) %>%
+       #           layout(yaxis = list(fixedrange=TRUE))
+       #           
+       #           } else {
+       #             
+       #           world <- ggplotly(
+       #           ggplot(data = plot2_data_conti, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_main)) +
+       #           geom_point(alpha = 0.7) +
+       #           geom_line() +
+       #           # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
+       #           xlab("\nPriority Year")+
+       #           ylab("\nNumber of patents")+
+       #           guides(color = FALSE)+
+       #           # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
+       #           theme(axis.title = element_text(face="bold",size = 10),
+       #                 panel.background = element_blank(),
+       #                 axis.line = element_line()
+       #                 ),
+       #           dynamicTicks = FALSE) %>%
+       #           config(displayModeBar = F) %>%
+       #           layout(xaxis = list(fixedrange=TRUE)) %>%
+       #           layout(yaxis = list(fixedrange=TRUE)) 
+       #           }
 
                
                  
