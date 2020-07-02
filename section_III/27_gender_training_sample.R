@@ -1,4 +1,4 @@
-cat("27: Create sample for training a model that classifies gender using names.
+cat("27: Create sample for training a neural network that classifies gender using names as inputs.
     (MN 02.07.2020)")
 
 #######################################
