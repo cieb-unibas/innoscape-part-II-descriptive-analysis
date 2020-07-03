@@ -79,6 +79,8 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
   
   reg_agg <- subset(reg_agg, p_year > 1989 & get(geo_level) %in% list_geo)
   reg_agg <- mutate(reg_agg, ipc_main = "all", IPC.title = "all")
+  setDT(reg_agg)[, n_ipc := sum(share_inv), .(ipc_main)]
+  
   output <- rbind.fill(reg, reg_agg) %>% mutate(p_year = as.numeric(as.character(p_year)))
   return(output)
 }
