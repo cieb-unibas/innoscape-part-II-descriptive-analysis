@@ -39,7 +39,7 @@ library(data.table)
 
 ```{r, echo = F}
 # Load data
-dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() %>% filter(n_ipc > 99)
+dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```
@@ -220,8 +220,13 @@ pickerInput(
 pickerInput(
    inputId = "CTRY_ABS_REL",
    label = "Choose absolut or relative",
+<<<<<<< HEAD
    choices = unique(na.omit(dat_ii$abs_rel)),
    selected = "abs",
+=======
+    choices = unique(na.omit(dat_ii$abs_rel)),
+   selected = "rel_1990",
+>>>>>>> d3ff43bf35ecd924962f869d78859c540344bcb9
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -337,7 +342,7 @@ pickerInput(
    inputId = "REGIO_NAME",
    label = "Choose regions",
    choices = unique(na.omit(dat_ii$Up_reg_label)),
-   selected = c("Northwestern Switzerland", "Massachusetts", "Rheinhessen-Pfalz"),
+   selected = c("Northwestern Switzerland", "Massachusetts"),
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -352,7 +357,11 @@ pickerInput(
    inputId = "REGIO_ABS_REL",
    label = "Choose absolut or relative",
    choices = unique(na.omit(dat_ii$abs_rel)),
+<<<<<<< HEAD
    selected = "abs",
+=======
+   selected = "rel_1990",
+>>>>>>> d3ff43bf35ecd924962f869d78859c540344bcb9
    options = list(
      `actions-box` = TRUE,
      size = 10,
