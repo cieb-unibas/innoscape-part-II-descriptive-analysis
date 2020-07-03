@@ -110,7 +110,8 @@ num_pat_16_3 <- filter(num_pat_16_3, geo != "world")
 num_pat_16_4 <- filter(num_pat_16_4, geo != "world")
 
 ## Add all data together
-num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
+num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4) 
+num_pat_16 <- saveRDS(num_pat_16, "/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
 num_pat_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_16.rds")
 
 ##################################################
@@ -138,7 +139,8 @@ world_class_16_3 <- filter(world_class_16_3, geo != "world")
 world_class_16_4 <- filter(world_class_16_4, geo != "world")
 
 ## Add all data together
-world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
+world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) 
+world_class_16 <- saveRDS(world_class_16, "/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
 world_class_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
 
 
