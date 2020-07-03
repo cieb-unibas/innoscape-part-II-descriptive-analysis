@@ -220,8 +220,8 @@ pickerInput(
 pickerInput(
    inputId = "CTRY_ABS_REL",
    label = "Choose absolut or relative",
-   choices = c("absolute", "relative"),
-   selected = "relative",
+    choices = unique(na.omit(dat_ii$abs_rel)),
+   selected = "rel_1990",
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -337,7 +337,7 @@ pickerInput(
    inputId = "REGIO_NAME",
    label = "Choose regions",
    choices = unique(na.omit(dat_ii$Up_reg_label)),
-   selected = c("Northwestern Switzerland", "Massachusetts", "Rheinhessen-Pfalz"),
+   selected = c("Northwestern Switzerland", "Massachusetts"),
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -351,8 +351,8 @@ pickerInput(
 pickerInput(
    inputId = "REGIO_ABS_REL",
    label = "Choose absolut or relative",
-   choices = c("absolute", "relative"),
-   selected = "relative",
+   choices = unique(na.omit(dat_ii$abs_rel)),
+   selected = "rel_1990",
    options = list(
      `actions-box` = TRUE,
      size = 10,

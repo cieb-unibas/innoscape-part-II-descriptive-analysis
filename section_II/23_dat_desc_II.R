@@ -75,6 +75,7 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
   }
   
   setDT(reg)[, n_ipc := sum(share_inv), .(ipc_main)]
+  reg <- reg %>% mutate(rank = dense_rank(desc(n_ipc)))
   reg <- reg %>% subset(p_year > 1989 & get(geo_level) %in% list_geo)
   
   reg_agg <- subset(reg_agg, p_year > 1989 & get(geo_level) %in% list_geo)
@@ -95,16 +96,19 @@ num_pat_16 <- rbind.fill(num_pat_conti, num_pat_ctry, num_pat_reg) %>% mutate(ge
 
 ## Create some relative outputs used in innoscape_pharma.Rmd
 ## relative to 1990
-num_pat_16_2 <- setDT(num_pat_16)[, share_inv := share_inv/share_inv[p_year == 1990], .(geo, ipc_main)] 
+num_pat_16_2 <- as.data.table(num_pat_16)
+num_pat_16_2 <- num_pat_16_2[, share_inv := share_inv/share_inv[p_year == 1990], .(geo, ipc_main)] 
 num_pat_16_2 <- mutate(num_pat_16_2, abs_rel = "rel_1990")
 
 ## relative share of IPC to all patents per year and RCA (relative share of IPC to all patents per country to relative share of IPC to all patetnets of all countries)
 dat_conti <- dplyr::filter(num_pat_16, is.na(conti) != T) 
 dat_conti <- cbind(geo = "world", aggregate(share_inv ~ p_year + ipc_main, FUN = sum, data = dat_conti))
 num_pat_16_3  <- rbind.fill(num_pat_16, dat_conti) 
-num_pat_16_3 <- setDT(num_pat_16_3)[, share_inv := share_inv/share_inv[ipc_main == "all"], .(geo, p_year)]  
+num_pat_16_3  <- as.data.table(num_pat_16_3)
+num_pat_16_3 <- num_pat_16_3[, share_inv := share_inv/share_inv[ipc_main == "all"], .(geo, p_year)]  
 num_pat_16_3 <- mutate(num_pat_16_3, abs_rel = "share_all")
-num_pat_16_4 <- setDT(num_pat_16_3)[, share_inv := share_inv/share_inv[geo == "world"], .(geo, p_year)]  
+num_pat_16_4 <- as.data.table(num_pat_16_3)
+num_pat_16_4 <- num_pat_16_4[, share_inv := share_inv/share_inv[geo == "world"], .(geo, p_year)]  
 num_pat_16_4 <- mutate(num_pat_16_4, abs_rel = "rca")
 num_pat_16_3 <- filter(num_pat_16_3, geo != "world")
 num_pat_16_4 <- filter(num_pat_16_4, geo != "world")
@@ -124,7 +128,8 @@ world_class_16 <- rbind.fill(world_class_conti, world_class_ctry, world_class_re
 
 ## Create some relative outputs used in innoscape_pharma.Rmd
 ## relative to 1990
-world_class_16_2 <- setDT(world_class_16)[, share_inv := share_inv/share_inv[p_year == 1990], .(geo, ipc_main)] 
+world_class_16_2 <- world_class_16
+world_class_16_2 <- setDT(world_class_16_2)[, share_inv := share_inv/share_inv[p_year == 1990], .(geo, ipc_main)] 
 world_class_16_2 <- mutate(world_class_16_2, abs_rel = "rel_1990")
 
 ## relative share of IPC to all patents per year and RCA (relative share of IPC to all patents per country to relative share of IPC to all patetnets of all countries)
@@ -133,7 +138,8 @@ world_class_conti <- cbind(geo = "world", aggregate(share_inv ~ p_year + ipc_mai
 world_class_16_3  <- rbind.fill(world_class_16, world_class_conti) 
 world_class_16_3 <- setDT(world_class_16_3)[, share_inv := share_inv/share_inv[ipc_main == "all"], .(geo, p_year)]  
 world_class_16_3 <- mutate(world_class_16_3, abs_rel = "share_all")
-world_class_16_4 <- setDT(world_class_16_3)[, share_inv := share_inv/share_inv[geo == "world"], .(geo, p_year)]  
+world_class_16_4 <- world_class_16_3
+world_class_16_4 <- setDT(world_class_16_4)[, share_inv := share_inv/share_inv[geo == "world"], .(geo, p_year)]  
 world_class_16_4 <- mutate(world_class_16_4, abs_rel = "rca")
 world_class_16_3 <- filter(world_class_16_3, geo != "world")
 world_class_16_4 <- filter(world_class_16_4, geo != "world")
