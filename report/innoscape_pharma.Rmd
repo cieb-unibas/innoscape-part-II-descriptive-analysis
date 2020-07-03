@@ -39,7 +39,7 @@ library(data.table)
 
 ```{r, echo = F}
 # Load data
-dat_ii <- readRDS("num_pat_16.rds") %>% data.frame()
+dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() %>% filter(n_ipc > 99)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```
@@ -73,7 +73,7 @@ dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
    inputId = "CONTI_NAME",
    label = "Choose continents",
    choices = unique(na.omit(dat_ii$conti)),
-   selected = unique(na.omit(dat_ii$conti)),
+   selected = "abs",
    options = list(
      `actions-box` = TRUE,
      size = 10,
