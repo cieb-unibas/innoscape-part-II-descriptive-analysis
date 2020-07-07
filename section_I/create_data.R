@@ -1,5 +1,5 @@
 print("Create economic indicators for intro to part II descriptive analysis")
-# Last modified 29.6.2020 / DF
+# Last modified 07.07.2020 / DF
 
 require(data.table)
 require(plyr)
@@ -11,13 +11,12 @@ library(reshape2)
 library(stringr)
 library("rio")
 rm(list = ls())
-# test
 
 ########################
 #a. Employment figures # 
 ########################
 
-# ILO DATA#
+# ILO DATA #
 names(ilo_2020)
 
 ilo_2020 <-read.csv2("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/employees_01072020.csv",header=T,sep=",",stringsAsFactors = FALSE,dec=".")
@@ -44,11 +43,11 @@ setDT(ilo_2020)[,share_emp:=nemp/tot_emp,by=list(country, IND, year)]
 #Preparing labels
 ilo_lab <-read.csv2("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/ilostat_indlab.csv",header=T,sep=",",stringsAsFactors = FALSE,dec=".")
 ilo_lab <-subset(ilo_lab, select = c("classif1", "classif1.label"))
-  split_lab <- data.frame(do.call('rbind', strsplit(as.character(ilo_lab$classif1),'_',fixed=TRUE)))
+split_lab <- data.frame(do.call('rbind', strsplit(as.character(ilo_lab$classif1),'_',fixed=TRUE)))
 ilo_lab$IND<-paste0("",split_lab$X3)
-  split_lab2 <- data.frame(do.call('rbind', strsplit(as.character(ilo_lab$classif1.label),'Economic activity (ISIC-Rev.4),',fixed=TRUE)))
-  split_lab2 <- data.frame(do.call('rbind', strsplit(as.character(split_lab2$X2),'-',fixed=TRUE)))
-  names(split_lab2)[names(split_lab2) == "X2"] <- "IND_lab"
+split_lab2 <- data.frame(do.call('rbind', strsplit(as.character(ilo_lab$classif1.label),'Economic activity (ISIC-Rev.4),',fixed=TRUE)))
+split_lab2 <- data.frame(do.call('rbind', strsplit(as.character(split_lab2$X2),'-',fixed=TRUE)))
+names(split_lab2)[names(split_lab2) == "X2"] <- "IND_lab"
 ilo_lab$lab<-paste0("",split_lab2$IND_lab)
 ilo_lab <-subset(ilo_lab, select = c("IND", "lab"))
 ilo_lab <- subset(ilo_lab,IND!="TOTAL")
@@ -59,8 +58,8 @@ ilo_2020_final <- merge(ilo_2020, ilo_lab)
 #TEST:Pharma only 
 
 ilo_2020_pharma <- ilo_2020_final %>%
-                    filter(IND == "C21") %>%
-                    filter(year >= 2008)
+  filter(IND == "C21") %>%
+  filter(year >= 2008)
 
 ggplot(ilo_2020_pharma) + 
   geom_line(aes(x = year, y = share_emp, group = country, colour = country)) + 
@@ -72,7 +71,7 @@ ggplot(ilo_2020_pharma) +
 #d. Labor productivity #
 ########################
 
-# NEW OECD STAN DATA#
+# NEW OECD STAN DATA #
 stan_2020 <-read.csv2("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/STAN_2020.csv",header=T,sep=",",stringsAsFactors = FALSE,dec=".")
 stan_2020 <-subset(stan_2020, select = c("LOCATION", "Country", "Variable", "IND", "Industry", "Time", "Unit", "PowerCode", "Reference.Period", "Value", "Flags"))
 stan_2020 <-dcast(stan_2020, LOCATION + Country + IND+ Time+ Unit+ PowerCode+ Reference.Period+ Flags~ Variable, value.var="Value")
@@ -94,23 +93,23 @@ stan_2020 <-subset(stan_2020, select = c("cou.code", "cou.name", "IND", "year", 
 
 stan_2020 <- filter(stan_2020, IND %in% c("D05T09", "D10T12", "D13T15", "D16T18", "D19", "D20", "D21", "D22", "D23", "D24", "D25", "D26", "D27", "D28", "D29", "D30", "D31T33", "D35" , "D36T39" , "D41T43"))
 stan_2020 <- mutate(stan_2020, IND = case_when(IND %in% c("D19", "D20") ~ "C19-C20",
-                                                       IND %in% c("D22", "D23") ~ "C22-C23",
-                                                       IND %in% c("D24", "D25") ~ "C24-C25",
-                                                       IND %in% c("D29", "D30") ~ "C29-C30",
-                                                       IND == "D05T09" ~ "B",
-                                                       IND == "D10T12" ~ "C10-C12",
-                                                       IND == "D13T15" ~ "C13-C15",
-                                                       IND == "D16T18" ~  "C16-18",
-                                                       IND == "D19" ~  "C19",
-                                                       IND == "D20" ~  "C20",
-                                                       IND == "D21" ~  "C21",
-                                                       IND == "D26" ~ "C26",
-                                                       IND == "D27" ~ "C27",
-                                                       IND == "D28" ~  "C28",
-                                                       IND == "D31T33" ~ "C31-C33",
-                                                       IND == "D35" ~  "D35",
-                                                       IND == "D36T39" ~  "E36-39",
-                                                       IND == "D41T43" ~  "F41-43",))
+                                               IND %in% c("D22", "D23") ~ "C22-C23",
+                                               IND %in% c("D24", "D25") ~ "C24-C25",
+                                               IND %in% c("D29", "D30") ~ "C29-C30",
+                                               IND == "D05T09" ~ "B",
+                                               IND == "D10T12" ~ "C10-C12",
+                                               IND == "D13T15" ~ "C13-C15",
+                                               IND == "D16T18" ~  "C16-18",
+                                               IND == "D19" ~  "C19",
+                                               IND == "D20" ~  "C20",
+                                               IND == "D21" ~  "C21",
+                                               IND == "D26" ~ "C26",
+                                               IND == "D27" ~ "C27",
+                                               IND == "D28" ~  "C28",
+                                               IND == "D31T33" ~ "C31-C33",
+                                               IND == "D35" ~  "D35",
+                                               IND == "D36T39" ~  "E36-39",
+                                               IND == "D41T43" ~  "F41-43",))
 
 #Exchange Rates#
 dollar_exrates <-rio::import("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/exch_rate.csv")
@@ -181,7 +180,7 @@ oecd_trade_2020 <-subset(oecd_trade_2020, select = c("rep.code", "rep.name", "pa
 oecd_ind_label <-subset(oecd_trade_2020, select = c("ind.code", "ind.name")) 
 oecd_trade_2020 <-subset(oecd_trade_2020, select = c("rep.code", "par.code", "ind.code", "year", "value" )) 
 
-                                                     
+
 #Swiss export data
 setwd("/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/")
 files <- list.files(pattern="*.TXT")
@@ -200,30 +199,30 @@ oecd_trade_final_2020 <- filter(oecd_trade_final_2020, ind.code %in% c("D05T09",
 names(oecd_trade_final_2020)[names(oecd_trade_final_2020) == "Number of persons engaged (total employment)"] <- "nemp"
 
 oecd_trade_final_2020 <- mutate(oecd_trade_final_2020, ind.code = case_when(ind.code %in% c("D19", "D20") ~ "C19-C20",
-                                                                ind.code %in% c("D22", "D23") ~ "C22-C23",
-                                                                ind.code %in% c("D24", "D25") ~ "C24-C25",
-                                                                ind.code %in% c("D29", "D30") ~ "C29-C30",
-                                                                ind.code == "D05T09" ~ "B",
-                                                                ind.code == "D10T12" ~ "C10-C12",
-                                                                ind.code == "D13T15" ~ "C13-C15",
-                                                                ind.code == "D16T18" ~  "C16-18",
-                                                                ind.code == "D19" ~  "C19",
-                                                                ind.code == "D20" ~  "C20",
-                                                                ind.code == "D21" ~  "C21",
-                                                                ind.code == "D26" ~ "C26",
-                                                                ind.code == "D27" ~ "C27",
-                                                                ind.code == "D28" ~  "C28",
-                                                                ind.code == "D31T33" ~ "C31-C33",
-                                                                ind.code == "D35" ~  "D35",
-                                                                ind.code == "D36T39" ~  "E36-39",
-                                                                ind.code == "D41T43" ~  "F41-43",))
+                                                                            ind.code %in% c("D22", "D23") ~ "C22-C23",
+                                                                            ind.code %in% c("D24", "D25") ~ "C24-C25",
+                                                                            ind.code %in% c("D29", "D30") ~ "C29-C30",
+                                                                            ind.code == "D05T09" ~ "B",
+                                                                            ind.code == "D10T12" ~ "C10-C12",
+                                                                            ind.code == "D13T15" ~ "C13-C15",
+                                                                            ind.code == "D16T18" ~  "C16-18",
+                                                                            ind.code == "D19" ~  "C19",
+                                                                            ind.code == "D20" ~  "C20",
+                                                                            ind.code == "D21" ~  "C21",
+                                                                            ind.code == "D26" ~ "C26",
+                                                                            ind.code == "D27" ~ "C27",
+                                                                            ind.code == "D28" ~  "C28",
+                                                                            ind.code == "D31T33" ~ "C31-C33",
+                                                                            ind.code == "D35" ~  "D35",
+                                                                            ind.code == "D36T39" ~  "E36-39",
+                                                                            ind.code == "D41T43" ~  "F41-43",))
 #TEST:Pharma, CHE/USA only 
 
 trade_pharma_ch <- oecd_trade_final_2020 %>%
   filter(rep.code == "CHE") %>%
   filter(ind.code == "C21") %>%
   filter(par.code == "USA")
-  
+
 
 ggplot(trade_pharma_ch) + 
   geom_line(aes(x = year, y = value, group = par.code, colour = par.code)) + 
