@@ -84,37 +84,40 @@ char_dict <- c(letters,
                "END")
 n_chars <- length(char_dict)
 
-## define function for one-hot-encoding all characters
-encode_chars <- function(names, seq_max = max_char){
-        
-        N <- length(names)
-        
-        # Create 3D-Tensor with shape (No. of samples, max. name length, number of characters):
-        tmp <- array(rep(0, N * n_chars * seq_max), 
-                     dim = c(N, seq_max, n_chars)
-        ) 
-        
-        # iterate over all names
-        for(i in 1:N){
-                name <- names[[i]]
-                
-                # truncate at seq_max:
-                if(nchar(name) > seq_max){name <- substr(name, 1, seq_max)}
-                
-                # encode characters:
-                for (char in 1:nchar(name)) {
-                        idx_pos <- which(char_dict == substr(name, char, char))
-                        tmp[i, char, idx_pos] <- 1
-                }
-                
-                # padding:
-                if(nchar(name) < seq_max){
-                        tmp[i, seq(nchar(name)+1, seq_max), which(char_dict == "END")] <- 1
-                }
-        }
-        
-        return(tmp)
-}
+# ## define/load function for one-hot-encoding all characters
+source(paste0(getwd(), "/section_III/names_encoding_function.R"))
+# encode_chars <- function(names, seq_max = max_char){
+#         
+#         N <- length(names)
+#         
+#         # Create 3D-Tensor with shape (No. of samples, max. name length, number of characters):
+#         tmp <- array(rep(0, N * n_chars * seq_max), 
+#                      dim = c(N, seq_max, n_chars)
+#         ) 
+#         
+#         # iterate over all names
+#         for(i in 1:N){
+#                 name <- names[[i]]
+#                 
+#                 # truncate at seq_max:
+#                 if(nchar(name) > seq_max){name <- substr(name, 1, seq_max)}
+#                 
+#                 # encode characters:
+#                 for (char in 1:nchar(name)) {
+#                         idx_pos <- which(char_dict == substr(name, char, char))
+#                         tmp[i, char, idx_pos] <- 1
+#                 }
+#                 
+#                 # padding:
+#                 if(nchar(name) < seq_max){
+#                         tmp[i, seq(nchar(name)+1, seq_max), which(char_dict == "END")] <- 1
+#                 }
+#         }
+#         
+#         return(tmp)
+# }
+
+
 
 # TEST
 encode_chars(names = "asterix", seq_max = max_char)[1, , ]
@@ -171,8 +174,7 @@ hist <- model %>% fit(
 plot(hist)
 
 ## save the model (C) --------------------------------------------------------------
-# https://tensorflow.rstudio.com/tutorials/beginners/basic-ml/tutorial_save_and_restore/
-# model %>% save_model_hdf5("/scicore/home/weder/nigmat01/gender_classification_LSTM_model.h5")
+# model %>% save_model_hdf5("/scicore/home/weder/GROUP/Innovation/01_patent_data/created_models/gender_classification_LSTM_model.h5")
 
 ## evaluate the model ----------------------------------------------------------
 tmp_pred <- encode_chars(c("matthias", "christian", "dragan",
