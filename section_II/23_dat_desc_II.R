@@ -24,7 +24,7 @@ vers <- c("202001_")
 q_new <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds")) %>% distinct(p_key, tech_field) %>% mutate(p_key = as.character(p_key))
 
 ## Load regions of patents' inventors
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg.rds")) 
+inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg.rds")) ## created in 20_us_inv_reg.R
 inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"))
 inv_reg <- left_join(inv_reg, q_new, by = c("p_key"))
