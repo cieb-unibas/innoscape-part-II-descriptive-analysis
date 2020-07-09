@@ -12,6 +12,11 @@ library("data.table")
 library("countrycode")
 library("stringi") 
 
+# packages for gender classification -------------------------------------------
+library("keras")
+library("tensorflow")
+library("reticulate")
+
 # packages for prism-name API: -------------------------------------------------
 library("jsonlite")
 library("httr")
@@ -56,31 +61,67 @@ p_year <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created d
   mutate(p_key = as.character(p_key))  %>% 
   dplyr::distinct(p_key, p_year)
 
-# ## add data on gender for USPTO patents inventors -----------------------------
-# gender_path <- paste0(mainDir1,"/raw data/inventor_gender.tsv")
-# gender <- read.table(gender_path, sep = "\t", header = TRUE, quote = "")
-# gender$male <- as.character(gender$male)
-# gender <- gender %>%
-#   select(disamb_inventor_id_20191231, male) %>%
-#   distinct(disamb_inventor_id_20191231, .keep_all = TRUE) %>%
-#   rename(inventor_id = disamb_inventor_id_20191231,
-#          gender = male)
-# gender <- subset(gender, gender %in% c("0", "1")) # only keep those observations that clearly defined
-# paste("number of inventors with gender information:", nrow(gender))
-# paste("share of male inventors:", 
-#       nrow(gender[gender$gender == "1", ])/nrow(gender))
-# paste("share of female inventors:", 
-#       nrow(gender[gender$gender == "0", ])/nrow(gender))
-# inv_reg <- left_join(x = inv_reg, y = gender, by = "inventor_id")
+## add data on gender for USPTO patents inventors ------------------------------
+gender_path <- paste0(mainDir1,"/raw data/inventor_gender.tsv")
+gender <- read.table(gender_path, sep = "\t", header = TRUE, quote = "")
+gender$male <- as.character(gender$male)
+gender <- gender %>%
+  select(disamb_inventor_id_20191231, male) %>%
+  distinct(disamb_inventor_id_20191231, .keep_all = TRUE) %>%
+  rename(inventor_id = disamb_inventor_id_20191231,
+         gender = male)
 
-# print("All necessary datas is loaded")
+# subset to inventors whose gender is clearly defined and merge to full dataset
+gender <- subset(gender, gender %in% c("0", "1"))
+inv_reg <- left_join(x = inv_reg, y = gender, by = "inventor_id")
+paste("number of inventors with gender information:", nrow(gender))
+
+# subset to unique inventors...
+# USPTO have inventor_id but European dont have one
+# check with CR if these are all unique inventors!!
+# if not, check for multiple matches
+
+print("All necessary data is loaded")
+
 
 ##############################################
 ## Assign gender to inventors based on name ##
 ##############################################
 
-# load the trained model here
-# predict the gender of non-USPTO inventors 
+## subset to inventors without gender information ------------------------------
+gender <- subset(inv_reg, !gender %in% c("1", "0"))
+gender_idx <- rownames(gender) # keep index positions from "inv_reg"
+
+# remove punctuation and turn ä, ü etc. to a u => need to retrain the model
+
+# extract first name and make everything lowercase
+first_names <- stri_extract_first_words(gender$name)
+first_names <- tolower(first_names)
+
+## transform these inventor names into one-hot-encoded tensors -----------------
+
+# specify vocabulary and sequence length
+char_dict <- c(letters, "END")
+n_chars <- length(char_dict)
+max_char <- 19 # the model was trained on a maximum length 19 characters
+
+# load encoding function
+source(paste0(getwd(), "/section_III/names_encoding_function.R"))
+
+# transform the names
+first_names_encoded <- encode_chars(first_names[1:10000])
+
+## load the trained LSTM model -------------------------------------------------
+gender_model <- load_model_hdf5(
+  paste0(mainDir1, "/created_models/gender_classification_LSTM_model.h5")
+  )
+
+## predict the gender of the inventors -----------------------------------------
+# gender_prob <- gender_model %>% predict_proba(first_names_encoded)
+gender$gender[1:10000] <- gender_model %>% predict_classes(first_names_encoded)
+
+## merge back to "inv_reg"
+inv_reg[gender_idx[1:10000], "gender"] <- gender$gender[1:10000]
 
 
 #########################################################
