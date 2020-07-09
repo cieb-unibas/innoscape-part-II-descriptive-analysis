@@ -150,14 +150,14 @@ last_names <- stri_extract_last_words(query_names)
 
 i <- 1
 #for(inv_name in 1:length(query_names)){
-  
-  url <- paste("https://v2.namsor.com/NamSorAPIv2/api2/json/origin/",
-               first_names[i], "/", last_names[i],
-               sep = "")
-  
-  res <- GET(url, add_headers("X-API-KEY" = api_namsor))
-  res <- fromJSON(content(res, as = "text"))
-  res
+
+url <- paste("https://v2.namsor.com/NamSorAPIv2/api2/json/origin/",
+             first_names[i], "/", last_names[i],
+             sep = "")
+
+res <- GET(url, add_headers("X-API-KEY" = api_namsor))
+res <- fromJSON(content(res, as = "text"))
+res
 #}
 
 
