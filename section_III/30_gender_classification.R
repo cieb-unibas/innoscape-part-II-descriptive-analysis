@@ -209,4 +209,3 @@ tmp_true == model %>% predict_classes(tmp_pred)
 # French & US names: 86 % accuracy
 # Indian names : 86%
 # => our model: 97% accuracy (probably because we have a balanced training sample)
-

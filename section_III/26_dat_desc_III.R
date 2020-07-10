@@ -83,7 +83,6 @@ paste("number of inventors with gender information:", nrow(gender))
 
 print("All necessary data is loaded")
 
-
 ##############################################
 ## Assign gender to inventors based on name ##
 ##############################################
@@ -123,7 +122,6 @@ gender$gender[1:10000] <- gender_model %>% predict_classes(first_names_encoded)
 
 ## merge back to "inv_reg"
 inv_reg[gender_idx[1:10000], "gender"] <- gender$gender[1:10000]
-
 
 #########################################################
 ## Assign ethnic groups and nationalities to inventors ##
