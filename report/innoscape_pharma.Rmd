@@ -21,7 +21,6 @@ library(plotly)
 library(viridis)
 library(autoimage)
 library(shinyWidgets)
-library(plyr)
 ```
 
 <head>
@@ -39,10 +38,11 @@ library(plyr)
 # Load data
 
 dat_ii <- readRDS("num_pat_16.rds") 
-dat_ii <- data.frame(dat_ii) %>% mutate(abs_rel = "abs")
-dat_ii_2 <- mutate(dat_ii, share_inv = 1/share_inv, abs_rel = "rel")
-dat_ii <- rbind.fill(dat_ii, dat_ii_2)
-dat_ii <- data.frame(dat_ii)
+dat_ii <- data.frame(dat_ii) 
+# %>% mutate(abs_rel = "abs")
+# dat_ii_2 <- mutate(dat_ii, share_inv = 1/share_inv, abs_rel = "rel")
+# dat_ii <- rbind.fill(dat_ii, dat_ii_2)
+# dat_ii <- data.frame(dat_ii)
 # dat_ii_world <- readRDS("world_class_pat_16.rds") 
 
 
@@ -217,10 +217,10 @@ renderPlotly({
                  ggplot(data = plot2_data, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
-                 xlab("\nPriority Year")+
-                 ylab("\nNumber of patents")+
+                 xlab("Priority Year")+
+                 ylab("Number of patents")+
                  guides(color = FALSE)+
-                 facet_wrap(~ abs_rel) +
+                 # facet_wrap(~ abs_rel) +
                  # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
@@ -237,8 +237,8 @@ renderPlotly({
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-                 xlab("\nPriority Year")+
-                 ylab("\nNumber of patents")+
+                 xlab("Priority Year")+
+                 ylab("Number of patents")+
                  guides(color = FALSE)+
                  # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
                  theme(axis.title = element_text(face="bold",size = 10),
@@ -251,9 +251,9 @@ renderPlotly({
                  layout(yaxis = list(fixedrange=TRUE)) 
                  }
 
-               
+                  + 
                  
-        # subplot(abs, world, nrows = 1)
+        subplot(abs, world, nrows = 1)
         
          })
 ```
