@@ -1,5 +1,5 @@
 #######################################################################
-# Cluster Basel / CR 30.6.2020 ##
+print("27: Create analysis for cluster basel: where are inventions registered and where do they actually happen/ CR 30.6.2020")
 #######################################################################
 require(data.table)
 require(ggplot2)
@@ -7,7 +7,6 @@ require(dplyr)
 require(geosphere)
 require(fuzzyjoin)
 require(plyr)
-print("Function to get regio data for USPTO inventor firms")
 
 mainDir1 <- c("/scicore/home/weder/GROUP/Innovation/01_patent_data")
 
