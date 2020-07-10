@@ -5,9 +5,10 @@
 # 3D-Tensor of encoded names      #
 ###################################
 
-encode_chars <- function(names, seq_max = max_char){
+encode_chars <- function(names, seq_max, char_dict, n_chars){
   
   N <- length(names)
+  END_idx <- which(char_dict == "END")
   
   # Create 3D-Tensor with shape (No. of samples, max. name length, number of characters):
   tmp <- array(rep(0, N * n_chars * seq_max), 
@@ -29,7 +30,7 @@ encode_chars <- function(names, seq_max = max_char){
     
     # padding:
     if(nchar(name) < seq_max){
-      tmp[i, seq(nchar(name)+1, seq_max), which(char_dict == "END")] <- 1
+      tmp[i, seq(nchar(name)+1, seq_max), END_idx] <- 1
     }
   }
   

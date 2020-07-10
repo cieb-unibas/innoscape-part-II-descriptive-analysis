@@ -130,7 +130,7 @@ train_set_fun <- function(df = gender, N = 100000, gender_ratio = 0.5,
   df_out <- bind_rows(df_out, tmp)
   
   # TEST if N = 100'000 and throw an error if it does not match
-  if(nrow(df_out) != 100000){stop("Size of the data.frame does not correspond to N")}
+  if(nrow(df_out) != N){stop("Size of the data.frame does not correspond to N")}
   
   # shuffle the data.frame
   df_out <- df_out[sample(nrow(df_out)), ]

@@ -87,29 +87,33 @@ print("All necessary data is loaded")
 ## Assign gender to inventors based on name ##
 ##############################################
 
-## subset to inventors without gender information ------------------------------
+# subset to inventors without gender information
 gender <- subset(inv_reg, !gender %in% c("1", "0"))
 gender_idx <- rownames(gender) # keep index positions from "inv_reg"
 
-# extract first name and make everything lowercase
-first_names <- stri_extract_first_words(gender$name)
+## data processing -------------------------------------------------------------
+first_names <- stri_extract_first_words(gender$name) # first names only
 first_names <- tolower(first_names)
 
-# remove punctuation and turn ä, ü etc. to a u => need to retrain the model
+# remove punctuation turn ä, ü etc. to a u => need to retrain the model
+first_names <- gsub("[[:punct:]]", "", first_names)
 
-
-## transform these inventors first names into one-hot-encoded tensors ----------
-
-# specify vocabulary and sequence length
-char_dict <- c(letters, "END")
+## load vocabulary and sequence length --------------------------------------
+char_dict <- c("...") # load from 30_gender_classification.R
 n_chars <- length(char_dict)
 max_char <- 19 # the model was trained on a maximum length 19 characters
+
+
+## transform inventors' first names into one-hot-encoded tensors ---------------
 
 # load encoding function
 source(paste0(getwd(), "/section_III/names_encoding_function.R"))
 
 # transform the names
-first_names_encoded <- encode_chars(first_names[1:10000])
+first_names_encoded <- encode_chars(names = first_names[1:10000], 
+                                    seq_max = max_char, 
+                                    char_dict = char_dict,
+                                    n_chars = n_chars)
 
 ## load the trained LSTM model -------------------------------------------------
 gender_model <- load_model_hdf5(
@@ -120,7 +124,7 @@ gender_model <- load_model_hdf5(
 # gender_prob <- gender_model %>% predict_proba(first_names_encoded)
 gender$gender[1:10000] <- gender_model %>% predict_classes(first_names_encoded)
 
-## merge back to "inv_reg"
+## merge to "inv_reg"
 inv_reg[gender_idx[1:10000], "gender"] <- gender$gender[1:10000]
 
 #########################################################

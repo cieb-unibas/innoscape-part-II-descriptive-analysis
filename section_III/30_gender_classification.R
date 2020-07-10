@@ -63,20 +63,14 @@ lapply(special_chars, function(x){
 # - if new char, then add to vocab, else go further
 # ----------------------------------------
 
-# maximum length and distribution of the number of characters per name
-max_char <- max(nchar(dat$name))
+# distribution of the number of characters per name
 hist(nchar(dat$name), main = "", 
      xlab = "Number of characters per name")
-paste("very few names have more than 20 characters. 
-      Maximum number of characters is", max_char)
 
-# two possibilities:
-# 1) use "max_char" and padding with an "END" token indicating the end of the name
-# 2) truncate at e.g. 20 characters and "END" token to save computing time
+# create the vocabulary and truncate at "max_char"
 char_dict <- c(letters,
 #               " ", # remove when using the first word only
                "END")
-n_chars <- length(char_dict)
 
 #######################################
 ########### gender encoding ###########
@@ -88,45 +82,27 @@ y_dat <- as.numeric(dat$gender)
 ######### tokenization: character encoding ##########
 #####################################################
 
-## load function for one-hot-encoding names as 3D-tensors
+# load function for one-hot-encoding names as 3D-tensors
 source(paste0(getwd(), "/section_III/names_encoding_function.R"))
 
-# encode_chars <- function(names, seq_max = max_char){
-#         
-#         N <- length(names)
-#         
-#         # Create 3D-Tensor with shape (No. of samples, max. name length, number of characters):
-#         tmp <- array(rep(0, N * n_chars * seq_max), 
-#                      dim = c(N, seq_max, n_chars)
-#         ) 
-#         
-#         # iterate over all names
-#         for(i in 1:N){
-#                 name <- names[[i]]
-#                 
-#                 # truncate at seq_max:
-#                 if(nchar(name) > seq_max){name <- substr(name, 1, seq_max)}
-#                 
-#                 # encode characters:
-#                 for (char in 1:nchar(name)) {
-#                         idx_pos <- which(char_dict == substr(name, char, char))
-#                         tmp[i, char, idx_pos] <- 1
-#                 }
-#                 
-#                 # padding:
-#                 if(nchar(name) < seq_max){
-#                         tmp[i, seq(nchar(name)+1, seq_max), which(char_dict == "END")] <- 1
-#                 }
-#         }
-#         
-#         return(tmp)
-# }
+# choose sequence length:
+n_chars <- length(char_dict) # number of unqiue characters
+max_char <- max(nchar(dat$name)) # maximum character length of names in the sample
 
-# TEST
-encode_chars(names = "asterix", seq_max = max_char)[1, , ]
+# 1) use "max_char" and padding with an "END" token indicating the end of the name
+# 2) truncate at e.g. 20 characters and "END" token indicating the end of the name
 
-# encode all names in the data and create a 3D-Tensor to train and evaluate the models
-x_dat <- encode_chars(names = dat$name, seq_max = max_char) # truncate at max_char or 20 character length
+# test:
+encode_chars(names = "asterix", 
+             seq_max = max_char, 
+             char_dict = char_dict,
+             n_chars = n_chars)[1, , ]
+
+# encode all names as a 3D-tensor
+x_dat <- encode_chars(names = dat$name, 
+                      seq_max = max_char,
+                      char_dict = char_dict,
+                      n_chars = n_chars)
 
 # summarize
 paste("names are one-hot-encoded with shape: ", 
@@ -186,7 +162,10 @@ tmp_true <- c(1, 1, 1, 1, 1, 0, 0, 1)
 model %>% predict_proba(tmp_pred)
 tmp_true == model %>% predict_classes(tmp_pred)
 
-##### findings: ----------------------------------------------------------------
+#########################################
+############### findings: ###############
+#########################################
+
 # A) with first name, full sample, 2 512-LSTM layers, batch_size = 512 and 25 epochs:
 #   (1) starts slightly overfitting at around 7 epochs
 #   (2) validation accuracy reaches 97% after 16 epochs and then marginally increases to 97.5%
