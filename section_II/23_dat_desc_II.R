@@ -58,18 +58,18 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
   if(world_class == "yes"){
     form <- as.formula(paste0("share_inv ~ cit_cat_y_5 + p_year + ipc_main + IPC.title + ", geo_level, " + ", geo_name))
     form_agg <- as.formula(paste0("share_inv ~ cit_cat_y_5 + p_year + ", geo_level, " + ", geo_name))
-    }else{
-  form <- as.formula(paste0("share_inv ~ p_year + ipc_main + IPC.title + ", geo_level, " + ", geo_name))
-  form_agg <- as.formula(paste0("share_inv ~ p_year + ", geo_level, " + ", geo_name))
-    }
-    
+  }else{
+    form <- as.formula(paste0("share_inv ~ p_year + ipc_main + IPC.title + ", geo_level, " + ", geo_name))
+    form_agg <- as.formula(paste0("share_inv ~ p_year + ", geo_level, " + ", geo_name))
+  }
+  
   reg     <- aggregate(form, FUN = sum, data = inv_reg) %>% mutate(reg, tech_field = tech_field_start)
   reg_agg <- aggregate(form_agg, FUN = sum, data = inv_reg) %>% mutate(reg_agg, tech_field = tech_field_start)
   
   if(geo_level == "ctry_code"){
-  list_geo <- imp[1:15, geo_level]
+    list_geo <- imp[1:15, geo_level]
   } else if(geo_level == "Up_reg_code"){
-  list_geo <- imp[1:80, geo_level]
+    list_geo <- imp[1:80, geo_level]
   } else if(geo_level == "conti"){
     list_geo <- c( "Europe", "Oceania", "Americas", "Asia", "Africa")
   }
@@ -148,8 +148,6 @@ world_class_16_4 <- filter(world_class_16_4, geo != "world")
 world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) 
 world_class_16 <- saveRDS(world_class_16, "/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
 world_class_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_16.rds")
-
-
 
 
 
