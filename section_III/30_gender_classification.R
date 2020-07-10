@@ -27,37 +27,56 @@ set.seed(06072020)
 ############ Load and preprocess data ############
 ##################################################
 
-dat <- readRDS(paste0(getwd(),"/section_III/gender_training_sample.rds"))
+dat <- readRDS(paste0(mainDir1,"/created data/gender_training_sample.rds"))
 dat <- dat %>% select(name, gender) # only use names as inputs
 dat <- dat[sample(nrow(dat)), ] # shuffle the data
 dat$name <- tolower(dat$name) # reduce the number of features.
 
-## remove all punctuation ------------------------------------------------------
-dat$name <- gsub("[[:punct:]]", "", dat$name)
-# check
-special_chars <- c(",", ";", ".", "/", "-")
-lapply(special_chars, function(x){
-        tmp <- grepl(x, "", dat$name, fixed = TRUE)
-        if(length(tmp[tmp == TRUE] > 0)){paste(x, "exists")}
-        else{paste(x, "does not exist")}
-})
-
 ## first names only ------------------------------------------------------------
-
 # Option 1: only keep first word
 dat$name <- stri_extract_first_words(dat$name)
 
-# Option 2: keep everything except the last word (assumed to be the last name)
-# remove_lastName <- function(name){
-# 
-#   name_split <- strsplit(name, " ")
-# 
-#   first_name <- name_split[[1]][-length(name_split[[1]])]
-#   first_name <- paste(first_name, collapse = " ")
-# 
-#   return(first_name)
-# }
+# Option 2: keep everything except the last word (assumed to be the lastname)
+remove_lastName <- function(name){
+
+  name_split <- strsplit(name, " ")
+
+  first_name <- name_split[[1]][-length(name_split[[1]])]
+  first_name <- paste(first_name, collapse = " ")
+
+  return(first_name)
+}
 # dat$name <- lapply(dat$name, remove_lastName)
+
+## remove punctuation ----------------------------------------------------------
+dat$name <- gsub("[[:punct:]]", "", dat$name)
+special_chars <- c(",", ";", ".", "/", "-", ")", "(")
+lapply(special_chars, function(x){
+  tmp <- grepl(x, "", dat$name, fixed = TRUE)
+  if(length(tmp[tmp == TRUE] > 0)){paste(x, "exists")}
+  else{paste(x, "does not exist")}
+})
+
+# ----------------------------------------
+## define the vocabulary based on all characters in the names
+# - extract all unique characters with a loop over all names
+# - if new char, then add to vocab, else go further
+# ----------------------------------------
+
+# maximum length and distribution of the number of characters per name
+max_char <- max(nchar(dat$name))
+hist(nchar(dat$name), main = "", 
+     xlab = "Number of characters per name")
+paste("very few names have more than 20 characters. 
+      Maximum number of characters is", max_char)
+
+# two possibilities:
+# 1) use "max_char" and padding with an "END" token indicating the end of the name
+# 2) truncate at e.g. 20 characters and "END" token to save computing time
+char_dict <- c(letters,
+#               " ", # remove when using the first word only
+               "END")
+n_chars <- length(char_dict)
 
 #######################################
 ########### gender encoding ###########
@@ -69,23 +88,9 @@ y_dat <- as.numeric(dat$gender)
 ######### tokenization: character encoding ##########
 #####################################################
 
-## maximum length and distribution of the number of characters per name: -------
-max_char <- max(nchar(dat$name))
-hist(nchar(dat$name), main = "", 
-     xlab = "Number of characters per name")
-paste("very few names have more than 20 characters. 
-      Maximum number of characters is", max_char)
-
-# two possibilities:
-# 1) use "max_char" and padding with an "END" token indicating the end of the name
-# 2) truncate at e.g. 20 characters and "END" token to save computing time
-char_dict <- c(letters,
-               #               " ", # remove when using the first word only
-               "END")
-n_chars <- length(char_dict)
-
-# ## define/load function for one-hot-encoding all characters
+## load function for one-hot-encoding names as 3D-tensors
 source(paste0(getwd(), "/section_III/names_encoding_function.R"))
+
 # encode_chars <- function(names, seq_max = max_char){
 #         
 #         N <- length(names)
@@ -117,13 +122,11 @@ source(paste0(getwd(), "/section_III/names_encoding_function.R"))
 #         return(tmp)
 # }
 
-
-
 # TEST
 encode_chars(names = "asterix", seq_max = max_char)[1, , ]
 
 # encode all names in the data and create a 3D-Tensor to train and evaluate the models
-x_dat <- encode_chars(names = dat$name, seq_max = max_char) # truncate at max_char / 20 character length
+x_dat <- encode_chars(names = dat$name, seq_max = max_char) # truncate at max_char or 20 character length
 
 # summarize
 paste("names are one-hot-encoded with shape: ", 
