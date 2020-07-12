@@ -57,20 +57,29 @@ lapply(special_chars, function(x){
   else{paste(x, "does not exist")}
 })
 
-# ----------------------------------------
-## define the vocabulary based on all characters in the names
-# - extract all unique characters with a loop over all names
-# - if new char, then add to vocab, else go further
-# ----------------------------------------
+## define the vocabulary based on all characters in the names ------------------
+char_dict <- NULL
 
-# distribution of the number of characters per name
-hist(nchar(dat$name), main = "", 
-     xlab = "Number of characters per name")
+# find all the unique characters
+for(i in 1:length(dat$name)){
+  chars <- unlist(str_extract_all(dat$name[i], "[:print:]"))
+  chars <- unique(chars)
+  char_dict <- c(char_dict, chars[!chars %in% char_dict])
+}
 
-# create the vocabulary and truncate at "max_char"
-char_dict <- c(letters,
+# evaluate if there are non-standard letters and replace them
+letters %in% char_dict # all standard letters are in the vocabulary
+char_dict[which(!char_dict %in% letters)]
+dat$name <- unlist(lapply(dat$name, function(x) stri_replace_all_fixed(str = x,
+                                               pattern = c("é", "í", "å"),
+                                               replacement = c("e", "i", "a"),
+                                               vectorize_all = FALSE)))
+
+# define final vocabulary and save for out-of-sample predictions
+char_dict <- c(sort(char_dict),
 #               " ", # remove when using the first word only
                "END")
+char_dict
 
 #######################################
 ########### gender encoding ###########
@@ -85,7 +94,11 @@ y_dat <- as.numeric(dat$gender)
 # load function for one-hot-encoding names as 3D-tensors
 source(paste0(getwd(), "/section_III/names_encoding_function.R"))
 
-# choose sequence length:
+# choose sequence length -------------------------------------------------------
+
+# distribution of the number of characters per name
+hist(nchar(dat$name), main = "", 
+     xlab = "Number of characters per name")
 n_chars <- length(char_dict) # number of unqiue characters
 max_char <- max(nchar(dat$name)) # maximum character length of names in the sample
 

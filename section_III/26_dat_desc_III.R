@@ -95,21 +95,36 @@ gender_idx <- rownames(gender) # keep index positions from "inv_reg"
 first_names <- stri_extract_first_words(gender$name) # first names only
 first_names <- tolower(first_names)
 
-# remove punctuation turn ä, ü etc. to a u => need to retrain the model
+# remove punctuation and digits
 first_names <- gsub("[[:punct:]]", "", first_names)
+first_names <- gsub("[0-9]", "", first_names)
 
-## load vocabulary and sequence length --------------------------------------
-char_dict <- c("...") # load from 30_gender_classification.R
+# search for special characters and replace them from 'first_names'
+special_chars <- stri_extract_all(str = first_names, regex = "[^a-z]")
+special_chars <- unlist(special_chars)
+special_chars <- unique(special_chars)[-1]
+special_chars
+
+# create a replacement vector for special_chars
+rep_vec <- c("o", "e", "u", "a", "o", "i", "o", "c", "e", "i", "e", "n", "o", "a", "i", "a", "u", "a", "a",
+             "o", "ae", "a", "u", "e", "o", "y", "u", "a", "i", "y", "d", "s", "s", "n", "l", "s", "ss",
+             "d", "z", "l", "e", "z")
+data.frame(spec = special_chars, rep = rep_vec)
+first_names <- unlist(lapply(
+  first_names, function(x) stri_replace_all_fixed(str = x, 
+                                               pattern = special_chars,
+                                               replacement = rep_vec,
+                                               vectorize_all = FALSE)))
+
+print("first_names now only consist of lowercase latin letters")
+
+## load vocabulary and sequence length -----------------------------------------
+char_dict <- c(letters, "END") # this is the vocab that was used for training
 n_chars <- length(char_dict)
 max_char <- 19 # the model was trained on a maximum length 19 characters
 
-
 ## transform inventors' first names into one-hot-encoded tensors ---------------
-
-# load encoding function
-source(paste0(getwd(), "/section_III/names_encoding_function.R"))
-
-# transform the names
+source(paste0(getwd(), "/section_III/names_encoding_function.R")) # load encoding function
 first_names_encoded <- encode_chars(names = first_names[1:10000], 
                                     seq_max = max_char, 
                                     char_dict = char_dict,
@@ -120,12 +135,33 @@ gender_model <- load_model_hdf5(
   paste0(mainDir1, "/created_models/gender_classification_LSTM_model.h5")
   )
 
-## predict the gender of the inventors -----------------------------------------
+## predict the inventors' gender ----- -----------------------------------------
+
 # gender_prob <- gender_model %>% predict_proba(first_names_encoded)
 gender$gender[1:10000] <- gender_model %>% predict_classes(first_names_encoded)
 
 ## merge to "inv_reg"
 inv_reg[gender_idx[1:10000], "gender"] <- gender$gender[1:10000]
+
+print("Gender information has been added.")
+
+#########################################################
+## Analysis: Gender & patenting in different regions   ##
+#########################################################
+
+tmp <- inv_reg[gender_idx[1:10000], ]
+tmp <- subset(tmp, tech_field == 16)
+
+table(tmp$gender)/nrow(tmp)
+
+# shares over time per continent, country and region:
+
+# how many patents does the average female have? how many do males have?
+
+# is the share of female inventors higher among highly cited patents?
+
+
+
 
 #########################################################
 ## Assign ethnic groups and nationalities to inventors ##
