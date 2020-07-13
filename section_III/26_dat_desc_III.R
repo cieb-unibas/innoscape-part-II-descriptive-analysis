@@ -88,14 +88,14 @@ print("All necessary data is loaded")
 ##############################################
 
 # subset to inventors without gender information
-gender <- subset(inv_reg, !gender %in% c("1", "0"))
+gender <- subset(inv_reg, !gender %in% c("1", "0")) %>% select(name, gender)
 gender_idx <- rownames(gender) # keep index positions from "inv_reg"
 
 ## data processing -------------------------------------------------------------
 first_names <- stri_extract_first_words(gender$name) # first names only
 first_names <- tolower(first_names)
 
-# remove punctuation and digits
+# remove punctuation and numbers
 first_names <- gsub("[[:punct:]]", "", first_names)
 first_names <- gsub("[0-9]", "", first_names)
 
@@ -105,27 +105,43 @@ special_chars <- unlist(special_chars)
 special_chars <- unique(special_chars)[-1]
 special_chars
 
-# create a replacement vector for special_chars
+# create a replacement vector and replace special_chars
 rep_vec <- c("o", "e", "u", "a", "o", "i", "o", "c", "e", "i", "e", "n", "o", "a", "i", "a", "u", "a", "a",
              "o", "ae", "a", "u", "e", "o", "y", "u", "a", "i", "y", "d", "s", "s", "n", "l", "s", "ss",
              "d", "z", "l", "e", "z")
 data.frame(spec = special_chars, rep = rep_vec)
+
+# drop NA's from sample
+NA_obs <- which(is.na(first_names) == TRUE)
+first_names <- first_names[-NA_obs]
+gender <- gender[-NA_obs, ]
+gender_idx <- rownames(gender)
+if(length(first_names[is.na(first_names) == TRUE]) != 0){
+  warning("NA names in the sample")}else{paste("NA names cleared")}
+
+## define a random sub-sample for analysis (save computing time)
+keep_obs <- sample(nrow(gender), 100000)
+first_names <- first_names[keep_obs]
+gender <- gender[keep_obs, ]
+gender_idx <- rownames(gender) # keep index positions from "inv_reg"
+
+## clean special characters from "first_names"
 first_names <- unlist(lapply(
   first_names, function(x) stri_replace_all_fixed(str = x, 
                                                pattern = special_chars,
                                                replacement = rep_vec,
                                                vectorize_all = FALSE)))
 
-print("first_names now only consist of lowercase latin letters")
+print("first_names now only consist of 26 lowercase latin letters")
 
-## load vocabulary and sequence length -----------------------------------------
-char_dict <- c(letters, "END") # this is the vocab that was used for training
+## construct vocabulary and sequence length ------------------------------------
+char_dict <- c(letters, "END") # => this is the vocab that was used for training
 n_chars <- length(char_dict)
 max_char <- 19 # the model was trained on a maximum length 19 characters
 
 ## transform inventors' first names into one-hot-encoded tensors ---------------
 source(paste0(getwd(), "/section_III/names_encoding_function.R")) # load encoding function
-first_names_encoded <- encode_chars(names = first_names[1:10000], 
+first_names_encoded <- encode_chars(names = first_names, 
                                     seq_max = max_char, 
                                     char_dict = char_dict,
                                     n_chars = n_chars)
@@ -138,10 +154,7 @@ gender_model <- load_model_hdf5(
 ## predict the inventors' gender ----- -----------------------------------------
 
 # gender_prob <- gender_model %>% predict_proba(first_names_encoded)
-gender$gender[1:10000] <- gender_model %>% predict_classes(first_names_encoded)
-
-## merge to "inv_reg"
-inv_reg[gender_idx[1:10000], "gender"] <- gender$gender[1:10000]
+gender$gender <- gender_model %>% predict_classes(first_names_encoded)
 
 print("Gender information has been added.")
 
@@ -149,23 +162,61 @@ print("Gender information has been added.")
 ## Analysis: Gender & patenting in different regions   ##
 #########################################################
 
-tmp <- inv_reg[gender_idx[1:10000], ]
+# predicted gender + existing gender
+tmp <- inv_reg[gender_idx, ]
+tmp$gender <- gender$gender
+t <- inv_reg %>% subset(gender %in% c("1", "0")) %>% sample_n(500000)
+tmp <- rbind(tmp, t)
+t <- NULL
 tmp <- subset(tmp, tech_field == 16)
-
 table(tmp$gender)/nrow(tmp)
 
-# shares over time per continent, country and region:
+# female inventor shares over time per country
+plot_data <- tmp %>% group_by(ctry_code, p_year) %>%
+  summarise(female_share = 1 - sum(as.numeric(gender))/n(),
+            total_count = n()) %>%
+  select(ctry_code, p_year, total_count, female_share)
+plot_data <- subset(plot_data, ctry_code %in% c("US", "JP", "DE", "FR", "UK") &
+                    as.numeric(p_year) > 1990 & total_count > 10)
+ggplot(plot_data, aes(x = as.numeric(p_year), y = female_share, color = ctry_code))+
+  geom_line()
 
-# how many patents does the average female have? how many do males have?
+# how many patents do females invent? how many do males invent?
+plot_data <- tmp %>% group_by(name) %>% summarize(n_patent = n())
+plot_data <- left_join(plot_data, tmp[, c("name", "gender")], by = "name")
+n_females <- nrow(plot_data[plot_data$gender == "0", ])
+n_males <- nrow(plot_data) - n_females
+plot_data <- plot_data %>% group_by(n_patent, gender)%>% summarize(share = n())
+plot_data[plot_data$gender == 0, "share"]/n_females
+plot_data[plot_data$gender == 1, "share"]/n_males
+# => more females only have 1 patent
 
 # is the share of female inventors higher among highly cited patents?
+plot_data <- tmp %>% subset(num_cited == 2)
+table(plot_data$gender) / nrow(plot_data) # => slightly higher
 
+# distribution of female inventors by patent
+plot_data <- tmp %>% group_by(p_key) %>% summarise(
+  female_share = 1 - sum(as.numeric(gender))/n())
+ggplot(plot_data, #[plot_data$female_share > 0, ], 
+       aes(female_share))+
+  geom_density(fill = "#420A68FF", colour = "#420A68FF", alpha = 0.3)
+#  geom_bar(fill = "#420A68FF", colour = "#420A68FF", alpha = 0.3)
 
+# share of patents with female inventors
+plot_data$female <- ifelse(plot_data$female_share > 0, 1, 0)
+table(plot_data$female)/nrow(plot_data)
 
 
 #########################################################
 ## Assign ethnic groups and nationalities to inventors ##
 #########################################################
+
+print("Number of unique inventors:")
+inv_reg %>%
+  distinct(name, .keep_all = TRUE) %>%
+  nrow()
+
 
 #### 'name-prism' API -------------------------------------
 # http://www.name-prism.com/api
