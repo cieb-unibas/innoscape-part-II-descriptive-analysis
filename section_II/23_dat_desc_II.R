@@ -32,7 +32,7 @@ ipc <- read.csv2(paste0(mainDir1, "/raw data/ipc_4_digit.csv"))
 inv_reg <- left_join(inv_reg, ipc, by = c("ipc_main" = "IPC"))
 
 ## Use backward citations to classify world-class patents
-q <- readRDS(paste0(mainDir1, "/created data/info_cited_pat_", tech_field_start, ".rds"))
+q <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds"))
 q <- setDT(q)[order(-fwd_cits5), .SD[1], .(p_key)]
 q <- mutate(q, cit_cat_y_5 = case_when(fwd_cits5 <= 1 ~ 0, fwd_cits5 >= 2 & fwd_cits5 < 16 ~ 1, fwd_cits5 > 15 ~ 2))
 q <- dplyr::select(q, p_key, cit_cat_y_5) %>% mutate(p_key= as.character(p_key))
@@ -112,8 +112,8 @@ num_pat_16_4 <- filter(num_pat_16_4, geo != "world")
 
 ## Add all data together
 num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4) 
-num_pat_16 <- saveRDS(num_pat_16, "/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds")
-num_pat_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds")
+num_pat_16 <- saveRDS(num_pat_16, paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
+num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
 ##################################################
 ## Get inventors shares for world class patents ##
@@ -143,8 +143,8 @@ world_class_16_4 <- filter(world_class_16_4, geo != "world")
 
 ## Add all data together
 world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) 
-world_class_16 <- saveRDS(world_class_16, "/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds")
-world_class_16 <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds")
+world_class_16 <- saveRDS(world_class_16, paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
+world_class_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
 
 
 
