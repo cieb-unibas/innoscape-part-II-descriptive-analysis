@@ -25,7 +25,6 @@ tech_field_start <- 16
 inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, ".rds")) 
 inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"))
-inv_reg <- left_join(inv_reg, q_new, by = c("p_key"))
 inv_reg <- mutate(inv_reg, share_inv = 1) # if patent belongs to different locations -> each location gets value of 1. This takes into account international collaboration. 
 
 ## Load name of IPC
