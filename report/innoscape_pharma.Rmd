@@ -40,6 +40,7 @@ library(data.table)
 ```{r, echo = F}
 # Load data
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
+dat_ii <- filter(dat_ii, n_ipc > 100)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```
@@ -125,10 +126,9 @@ renderPlotly({
                               conti %in% input$CONTI_NAME &
                               ipc_main %in% input$CONTI_IPC &
                               abs_rel %in%  input$CONTI_ABS_REL)
-       
      
 
-         # make the plot
+          # make the plot
                  abs <- ggplotly(
                  ggplot(data = plot2_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
                  geom_point(alpha = 0.7) +
@@ -137,7 +137,6 @@ renderPlotly({
                  xlab("Priority Year")+
                  ylab("Number of patents")+
                  guides(color = FALSE)+
-                facet_wrap(~ abs_rel) +
                  # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
@@ -147,54 +146,11 @@ renderPlotly({
                  config(displayModeBar = F) %>%
                  layout(xaxis = list(fixedrange=TRUE)) %>%
                  layout(yaxis = list(fixedrange=TRUE))
-        
-       # if(input$CONTI_ABS_REL == "rel_1990"){
-       #           world <- ggplotly(
-       #           ggplot(data = plot2_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
-       #           geom_point(alpha = 0.7) +
-       #           geom_line() +
-       #           xlab("\nPriority Year")+
-       #           ylab("\nNumber of patents")+
-       #           guides(color = FALSE)+
-       #           facet_wrap(~ abs_rel) +
-       #           # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
-       #           theme(axis.title = element_text(face="bold",size = 10),
-       #                 panel.background = element_blank(),
-       #                 axis.line = element_line()                       ),
-       #           dynamicTicks = FALSE) %>%
-       #           config(displayModeBar = F) %>%
-       #           layout(xaxis = list(fixedrange=TRUE)) %>%
-       #           layout(yaxis = list(fixedrange=TRUE))
-       #           
-       #           } else {
-       #             
-       #           world <- ggplotly(
-       #           ggplot(data = plot2_data_conti, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_main)) +
-       #           geom_point(alpha = 0.7) +
-       #           geom_line() +
-       #           # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-       #           xlab("\nPriority Year")+
-       #           ylab("\nNumber of patents")+
-       #           guides(color = FALSE)+
-       #           # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
-       #           theme(axis.title = element_text(face="bold",size = 10),
-       #                 panel.background = element_blank(),
-       #                 axis.line = element_line()
-       #                 ),
-       #           dynamicTicks = FALSE) %>%
-       #           config(displayModeBar = F) %>%
-       #           layout(xaxis = list(fixedrange=TRUE)) %>%
-       #           layout(yaxis = list(fixedrange=TRUE)) 
-       #           }
-
-               
-                 
-        # subplot(abs, world, nrows = 1)
-        
          })
 ```
 <span style="font-size:0.8em">*Source: Own estimations of <a href="http://cieb.unibas.ch/" target = "_blank">CIEB</a> based on data.  All the data is available on [GitHub](https://github.com/matthnig/green-potential).*</span>
 
+HERE short description of the findings at the continent level
 
 ### Countries
 
@@ -268,8 +224,8 @@ renderPlotly({
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-                 xlab("Priority Year")+
-                 ylab("Number of patents")+
+                 xlab("\nPriority Year")+
+                 ylab("\n\n\nNumber of patents")+
                  guides(color = FALSE)+
                  # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
                  theme(axis.title = element_text(face="bold",size = 10),
@@ -328,6 +284,9 @@ renderPlotly({
 ```
 <span style="font-size:0.8em">*Source: Own estimations of <a href="http://cieb.unibas.ch/" target = "_blank">CIEB</a> based on data.  All the data is available on [GitHub](https://github.com/matthnig/green-potential).*</span>
 
+HERE short description of the findings at the country level
+
+
 ### Regions
 
 
@@ -385,20 +344,20 @@ pickerInput(
 
 
 ```{r, echo = F}
-# define the output panel : -------------------------------------------------------------------------
-renderPlotly({
-
-         # subset the data according to the input:
-        
-                              plot2_data <- subset(dat_ii,
+plot2_data <- reactive({plot2_data <- subset(dat_ii,
                               Up_reg_label %in% input$REGIO_NAME &
                               ipc_main %in% input$REGIO_IPC &
-                              abs_rel %in%  input$REGIO_ABS_REL)
-     
-                        
+                              abs_rel %in%  input$REGIO_ABS_REL)})
+```
+
+
+```{r, echo = F}
+# define the output panel : -------------------------------------------------------------------------
+
+renderPlotly({
          # make the plot
                  abs <- ggplotly(
-                 ggplot(data = plot2_data, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+                 ggplot(data = plot2_data(), aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -461,5 +420,13 @@ renderPlotly({
         })
 ```
 <span style="font-size:0.8em">*Source: Own estimations of <a href="http://cieb.unibas.ch/" target = "_blank">CIEB</a> based on data.  All the data is available on [GitHub](https://github.com/matthnig/green-potential).*</span>
+
+HERE short description of the findings at the regional level
+```{r, echo = F}
+renderTable({head(as.data.frame(plot2_data())[1:2, ])})
+
+```
+
+
 
 ## {.unlisted .unnumbered}
