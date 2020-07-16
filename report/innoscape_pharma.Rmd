@@ -40,7 +40,7 @@ library(data.table)
 ```{r, echo = F}
 # Load data
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, n_ipc > 100)
+dat_ii <- filter(dat_ii, rank < 20)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```
@@ -103,7 +103,7 @@ pickerInput(
 pickerInput(
    inputId = "CONTI_IPC",
    label = "Choose IPC",
-   choices = unique(dat_ii$ipc_main),
+   choices = unique(dat_ii$IPC.title),
    selected = "all",
    options = list(
      `actions-box` = TRUE,
@@ -124,7 +124,7 @@ renderPlotly({
          # subset the data according to the input:
                               plot2_data_conti <- subset(dat_ii,
                               conti %in% input$CONTI_NAME &
-                              ipc_main %in% input$CONTI_IPC &
+                              IPC.title %in% input$CONTI_IPC &
                               abs_rel %in%  input$CONTI_ABS_REL)
      
 
