@@ -10,7 +10,8 @@ cat("26: Create data for Section III.:
 library("tidyverse")
 library("data.table")
 library("countrycode")
-library("stringi") 
+library("stringi")
+library("OECD")
 
 # packages for gender classification -------------------------------------------
 library("keras")
@@ -34,21 +35,23 @@ print("Directories are set and packages are loaded")
 ############ Load data sets ###########
 #######################################
 
-## Load data on technology field -----------------------------------------------
-q_new <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds")) %>% 
-  distinct(p_key, tech_field) %>% 
-  mutate(p_key = as.character(p_key))
+## Load data on gender shares of university graduates --------------------------
+grad_dat <- read.csv(paste0(getwd(), "/section_III/oecd_graduates.csv"))
+unique(plot_data$FIELD)
+total_year <- grad_dat %>% filter(SEX == "T") %>% 
+  select(COUNTRY, FIELD, Field, ISC11_LEVEL, YEAR, Value) %>%
+  rename(Total = Value)
+grad_dat <- grad_dat %>% filter(SEX == "F") %>% 
+  select(COUNTRY, SEX, FIELD, ISC11_LEVEL, YEAR, Value)
+grad_dat <- merge(grad_dat, total_year, 
+                  by = c("COUNTRY", "FIELD", "ISC11_LEVEL", "YEAR"),
+                  all.x = TRUE)
+grad_dat <- mutate(grad_dat, female_share = Value / Total)
+grad_dat <- grad_dat[is.nan(grad_dat$female_share) == FALSE &
+                       is.na(grad_dat$female_share) == FALSE, ]
 
-## Load regions of patents' inventors ------------------------------------------
-# firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg.rds")) 
-# firm_reg <- distinct(firm_reg, p_key, organization, country, .keep_all = T)
-# firm_reg <- dplyr::rename(firm_reg, ctry_code = country)
-# setDT(firm_reg)[, share_firm := 1/.N, .(p_key)] #Q: Should we divide an invention by the number of regions or should we attribute each region a value to 1?
-# firm_reg <- mutate(firm_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"))
-# firm_reg <- left_join(firm_reg, q_new, by = c("p_key"))
-
-## Load names and regions of patents' inventors --------------------------------
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg.rds")) 
+## Load names and regions of pharma patents' inventors -------------------------
+inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_16.rds")) 
 inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
 setDT(inv_reg)[, share_inv := 1/.N, .(p_key)] 
 inv_reg <- mutate(inv_reg, 
@@ -75,11 +78,6 @@ gender <- gender %>%
 gender <- subset(gender, gender %in% c("0", "1"))
 inv_reg <- left_join(x = inv_reg, y = gender, by = "inventor_id")
 paste("number of inventors with gender information:", nrow(gender))
-
-# subset to unique inventors...
-# USPTO have inventor_id but European dont have one
-# check with CR if these are all unique inventors!!
-# if not, check for multiple matches
 
 print("All necessary data is loaded")
 
@@ -161,6 +159,29 @@ print("Gender information has been added.")
 #########################################################
 ## Analysis: Gender & patenting in different regions   ##
 #########################################################
+
+plot_data <- filter(grad_dat, FIELD %in% "F051",
+                    ISC11_LEVEL %in% paste0("L", 7),
+                    COUNTRY %in% c("CHE", "SWE", "USA", "FRA", "DEU", "DNK", "AUT",
+                                   "NED", "GBR", "NOR", "BEL", "ITA", "ESP"))
+print("Female share of PhD graduates (average 2010-2017):")
+plot_data %>% group_by(COUNTRY, Field) %>%
+  summarise(female_share = sum(Value)/sum(Total),
+            n_year = n()) %>%
+  arrange(desc(female_share))
+
+plot_data$Field <- paste(plot_data$FIELD, plot_data$Field)
+ggplot(plot_data, aes(x = YEAR, y = female_share, color = COUNTRY))+
+  geom_line()
+#  facet_grid(~COUNTRY)
+
+# => lets check out the ratio between these shares and the female patent inventor shares
+# => the worse it is, the more problems does a country have to "turn" female graduates into innovators
+
+
+
+
+
 
 # predicted gender + existing gender
 tmp <- inv_reg[gender_idx, ]
