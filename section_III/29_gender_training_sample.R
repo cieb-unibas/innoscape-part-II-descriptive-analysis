@@ -39,7 +39,7 @@ p_year <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created d
   mutate(p_key = as.character(p_key))  %>% 
   dplyr::distinct(p_key, p_year)
 
-## load data on gender of USPTO patents inventors -----------------------------
+## Load data on gender of USPTO patents inventors -----------------------------
 gender_path <- paste0(mainDir1,"/raw data/inventor_gender.tsv")
 gender <- read.table(gender_path, sep = "\t", header = TRUE, quote = "")
 gender$male <- as.character(gender$male)
@@ -65,7 +65,7 @@ print("All necessary datas is loaded")
 ## Create a sample for training a classification model ##
 #########################################################
 
-## Balance origin and gender in the sample
+## Balance origin and gender in the sample -----------------------------
 # 1) The ratio between male and female names is strongly unbalanced:
 prop.table(table(gender$gender))*100
 # => create a 50-50 sample on men and women
@@ -85,7 +85,7 @@ subset(gender, conti == "Oceania") %>% sample_n(15)
 # 1) upsample female names to 50%
 # 2) upsample Europe to 27.5%, downsample Americas to 44%, fix Asia at 27.5%, Africa/Oceania at 1%
 
-## create the dataset
+## create the dataset  -----------------------------------------------------
 train_set_fun <- function(df = gender, N = 100000, gender_ratio = 0.5,
                           frac_Americas = 0.44, frac_Europe = 0.275, 
                           frac_Asia = 0.275, frac_RoW = 0.01){
@@ -129,7 +129,7 @@ train_set_fun <- function(df = gender, N = 100000, gender_ratio = 0.5,
     sample_n(gender_ratio * frac_RoW * N)
   df_out <- bind_rows(df_out, tmp)
   
-  # TEST if N = 100'000 and throw an error if it does not match
+  # TEST if the df has length == N and throw an error if it does not match
   if(nrow(df_out) != N){stop("Size of the data.frame does not correspond to N")}
   
   # shuffle the data.frame
@@ -147,7 +147,7 @@ prop.table(table(gender_train$gender))*100
 prop.table(table(gender_train$conti))*100
 paste("number of observations:", nrow(gender_train))
 
-## save the sample for training 
+## save the sample for training  ------------------------------------------ 
 # saveRDS(gender_train, 
 #         paste0(getwd(),"/section_III/gender_training_sample.rds"))
 

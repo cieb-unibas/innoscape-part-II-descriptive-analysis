@@ -22,14 +22,16 @@ library("reticulate")
 library("jsonlite")
 library("httr")
 
-# directories ------------------------------------------------------------------
-mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
-
 # Version of OECD-data ---------------------------------------------------------
 # vers <- c("201907_")
 vers <- c("202001_")
 
-print("Directories are set and packages are loaded")
+# directories ------------------------------------------------------------------
+mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
+if(substr(getwd(), nchar(getwd())-38, nchar(getwd())) != "/innoscape-part-II-descriptive-analysis"){
+  print("make sure your working directory is the GitHub repository. Please specify with setwd().")}else{
+    print("Directories are set and packages are loaded")}
+
 
 #######################################
 ############ Load data sets ###########
@@ -37,7 +39,7 @@ print("Directories are set and packages are loaded")
 
 ## Load data on gender shares of university graduates --------------------------
 grad_dat <- read.csv(paste0(getwd(), "/section_III/oecd_graduates.csv"))
-unique(plot_data$FIELD)
+names(grad_dat)[1] <- "COUNTRY"
 total_year <- grad_dat %>% filter(SEX == "T") %>% 
   select(COUNTRY, FIELD, Field, ISC11_LEVEL, YEAR, Value) %>%
   rename(Total = Value)
@@ -46,6 +48,7 @@ grad_dat <- grad_dat %>% filter(SEX == "F") %>%
 grad_dat <- merge(grad_dat, total_year, 
                   by = c("COUNTRY", "FIELD", "ISC11_LEVEL", "YEAR"),
                   all.x = TRUE)
+total_year <- NULL
 grad_dat <- mutate(grad_dat, female_share = Value / Total)
 grad_dat <- grad_dat[is.nan(grad_dat$female_share) == FALSE &
                        is.na(grad_dat$female_share) == FALSE, ]
@@ -163,17 +166,21 @@ print("Gender information has been added.")
 plot_data <- filter(grad_dat, FIELD %in% "F051",
                     ISC11_LEVEL %in% paste0("L", 7),
                     COUNTRY %in% c("CHE", "SWE", "USA", "FRA", "DEU", "DNK", "AUT",
-                                   "NED", "GBR", "NOR", "BEL", "ITA", "ESP"))
-print("Female share of PhD graduates (average 2010-2017):")
+                                   "NED", "GBR", "NOR", "BEL", "ITA", "ESP", "FIN"))
+print("Female share of graduates (average 2010-2017):")
 plot_data %>% group_by(COUNTRY, Field) %>%
-  summarise(female_share = sum(Value)/sum(Total),
+  summarise(total_graduates = sum(Total),
+            female_share = sum(Value)/sum(Total),
             n_year = n()) %>%
   arrange(desc(female_share))
 
+# plot
 plot_data$Field <- paste(plot_data$FIELD, plot_data$Field)
 ggplot(plot_data, aes(x = YEAR, y = female_share, color = COUNTRY))+
-  geom_line()
-#  facet_grid(~COUNTRY)
+  geom_line()+geom_point()+
+  ylim(c(0.3, 0.8))+
+  ggtitle(paste0("Female share of graduates in ", plot_data$Field[1], 
+                 " (ISC-Level ", plot_data$ISC11_LEVEL[1],")"))
 
 # => lets check out the ratio between these shares and the female patent inventor shares
 # => the worse it is, the more problems does a country have to "turn" female graduates into innovators
