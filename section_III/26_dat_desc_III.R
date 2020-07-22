@@ -98,26 +98,21 @@ special_chars <- unique(special_chars)[-1]
 special_chars
 
 # create a replacement vector and replace special_chars
-repl_vec <- c("u", "o", "e", "a", "o", "i", "e", "c", "a", "o", "u",
-              "a", "i", "u", "o", "o", "n", "e", "ae", "i", "a", "a", "a", "a", "e", "b", "l", "th")
-# repl_vec <- c("o", "e", "u", "a", "o", "i", "o", "c", "e", "i", "e", "n", "o", "a", "i", "a", "u", "a", "a",
-#              "o", "ae", "a", "u", "e", "o", "y", "u", "a", "i", "y", "d", "s", "s", "n", "l", "s", "ss",
-#              "d", "z", "l", "e", "z")
+repl_vec <- c("e", "ue", "o", "oe", "a", "o", "i", "e", "i", "a", "c", "a", "ae",
+              "u", "o", "o", "i", "e", "a", "n", "a", "e", "o", "a", "u", 
+              "ae", "u", "d", "l", "i", "b")
+#repl_vec <- c("oe", "e")
 data.frame(spec = special_chars, rep = repl_vec)
 
 # drop NA's from sample
 NA_obs <- which(is.na(first_names) == TRUE)
-first_names <- first_names[-NA_obs]
-gender <- gender[-NA_obs, ]
-gender_idx <- rownames(gender)
+if(length(NA_obs) > 0){
+  first_names <- first_names[-NA_obs]
+  gender <- gender[-NA_obs, ]
+  gender_idx <- rownames(gender)
+}
 if(length(first_names[is.na(first_names) == TRUE]) != 0){
   warning("Some first names in the sample are NA")}else{paste("No first names are NA")}
-
-## define a random sub-sample for analysis (save computing time)
-# keep_obs <- sample(nrow(gender), 100000)
-# first_names <- first_names[keep_obs]
-# gender <- gender[keep_obs, ]
-# gender_idx <- rownames(gender) # keep index positions from "inv_reg"
 
 ## clean special characters from "first_names"
 first_names <- unlist(lapply(
@@ -139,17 +134,30 @@ first_names_encoded <- encode_chars(names = first_names,
                                     seq_max = max_char, 
                                     char_dict = char_dict,
                                     n_chars = n_chars)
+dim(first_names_encoded)
 print("First names encoded as 3D-tensors.")
 
 ## load the trained LSTM model -------------------------------------------------
 gender_model <- load_model_hdf5(
   paste0(mainDir1, "/created_models/gender_classification_LSTM_model.h5")
-  )
+  ) # if these throws an error, reload keras, tensorflow and reticulate and retry
 
 ## predict the inventors' gender ----- -----------------------------------------
 gender$gender <- gender_model %>% predict_classes(first_names_encoded)
 inv_reg[gender_idx, "gender"] <- gender$gender
 print("Gender information added to inventor data")
+
+# ## Robustness tests:
+# dat <- inv_reg[!rownames(inv_reg) %in% gender_idx, ]
+# set.seed(22072020)
+# dat <- dat[sample(nrow(dat), 1000), c("name", "gender")]
+# first_names <- stri_extract_first_words(dat$name)
+# # re-run the cleaning and encoding code above
+# dat$pred_gender <- as.numeric(gender_model %>% predict_classes(first_names_encoded))
+# dat$correct <- dat$gender == dat$pred_gender
+# dat[dat$correct == FALSE, ]
+
+
 
 ####################################################
 ## Analysis: Gender shares among patent inventors ##
@@ -159,18 +167,22 @@ print("Gender information added to inventor data")
 inv_reg <- inv_reg[is.na(inv_reg$gender) == FALSE, ] # drop NA's
 inv_reg$gender <- as.numeric(inv_reg$gender)
 inv_reg$p_year <- as.numeric(inv_reg$p_year)
+dat <- inv_reg
+
+## For robustness checks: subset to inventors with observed gender status
+dat <- inv_reg[!rownames(inv_reg) %in% gender_idx, ]
 
 ## overall gender shares among patent inventors: --------------------------------
-table(inv_reg$gender)/nrow(inv_reg)
+table(dat$gender)/nrow(dat) # => slightly lower gender share with USPTO inventors only
 
 ## share of female inventors per country and p_year ----------------------------
-female_inv_shares <- inv_reg %>% 
+female_inv_shares <- dat %>% 
   group_by(Ctry_code, p_year) %>%
   summarise(total_inventors = n(),
             female_inventor_share = 1 - sum(gender, na.rm = TRUE) / total_inventors)
-female_inv_shares[287, ] # example
-cat("In 2006, 468 Swiss residents contributed to a patent. 
-Among those 19% were female.")
+female_inv_shares[318, ] # example
+cat("In 2005, 834 Swiss residents contributed to a patent. 
+Among those 20.5% were female.")
 
 # Plot shares per country over time:
 plot_data <- female_inv_shares %>%
@@ -234,7 +246,8 @@ plot_data <- gender_dat %>%
          ISC11_LEVEL == "L8",
          FIELD == "F051",
          p_year >= 1990,
-         total_graduates > 50)
+         total_graduates > 50,
+         total_inventors > 30)
 plot_data$Field <- paste(plot_data$FIELD, plot_data$Field)
 ggplot(plot_data, aes(x = p_year, y = inventor_graduate_ratio, color = Ctry_code))+
   geom_line()+geom_point()+
@@ -248,7 +261,7 @@ ggplot(plot_data, aes(x = p_year, y = inventor_graduate_ratio, color = Ctry_code
 #########################################################
 
 print("Number of unique inventors:")
-inv_reg %>%
+dat %>%
   distinct(name, .keep_all = TRUE) %>%
   nrow()
 
@@ -307,7 +320,7 @@ inv_reg %>%
 # https://v2.namsor.com/NamSorAPIv2/index.html
 
 api_namsor <- "1f0a964700cbe94d6052afbab80fd8d7"
-test_df <- inv_reg[sample(nrow(inv_reg), 10), ]
+test_df <- dat[sample(nrow(dat), 10), ]
 
 #query_names <- c("Matthias Niggli", "Christian Rutzer", "Dragan Filimonovic")
 query_names <- test_df$name
