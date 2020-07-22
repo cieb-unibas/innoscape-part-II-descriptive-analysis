@@ -28,9 +28,13 @@ inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"))
 inv_reg <- mutate(inv_reg, share_inv = 1) # if patent belongs to different locations -> each location gets value of 1. This takes into account international collaboration. 
 
+## Add list of IPC per patent created in 08b_p_key_ipc.R
+ipc <- readRDS(paste0(mainDir1, "/created data/ipc_list.rds"))%>% dplyr::select(-ipc_main)
+inv_reg <- left_join(inv_reg, ipc, by = c("p_key"))
+
 ## Load name of IPC
-ipc <- read.csv2(paste0(mainDir1, "/raw data/ipc_4_digit.csv"))
-inv_reg <- left_join(inv_reg, ipc, by = c("ipc_main" = "IPC"))
+ipc_name <- read.csv2(paste0(mainDir1, "/raw data/ipc_3_digit.csv")) %>% dplyr::select(Code.1, Description)
+inv_reg <- left_join(inv_reg, ipc_name, by = c("ipc_3" = "Code.1"))
 
 ## Use backward citations to classify world-class patents
 q <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds"))
@@ -47,22 +51,22 @@ inv_reg <- left_join(inv_reg, q, by = c("p_key"))
 ## Function to calculate number of patents per geographic entity
 num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
   inv_reg <- filter(inv_reg, tech_field %in% tech_field_start)
-  inv_reg <- inv_reg[!duplicated(inv_reg[, c("p_key", geo_level)]), ]
+  inv_reg <- inv_reg[!duplicated(inv_reg[, c("p_key", "ipc_3_list", geo_level)]), ]
   
   ## find important countries and regions
   imp <- aggregate(as.formula(paste0("share_inv ~", geo_level)), data = filter(inv_reg, p_year > 1989), FUN = sum)
   imp <- arrange(imp, -share_inv) 
   
   if(world_class == "yes"){
-    form <- as.formula(paste0("share_inv ~ cit_cat_y_5 + p_year + ipc_main + IPC.title + ", geo_level, " + ", geo_name))
+    form <- as.formula(paste0("share_inv ~ cit_cat_y_5 + p_year + ipc_main + Description + ", geo_level, " + ", geo_name))
     form_agg <- as.formula(paste0("share_inv ~ cit_cat_y_5 + p_year + ", geo_level, " + ", geo_name))
   }else{
-    form <- as.formula(paste0("share_inv ~ p_year + ipc_main + IPC.title + ", geo_level, " + ", geo_name))
+    form <- as.formula(paste0("share_inv ~ p_year + ipc_main + Description + ", geo_level, " + ", geo_name))
     form_agg <- as.formula(paste0("share_inv ~ p_year + ", geo_level, " + ", geo_name))
   }
   
   reg     <- aggregate(form, FUN = sum, data = inv_reg) %>% mutate(tech_field = tech_field_start)
-  reg_agg <- aggregate(form_agg, FUN = sum, data = inv_reg) %>% mutate(tech_field = tech_field_start)
+  reg_agg <- aggregate(form_agg, FUN = sum, data = inv_reg[!duplicated(inv_reg[, c("p_key", geo_level)]), ]) %>% mutate(tech_field = tech_field_start)
   
   if(geo_level == "ctry_code"){
     list_geo <- imp[1:15, geo_level]
@@ -77,7 +81,7 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
   reg <- reg %>% subset(p_year > 1989 & get(geo_level) %in% list_geo)
   
   reg_agg <- subset(reg_agg, p_year > 1989 & get(geo_level) %in% list_geo)
-  reg_agg <- mutate(reg_agg, ipc_main = "all", IPC.title = "all")
+  reg_agg <- mutate(reg_agg, ipc_main = "all", Description = "all")
   setDT(reg_agg)[, n_ipc := sum(share_inv), .(ipc_main)]
   
   output <- rbind.fill(reg, reg_agg) %>% mutate(p_year = as.numeric(as.character(p_year)))
@@ -117,6 +121,8 @@ num_pat_16_4 <- filter(num_pat_16_4, geo != "world" & ipc_main != "all")
 num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4) 
 num_pat_16 <- saveRDS(num_pat_16, paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
+
+
 
 ##################################################
 ## Get inventors shares for world class patents ##

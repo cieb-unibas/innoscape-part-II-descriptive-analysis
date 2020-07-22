@@ -40,7 +40,7 @@ library(data.table)
 ```{r, echo = F}
 # Load data
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, rank < 20)
+dat_ii <- filter(dat_ii, ipc_main == "all")
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```
@@ -89,7 +89,7 @@ pickerInput(
    inputId = "CONTI_ABS_REL",
    label = "Choose absolut or relative",
    choices = unique(na.omit(dat_ii$abs_rel)),
-   selected = "rel_1990",
+   selected = "abs",
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -103,7 +103,7 @@ pickerInput(
 pickerInput(
    inputId = "CONTI_IPC",
    label = "Choose IPC",
-   choices = unique(dat_ii$IPC.title),
+   choices = unique(dat_ii$ipc_main),
    selected = "all",
    options = list(
      `actions-box` = TRUE,
@@ -177,7 +177,7 @@ pickerInput(
    inputId = "CTRY_ABS_REL",
    label = "Choose absolut or relative",
     choices = unique(na.omit(dat_ii$abs_rel)),
-   selected = "rel_1990",
+   selected = "abs",
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -312,7 +312,7 @@ pickerInput(
    inputId = "REGIO_ABS_REL",
    label = "Choose absolut or relative",
    choices = unique(na.omit(dat_ii$abs_rel)),
-   selected = "rel_1990",
+   selected = "abs",
    options = list(
      `actions-box` = TRUE,
      size = 10,
