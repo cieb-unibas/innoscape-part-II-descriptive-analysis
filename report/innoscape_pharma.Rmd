@@ -40,7 +40,7 @@ library(data.table)
 ```{r, echo = F}
 # Load data
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, ipc_main == "all")
+dat_ii <- filter(dat_ii, n_ipc > 1000)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```
@@ -103,7 +103,7 @@ pickerInput(
 pickerInput(
    inputId = "CONTI_IPC",
    label = "Choose IPC",
-   choices = unique(dat_ii$ipc_main),
+   choices = unique(dat_ii$Description),
    selected = "all",
    options = list(
      `actions-box` = TRUE,
@@ -124,13 +124,13 @@ renderPlotly({
          # subset the data according to the input:
                               plot2_data_conti <- subset(dat_ii,
                               conti %in% input$CONTI_NAME &
-                              IPC.title %in% input$CONTI_IPC &
+                              Description %in% input$CONTI_IPC &
                               abs_rel %in%  input$CONTI_ABS_REL)
      
 
           # make the plot
                  abs <- ggplotly(
-                 ggplot(data = plot2_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+                 ggplot(data = plot2_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -193,7 +193,7 @@ pickerInput(
  pickerInput(
    inputId = "CTRY_IPC",
    label = "Choose IPC",
-   choices = unique(dat_ii$ipc_main),
+   choices = unique(dat_ii$ipc_3),
    selected = "all",
    options = list(
      `actions-box` = TRUE,
@@ -213,14 +213,14 @@ renderPlotly({
 
                               plot2_data_ctry <- subset(dat_ii,
                               ctry_name %in% input$CTRY_NAME &
-                              ipc_main %in% input$CTRY_IPC & 
+                              ipc_3 %in% input$CTRY_IPC & 
                               abs_rel %in%  input$CTRY_ABS_REL)
   
     
                               
          # make the plot
                  abs <- ggplotly(
-                 ggplot(data = plot2_data_ctry, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+                 ggplot(data = plot2_data_ctry, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -239,7 +239,7 @@ renderPlotly({
        #  
        # if(input$CTRY_ABS_REL == "absolute"){
        #           world <- ggplotly(
-       #           ggplot(data = plot2_data_ctry, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+       #           ggplot(data = plot2_data_ctry, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
        #           geom_point(alpha = 0.7) +
        #           geom_line() +
        #           xlab("\nPriority Year")+
@@ -258,7 +258,7 @@ renderPlotly({
        #           } else {
        #             
        #           world <- ggplotly(
-       #           ggplot(data = plot2_data_ctry, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_main)) +
+       #           ggplot(data = plot2_data_ctry, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_3)) +
        #           geom_point(alpha = 0.7) +
        #           geom_line() +
        #           # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -328,7 +328,7 @@ pickerInput(
  pickerInput(
    inputId = "REGIO_IPC",
    label = "Choose IPC",
-   choices = unique(dat_ii$ipc_main),
+   choices = unique(dat_ii$ipc_3),
    selected = "all",
    options = list(
      `actions-box` = TRUE,
@@ -346,7 +346,7 @@ pickerInput(
 ```{r, echo = F}
 plot2_data <- reactive({plot2_data <- subset(dat_ii,
                               Up_reg_label %in% input$REGIO_NAME &
-                              ipc_main %in% input$REGIO_IPC &
+                              ipc_3 %in% input$REGIO_IPC &
                               abs_rel %in%  input$REGIO_ABS_REL)})
 ```
 
@@ -357,7 +357,7 @@ plot2_data <- reactive({plot2_data <- subset(dat_ii,
 renderPlotly({
          # make the plot
                  abs <- ggplotly(
-                 ggplot(data = plot2_data(), aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+                 ggplot(data = plot2_data(), aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -376,7 +376,7 @@ renderPlotly({
 
        # if(input$REGIO_ABS_REL == "absolute"){
        #           world <- ggplotly(
-       #           ggplot(data = plot2_data, aes(x = p_year, y= share_inv, color = geo, shape = ipc_main)) +
+       #           ggplot(data = plot2_data, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
        #           geom_point(alpha = 0.7) +
        #           geom_line() +
        #           xlab("\nPriority Year")+
@@ -395,7 +395,7 @@ renderPlotly({
        #           } else {
        # 
        #           world <- ggplotly(
-       #           ggplot(data = plot2_data, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_main)) +
+       #           ggplot(data = plot2_data, aes(x = p_year, y= 1/share_inv, color = geo, shape = ipc_3)) +
        #           geom_point(alpha = 0.7) +
        #           geom_line() +
        #           # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
