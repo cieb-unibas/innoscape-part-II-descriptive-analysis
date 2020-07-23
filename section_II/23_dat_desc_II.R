@@ -26,7 +26,7 @@ inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, 
 inv_reg <- filter(inv_reg, is.na(tech_field) != T)
 inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"), Up_reg_label = paste0(ctry_code, " - ", Up_reg_label))
-inv_reg <- mutate(inv_reg, share_inv = 1) # if patent belongs to different locations -> each location gets value of 1. This takes into account international collaboration. 
+inv_reg <- setDT(inv_reg)[, share_inv := 1/.N, .(p_key)]
 
 ## Add list of IPC per patent created in 08b_p_key_ipc.R
 ipc <- readRDS(paste0(mainDir1, "/created data/ipc_list.rds"))%>% dplyr::select(-ipc_main)
@@ -48,10 +48,12 @@ inv_reg <- left_join(inv_reg, q, by = c("p_key"))
 ## b.	Swiss Pharma in the Domestic Economy (Why Pharma?) #
 ##########################################################
 ## Function to calculate number of patents per geographic entity
-num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
+num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class, geo_value = "no"){
   inv_reg <- filter(inv_reg, tech_field %in% tech_field_start)
-  inv_reg <- inv_reg[!duplicated(inv_reg[, c("p_key", "ipc_3", geo_level)]), ]
-  
+  if(geo_value == "yes"){
+  inv_reg <- mutate(inv_reg, share_inv = 1) # if patent belongs to different locations -> each location gets value of 1. This takes into account international collaboration. 
+  inv_reg <- inv_reg[!duplicated(inv_reg[, c("p_key", "ipc_3", geo_level)]), ] 
+  }
   ## find important countries and regions
   imp <- aggregate(as.formula(paste0("share_inv ~", geo_level)), data = filter(inv_reg, p_year > 1989), FUN = sum)
   imp <- arrange(imp, -share_inv) 
@@ -84,15 +86,17 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
   setDT(reg_agg)[, n_ipc := sum(share_inv), .(ipc_3)]
   
   output <- rbind.fill(reg, reg_agg) %>% mutate(p_year = as.numeric(as.character(p_year)))
+  output$geo_one_inv <- geo_value
   return(output)
 }
 
 ################################################
 ## Get inventors shares of patents in general ##
 ################################################
-num_pat_conti <- num_pat_geo("conti", "conti", tech_field_start, "no") 
-num_pat_ctry <- num_pat_geo("ctry_code", "ctry_name", tech_field_start, "no") 
-num_pat_reg <- num_pat_geo("Up_reg_code", "Up_reg_label", tech_field_start, "no") 
+do.call(rbind, lapply(c("no", "yes"), function(geo_one_inv){
+num_pat_conti <- num_pat_geo("conti", "conti", tech_field_start, "no", geo_one_inv) 
+num_pat_ctry <- num_pat_geo("ctry_code", "ctry_name", tech_field_start, "no", geo_one_inv) 
+num_pat_reg <- num_pat_geo("Up_reg_code", "Up_reg_label", tech_field_start, "no", geo_one_inv) 
 num_pat_16 <- rbind.fill(num_pat_conti, num_pat_ctry, num_pat_reg) %>% mutate(geo = ifelse(is.na(conti) == T, ifelse(is.na(ctry_name) == T, Up_reg_label, ctry_name), conti), abs_rel = "abs") 
 
 ## Create some relative outputs used in innoscape_pharma.Rmd
@@ -117,8 +121,10 @@ num_pat_16_3 <- filter(num_pat_16_3, geo != "world" & ipc_3 != "all")
 num_pat_16_4 <- filter(num_pat_16_4, geo != "world" & ipc_3 != "all")
 
 ## Add all data together
-num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4) 
-num_pat_16 %>% saveRDS( paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
+num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4)
+})
+) %>% 
+saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
 
@@ -126,9 +132,10 @@ num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descr
 ##################################################
 ## Get inventors shares for world class patents ##
 ##################################################
-world_class_conti <- num_pat_geo("conti", "conti", tech_field_start, "yes") 
-world_class_ctry <- num_pat_geo("ctry_code", "ctry_name", tech_field_start, "yes") 
-world_class_reg <- num_pat_geo("Up_reg_code", "Up_reg_label", tech_field_start, "yes") 
+do.call(rbind, lapply(c("no", "yes"), function(geo_one_inv){
+world_class_conti <- num_pat_geo("conti", "conti", tech_field_start, "yes", geo_one_inv) 
+world_class_ctry <- num_pat_geo("ctry_code", "ctry_name", tech_field_start, "yes", geo_one_inv) 
+world_class_reg <- num_pat_geo("Up_reg_code", "Up_reg_label", tech_field_start, "yes", geo_one_inv) 
 world_class_16 <- rbind.fill(world_class_conti, world_class_ctry, world_class_reg) %>% mutate(geo = ifelse(is.na(conti) == T, ifelse(is.na(ctry_name) == T, Up_reg_label, ctry_name), conti), abs_rel = "abs") 
 
 ## Create some relative outputs used in innoscape_pharma.Rmd
@@ -152,7 +159,9 @@ world_class_16_4 <- filter(world_class_16_4, geo != "world"& ipc_3 != "all")
 
 ## Add all data together
 world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3, world_class_16_4) 
-world_class_16 %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
+})
+) %>% 
+saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
 world_class_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
 
 
