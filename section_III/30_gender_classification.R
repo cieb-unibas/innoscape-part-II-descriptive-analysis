@@ -30,7 +30,7 @@ set.seed(06072020)
 dat <- readRDS(paste0(mainDir1,"/created data/gender_training_sample.rds"))
 dat <- dat %>% select(name, gender) # only use names as inputs
 dat <- dat[sample(nrow(dat)), ] # shuffle the data
-dat$name <- tolower(dat$name) # reduce the number of features.
+dat$name <- tolower(dat$name) # reduce the number of features
 
 ## first names only ------------------------------------------------------------
 # Option 1: only keep first word
@@ -60,22 +60,22 @@ lapply(special_chars, function(x){
 ## define the vocabulary based on all characters in the names ------------------
 char_dict <- NULL
 
-# find all the unique characters
+# find all unique characters in the sample
 for(i in 1:length(dat$name)){
   chars <- unlist(str_extract_all(dat$name[i], "[:print:]"))
   chars <- unique(chars)
   char_dict <- c(char_dict, chars[!chars %in% char_dict])
 }
 
-# evaluate if there are non-standard letters and replace them
-letters %in% char_dict # all standard letters are in the vocabulary
-char_dict[which(!char_dict %in% letters)]
+# evaluate if there remain non-standard letters and replace them
+letters %in% char_dict # all standard letters are included in the vocabulary
+char_dict[which(!char_dict %in% letters)] # find characters that are not standard and replace them
 dat$name <- unlist(lapply(dat$name, function(x) stri_replace_all_fixed(str = x,
                                                pattern = c("é", "í", "å"),
                                                replacement = c("e", "i", "a"),
                                                vectorize_all = FALSE)))
 
-# define final vocabulary and save for out-of-sample predictions
+# define final vocabulary
 char_dict <- c(sort(char_dict),
 #               " ", # remove when using the first word only
                "END")
@@ -95,15 +95,14 @@ y_dat <- as.numeric(dat$gender)
 source(paste0(getwd(), "/section_III/names_encoding_function.R"))
 
 # choose sequence length -------------------------------------------------------
-
-# distribution of the number of characters per name
 hist(nchar(dat$name), main = "", 
-     xlab = "Number of characters per name")
+     xlab = "Number of characters per name") # highlight name length distribution
 n_chars <- length(char_dict) # number of unqiue characters
 max_char <- max(nchar(dat$name)) # maximum character length of names in the sample
 
+# Options:
 # 1) use "max_char" and padding with an "END" token indicating the end of the name
-# 2) truncate at e.g. 20 characters and "END" token indicating the end of the name
+# 2) truncate indiviudally e.g. at 20 characters and use "END" token indicating the end of the name
 
 # test:
 encode_chars(names = "asterix", 
@@ -165,7 +164,7 @@ hist <- model %>% fit(
 
 plot(hist)
 
-## save the model (C) --------------------------------------------------------------
+## save the model --------------------------------------------------------------
 # model %>% save_model_hdf5("/scicore/home/weder/GROUP/Innovation/01_patent_data/created_models/gender_classification_LSTM_model.h5")
 
 ## evaluate the model ----------------------------------------------------------

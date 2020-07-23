@@ -10,7 +10,7 @@ encode_chars <- function(names, seq_max, char_dict, n_chars){
   N <- length(names)
   END_idx <- which(char_dict == "END")
   
-  # Create 3D-Tensor with shape (No. of samples, max. name length, number of characters):
+  # Create 3D-Tensor with shape (No. of samples, maximum name length, number of characters):
   tmp <- array(rep(0, N * n_chars * seq_max), 
                dim = c(N, seq_max, n_chars)
   ) 

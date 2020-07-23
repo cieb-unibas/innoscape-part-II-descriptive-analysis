@@ -22,14 +22,16 @@ library("reticulate")
 library("jsonlite")
 library("httr")
 
-# directories ------------------------------------------------------------------
-mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
-
 # Version of OECD-data ---------------------------------------------------------
 # vers <- c("201907_")
 vers <- c("202001_")
 
-print("Directories are set and packages are loaded")
+# directories ------------------------------------------------------------------
+mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
+if(substr(getwd(), nchar(getwd())-38, nchar(getwd())) != "/innoscape-part-II-descriptive-analysis"){
+  print("make sure your working directory is the GitHub repository. Please specify with setwd().")}else{
+    print("Directories are set and packages are loaded")}
+
 
 #######################################
 ############ Load data sets ###########
@@ -37,32 +39,24 @@ print("Directories are set and packages are loaded")
 
 ## Load data on gender shares of university graduates --------------------------
 grad_dat <- read.csv(paste0(getwd(), "/section_III/oecd_graduates.csv"))
-unique(plot_data$FIELD)
+names(grad_dat)[1] <- "COUNTRY"
 total_year <- grad_dat %>% filter(SEX == "T") %>% 
   select(COUNTRY, FIELD, Field, ISC11_LEVEL, YEAR, Value) %>%
-  rename(Total = Value)
+  rename(total_graduates = Value)
 grad_dat <- grad_dat %>% filter(SEX == "F") %>% 
   select(COUNTRY, SEX, FIELD, ISC11_LEVEL, YEAR, Value)
 grad_dat <- merge(grad_dat, total_year, 
                   by = c("COUNTRY", "FIELD", "ISC11_LEVEL", "YEAR"),
                   all.x = TRUE)
-grad_dat <- mutate(grad_dat, female_share = Value / Total)
-grad_dat <- grad_dat[is.nan(grad_dat$female_share) == FALSE &
-                       is.na(grad_dat$female_share) == FALSE, ]
+total_year <- NULL
+grad_dat <- mutate(grad_dat, female_share_graduates = Value / total_graduates)
+grad_dat <- grad_dat[is.nan(grad_dat$female_share_graduates) == FALSE &
+                       is.na(grad_dat$female_share_graduates) == FALSE, ]
+print("Data on university graduates loaded")
 
 ## Load names and regions of pharma patents' inventors -------------------------
 inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_16.rds")) 
-inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
-setDT(inv_reg)[, share_inv := 1/.N, .(p_key)] 
-inv_reg <- mutate(inv_reg, 
-                  conti = countrycode(ctry_code, origin = "eurostat", 
-                                      destination = "continent"), 
-                  ctry_name = countrycode(ctry_code, origin = "eurostat", 
-                                          "country.name.en"))
-inv_reg <- left_join(inv_reg, q_new, by = c("p_key"))
-p_year <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/dat_p_year.rds")  %>% 
-  mutate(p_key = as.character(p_key))  %>% 
-  dplyr::distinct(p_key, p_year)
+print("Names of patent inventors loaded")
 
 ## add data on gender for USPTO patents inventors ------------------------------
 gender_path <- paste0(mainDir1,"/raw data/inventor_gender.tsv")
@@ -73,21 +67,21 @@ gender <- gender %>%
   distinct(disamb_inventor_id_20191231, .keep_all = TRUE) %>%
   rename(inventor_id = disamb_inventor_id_20191231,
          gender = male)
-
-# subset to inventors whose gender is clearly defined and merge to full dataset
-gender <- subset(gender, gender %in% c("0", "1"))
-inv_reg <- left_join(x = inv_reg, y = gender, by = "inventor_id")
+gender <- subset(gender, gender %in% c("0", "1")) # subset to clearly defined gender
 paste("number of inventors with gender information:", nrow(gender))
 
+## merge gender to names
+inv_reg <- left_join(x = inv_reg, y = gender, by = "inventor_id")
 print("All necessary data is loaded")
 
 ##############################################
 ## Assign gender to inventors based on name ##
 ##############################################
 
-# subset to inventors without gender information
+# subset to those inventors without gender information
 gender <- subset(inv_reg, !gender %in% c("1", "0")) %>% select(name, gender)
 gender_idx <- rownames(gender) # keep index positions from "inv_reg"
+print(paste0(nrow(gender)," inventors' gender has to be predicted based on name"))
 
 ## data processing -------------------------------------------------------------
 first_names <- stri_extract_first_words(gender$name) # first names only
@@ -104,33 +98,30 @@ special_chars <- unique(special_chars)[-1]
 special_chars
 
 # create a replacement vector and replace special_chars
-rep_vec <- c("o", "e", "u", "a", "o", "i", "o", "c", "e", "i", "e", "n", "o", "a", "i", "a", "u", "a", "a",
-             "o", "ae", "a", "u", "e", "o", "y", "u", "a", "i", "y", "d", "s", "s", "n", "l", "s", "ss",
-             "d", "z", "l", "e", "z")
-data.frame(spec = special_chars, rep = rep_vec)
+repl_vec <- c("e", "ue", "o", "oe", "a", "o", "i", "e", "i", "a", "c", "a", "ae",
+              "u", "o", "o", "i", "e", "a", "n", "a", "e", "o", "a", "u", 
+              "ae", "u", "d", "l", "i", "b")
+#repl_vec <- c("oe", "e")
+data.frame(spec = special_chars, rep = repl_vec)
 
 # drop NA's from sample
 NA_obs <- which(is.na(first_names) == TRUE)
-first_names <- first_names[-NA_obs]
-gender <- gender[-NA_obs, ]
-gender_idx <- rownames(gender)
+if(length(NA_obs) > 0){
+  first_names <- first_names[-NA_obs]
+  gender <- gender[-NA_obs, ]
+  gender_idx <- rownames(gender)
+}
 if(length(first_names[is.na(first_names) == TRUE]) != 0){
-  warning("NA names in the sample")}else{paste("NA names cleared")}
-
-## define a random sub-sample for analysis (save computing time)
-keep_obs <- sample(nrow(gender), 100000)
-first_names <- first_names[keep_obs]
-gender <- gender[keep_obs, ]
-gender_idx <- rownames(gender) # keep index positions from "inv_reg"
+  warning("Some first names in the sample are NA")}else{paste("No first names are NA")}
 
 ## clean special characters from "first_names"
 first_names <- unlist(lapply(
   first_names, function(x) stri_replace_all_fixed(str = x, 
                                                pattern = special_chars,
-                                               replacement = rep_vec,
+                                               replacement = repl_vec,
                                                vectorize_all = FALSE)))
 
-print("first_names now only consist of 26 lowercase latin letters")
+print("first names now only consist of 26 lowercase latin letters")
 
 ## construct vocabulary and sequence length ------------------------------------
 char_dict <- c(letters, "END") # => this is the vocab that was used for training
@@ -143,90 +134,126 @@ first_names_encoded <- encode_chars(names = first_names,
                                     seq_max = max_char, 
                                     char_dict = char_dict,
                                     n_chars = n_chars)
+dim(first_names_encoded)
+print("First names encoded as 3D-tensors.")
 
 ## load the trained LSTM model -------------------------------------------------
 gender_model <- load_model_hdf5(
   paste0(mainDir1, "/created_models/gender_classification_LSTM_model.h5")
-  )
+  ) # if these throws an error, reload keras, tensorflow and reticulate and retry
 
 ## predict the inventors' gender ----- -----------------------------------------
-
-# gender_prob <- gender_model %>% predict_proba(first_names_encoded)
 gender$gender <- gender_model %>% predict_classes(first_names_encoded)
+inv_reg[gender_idx, "gender"] <- gender$gender
+print("Gender information added to inventor data")
 
-print("Gender information has been added.")
+# ## Robustness tests:
+# dat <- inv_reg[!rownames(inv_reg) %in% gender_idx, ]
+# set.seed(22072020)
+# dat <- dat[sample(nrow(dat), 1000), c("name", "gender")]
+# first_names <- stri_extract_first_words(dat$name)
+# # re-run the cleaning and encoding code above
+# dat$pred_gender <- as.numeric(gender_model %>% predict_classes(first_names_encoded))
+# dat$correct <- dat$gender == dat$pred_gender
+# dat[dat$correct == FALSE, ]
 
-#########################################################
-## Analysis: Gender & patenting in different regions   ##
-#########################################################
 
-plot_data <- filter(grad_dat, FIELD %in% "F051",
-                    ISC11_LEVEL %in% paste0("L", 7),
-                    COUNTRY %in% c("CHE", "SWE", "USA", "FRA", "DEU", "DNK", "AUT",
-                                   "NED", "GBR", "NOR", "BEL", "ITA", "ESP"))
-print("Female share of PhD graduates (average 2010-2017):")
-plot_data %>% group_by(COUNTRY, Field) %>%
-  summarise(female_share = sum(Value)/sum(Total),
+
+####################################################
+## Analysis: Gender shares among patent inventors ##
+####################################################
+
+## clean the data --------------------------------------------------------------
+inv_reg <- inv_reg[is.na(inv_reg$gender) == FALSE, ] # drop NA's
+inv_reg$gender <- as.numeric(inv_reg$gender)
+inv_reg$p_year <- as.numeric(inv_reg$p_year)
+dat <- inv_reg
+
+## For robustness checks: subset to inventors with observed gender status
+dat <- inv_reg[!rownames(inv_reg) %in% gender_idx, ]
+
+## overall gender shares among patent inventors: --------------------------------
+table(dat$gender)/nrow(dat) # => slightly lower gender share with USPTO inventors only
+
+## share of female inventors per country and p_year ----------------------------
+female_inv_shares <- dat %>% 
+  group_by(Ctry_code, p_year) %>%
+  summarise(total_inventors = n(),
+            female_inventor_share = 1 - sum(gender, na.rm = TRUE) / total_inventors)
+female_inv_shares[318, ] # example
+cat("In 2005, 834 Swiss residents contributed to a patent. 
+Among those 20.5% were female.")
+
+# Plot shares per country over time:
+plot_data <- female_inv_shares %>%
+  filter(Ctry_code %in% c("CH", 
+                          "US", "JP",
+                          "DE", "AT", "GB", "NL", "BE"),
+                          # "NO", "SE", "DK", "FI"),
+                          # "FR", "IT", "ES", "PT",
+                          # "CZ", "PL", "SK", "HU"),
+         p_year >= 1990,
+         total_inventors > 30)
+ggplot(plot_data, aes(x = p_year, y = female_inventor_share, color = Ctry_code))+
+  geom_line()+ylim(c(0, 0.7))
+
+## share of female biology graduates between 2010-2017 -------------------------
+female_grad_shares <- filter(grad_dat, FIELD == "F051")
+female_grad_shares %>% filter(ISC11_LEVEL == paste0("L", 8)) %>%
+  group_by(COUNTRY, Field) %>%
+  summarise(total_graduates = sum(total_graduates, na.rm = TRUE),
+            female_share = sum(Value, na.rm = TRUE)/sum(total_graduates, na.rm = TRUE),
             n_year = n()) %>%
+  filter(n_year > 5) %>%
   arrange(desc(female_share))
 
+# plot female shares over time
+plot_data <- female_grad_shares %>%
+  filter(COUNTRY %in% c("CHE",
+                        "USA", "JPN",
+                        # "DEU", "AUT", "GBR", "NLD", "BEL"),
+                        # "NOR", "SWE", "DNK", "FIN"),
+                        "FRA", "ITA", "ESP", "PRT"),
+                        # "CZE", "POL", "SVK", "HUN"),
+         ISC11_LEVEL == "L8",
+         YEAR >= 1990,
+         total_graduates > 50)
 plot_data$Field <- paste(plot_data$FIELD, plot_data$Field)
-ggplot(plot_data, aes(x = YEAR, y = female_share, color = COUNTRY))+
-  geom_line()
-#  facet_grid(~COUNTRY)
+ggplot(plot_data, aes(x = YEAR, y = female_share_graduates, color = COUNTRY))+
+  geom_line()+geom_point()+
+  ylim(c(0.3, 0.8))+
+  ggtitle(paste0("Female share of graduates in ", plot_data$Field[1], 
+                 " (ISC-Level ", plot_data$ISC11_LEVEL[1],")"))
 
-# => lets check out the ratio between these shares and the female patent inventor shares
-# => the worse it is, the more problems does a country have to "turn" female graduates into innovators
+## bring graduates and inventors together
+grad_dat$COUNTRY <- countrycode(grad_dat$COUNTRY, "iso3c", "iso2c")
+grad_dat <- rename(grad_dat, Ctry_code = COUNTRY, p_year = YEAR, 
+                   N_female_graduates = Value)
+grad_dat <- select(grad_dat, - SEX)
+gender_dat <- merge(female_inv_shares, grad_dat, 
+                        by = c("Ctry_code", "p_year"))
+gender_dat <- mutate(gender_dat,
+                     inventor_graduate_ratio = female_inventor_share / female_share_graduates)
 
+# plot ratios over time
+plot_data <- gender_dat %>%
+  filter(Ctry_code %in% c("CH", 
+                          "US",
+                          "DE", "AT", "GB", "NL", "BE"),
+                          # "NO", "SE", "DK", "FI",
+                          # "FR", "IT", "ES", "PT"),
+                          # "CZ", "PL", "SK", "HU"),
+         ISC11_LEVEL == "L8",
+         FIELD == "F051",
+         p_year >= 1990,
+         total_graduates > 50,
+         total_inventors > 30)
+plot_data$Field <- paste(plot_data$FIELD, plot_data$Field)
+ggplot(plot_data, aes(x = p_year, y = inventor_graduate_ratio, color = Ctry_code))+
+  geom_line()+geom_point()+
+  ylim(c(0, 1.5))
 
-
-
-
-
-# predicted gender + existing gender
-tmp <- inv_reg[gender_idx, ]
-tmp$gender <- gender$gender
-t <- inv_reg %>% subset(gender %in% c("1", "0")) %>% sample_n(500000)
-tmp <- rbind(tmp, t)
-t <- NULL
-tmp <- subset(tmp, tech_field == 16)
-table(tmp$gender)/nrow(tmp)
-
-# female inventor shares over time per country
-plot_data <- tmp %>% group_by(ctry_code, p_year) %>%
-  summarise(female_share = 1 - sum(as.numeric(gender))/n(),
-            total_count = n()) %>%
-  select(ctry_code, p_year, total_count, female_share)
-plot_data <- subset(plot_data, ctry_code %in% c("US", "JP", "DE", "FR", "UK") &
-                    as.numeric(p_year) > 1990 & total_count > 10)
-ggplot(plot_data, aes(x = as.numeric(p_year), y = female_share, color = ctry_code))+
-  geom_line()
-
-# how many patents do females invent? how many do males invent?
-plot_data <- tmp %>% group_by(name) %>% summarize(n_patent = n())
-plot_data <- left_join(plot_data, tmp[, c("name", "gender")], by = "name")
-n_females <- nrow(plot_data[plot_data$gender == "0", ])
-n_males <- nrow(plot_data) - n_females
-plot_data <- plot_data %>% group_by(n_patent, gender)%>% summarize(share = n())
-plot_data[plot_data$gender == 0, "share"]/n_females
-plot_data[plot_data$gender == 1, "share"]/n_males
-# => more females only have 1 patent
-
-# is the share of female inventors higher among highly cited patents?
-plot_data <- tmp %>% subset(num_cited == 2)
-table(plot_data$gender) / nrow(plot_data) # => slightly higher
-
-# distribution of female inventors by patent
-plot_data <- tmp %>% group_by(p_key) %>% summarise(
-  female_share = 1 - sum(as.numeric(gender))/n())
-ggplot(plot_data, #[plot_data$female_share > 0, ], 
-       aes(female_share))+
-  geom_density(fill = "#420A68FF", colour = "#420A68FF", alpha = 0.3)
-#  geom_bar(fill = "#420A68FF", colour = "#420A68FF", alpha = 0.3)
-
-# share of patents with female inventors
-plot_data$female <- ifelse(plot_data$female_share > 0, 1, 0)
-table(plot_data$female)/nrow(plot_data)
+## save the dataset for report -------------------------------------------------
 
 
 #########################################################
@@ -234,7 +261,7 @@ table(plot_data$female)/nrow(plot_data)
 #########################################################
 
 print("Number of unique inventors:")
-inv_reg %>%
+dat %>%
   distinct(name, .keep_all = TRUE) %>%
   nrow()
 
@@ -293,7 +320,7 @@ inv_reg %>%
 # https://v2.namsor.com/NamSorAPIv2/index.html
 
 api_namsor <- "1f0a964700cbe94d6052afbab80fd8d7"
-test_df <- inv_reg[sample(nrow(inv_reg), 10), ]
+test_df <- dat[sample(nrow(dat), 10), ]
 
 #query_names <- c("Matthias Niggli", "Christian Rutzer", "Dragan Filimonovic")
 query_names <- test_df$name
