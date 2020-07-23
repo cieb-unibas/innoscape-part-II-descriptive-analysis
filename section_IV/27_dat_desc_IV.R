@@ -9,12 +9,18 @@ require(fuzzyjoin)
 require(plyr)
 
 mainDir1 <- c("/scicore/home/weder/GROUP/Innovation/01_patent_data")
+tech_field_start <- 16
 
 ## Check where the patent inventors from the cluster basel are coming from
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg.rds")) 
+inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, ".rds")) 
 ## Considering only firms having patents applied from Switzerland
-firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg.rds"))
-firm_ch  <- filter(firm_reg, country == "CH" & tech_f == 16 & p_year > 1989) %>% mutate(n = 1)
+firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg_", tech_field_start, ".rds"))
+firm_ch  <- filter(firm_reg, country == "CH" & p_year > 1989) %>% mutate(n = 1)
+
+
+
+
+
 
 inv_ch <- filter(inv_reg, p_key %in% firm_ch$p_key)
 inv_ch   <- setDT(inv_ch)[, num := ifelse(Ctry_code %in% c("CH", "DE", "FR"), 1, 0), .(p_key)]

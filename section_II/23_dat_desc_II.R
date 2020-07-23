@@ -1,4 +1,4 @@
-print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / CR 22.7.2020")
+print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / CR 23.7.2020")
 
 library(tidyr)
 library(dplyr)
@@ -18,9 +18,9 @@ mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
 vers <- c("202001_")
 tech_field_start <- 16
 
-####################################################
-## Load data used afterwards for each calculation ##
-####################################################
+#########################################
+## Load data on geography of inventors ##
+#########################################
 ## Load regions of patents' inventors
 inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, ".rds")) 
 inv_reg <- filter(inv_reg, is.na(tech_field) != T)
@@ -43,7 +43,6 @@ q <- mutate(q, cit_cat_y_5 = case_when(fwd_cits5 <= 1 ~ 0, fwd_cits5 >= 2 & fwd_
 q <- dplyr::select(q, p_key, cit_cat_y_5) %>% mutate(p_key= as.character(p_key))
 
 inv_reg <- left_join(inv_reg, q, by = c("p_key"))
-
 
 #######################################################
 ## b.	Swiss Pharma in the Domestic Economy (Why Pharma?) #
