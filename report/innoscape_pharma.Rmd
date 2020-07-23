@@ -454,7 +454,7 @@ ifelse(input$abs_rel_regio %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, igno
 
 ## Create plot
 renderPlotly({
-  plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & ipc_3 == "all" & abs_rel %in% abs_rel_regio())
+  plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & ipc_3 == "all" & abs_rel %in% abs_rel_regio)
 
           # make the plot
                  ggplotly(
