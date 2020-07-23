@@ -427,6 +427,6 @@ renderTable({head(as.data.frame(plot2_data())[1:2, ])})
 
 ```
 
-
-
 ## {.unlisted .unnumbered}
+
+
