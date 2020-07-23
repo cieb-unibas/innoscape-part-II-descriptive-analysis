@@ -43,6 +43,11 @@ dat_ii <- readRDS("num_pat_16.rds") %>% data.frame()
 dat_ii <- filter(dat_ii, n_ipc > 1000)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
+dat_ii <- mutate(dat_ii, geo_level = case_when(is.na(conti) != T ~ "conti", is.na(ctry_code) != T ~ " ctry", is.na(Up_reg_label) != T ~ "regio"))
+dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(geo)]
+dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
+dat_ii <- dplyr::rename(dat_ii, Continent = conti, Region = Up_reg_label, Country = ctry_name)
+dat_ii <- as.data.frame(dat_ii)
 ```
 
 
@@ -72,30 +77,41 @@ dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 ```{r, echo = F}
 
-select_conti <- distinct(dat_ii, conti, geo)  %>% na.omit()
+select_conti <- distinct(dat_ii, Continent, `Rank based on total patents`)  %>% na.omit()
 
-  output$conti =  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
+output$conti =  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
                   class = "display nowrap compact", # style
                   filter = "top", # location of column filters
                   rownames= FALSE,
                   fillContainer = T,
-                  selection = list(mode = 'multiple', selected = which(select_conti$geo %in% c("Europe"))),
+                  selection = list(mode = 'multiple', selected = which(select_conti$Continent %in% c("Europe"))),
                   options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
          			columnDefs = list(list(className = 'dt-center', targets = 1))))
 
 DT::dataTableOutput('conti')
 
+## Add clearing of rows
+proxy_conti <- dataTableProxy('conti')
+actionButton('clear_conti', 'Clear Selection')
+observeEvent(input$clear_conti, {
+    proxy_conti %>% selectRows(NULL)
+  })
 
 selectedRow_conti <- eventReactive(input$conti_rows_selected,{
-   select_conti[input$conti_rows_selected, "conti"]
+   select_conti[input$conti_rows_selected, "Continent"]
   })
+
+## Add button to choose between absolut and relative value
+actionButton('abs_rel_conti', "Absolute/relative value")
+
+abs_rel_conti <- eventReactive(input$abs_rel_conti,{
+ifelse(input$abs_rel_conti %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
 
 
 # renderText(selectedRow_conti())
 
-
 renderPlotly({
-  plot02_data_conti <- filter(dat_ii, conti %in% selectedRow_conti() & ipc_3 == "all" & abs_rel == "abs")
+  plot02_data_conti <- filter(dat_ii, Continent %in% selectedRow_conti() & ipc_3 == "all" & abs_rel %in% abs_rel_conti())
 
           # make the plot
                  ggplotly(
@@ -125,8 +141,8 @@ renderPlotly({
    pickerInput(
    inputId = "CONTI_NAME",
    label = "Choose continents",
-   choices = unique(na.omit(dat_ii$conti)),
-   selected = unique(na.omit(dat_ii$conti)),
+   choices = unique(na.omit(dat_ii$Continent)),
+   selected = unique(na.omit(dat_ii$Continent)),
    options = list(
      `actions-box` = TRUE,
      size = 10,
@@ -208,19 +224,19 @@ HERE short description of the findings at the continent level
 
 ```{r, echo = F}
 
-select_country <- distinct(dat_ii, ctry_name, geo)  %>% na.omit()
+select_country <- distinct(dat_ii, Country, `Rank based on total patents`)  %>% na.omit()
 
 output$country <- DT::renderDT(select_country, server = F, extensions = 'Scroller',  
                   filter = "top", # location of column filters
                   rownames= FALSE,
                   class = "display nowrap compact", 
-                  selection = list(mode = 'multiple', selected = which(select_country$geo %in% c("Germany", "Switzerland", "United States"))),
+                  selection = list(mode = 'multiple', selected = which(select_country$Country %in% c("Germany", "Switzerland", "United States"))),
                   options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
          			columnDefs = list(list(className = 'dt-center', targets = 1))))
 
 
 selectedRow_ctry <- eventReactive(input$country_rows_selected,{
-   select_country[input$country_rows_selected, "geo"]
+   select_country[input$country_rows_selected, "Country"]
   })
 
 DT::dataTableOutput('country')
@@ -234,13 +250,20 @@ observeEvent(input$clear1, {
     proxy %>% selectRows(NULL)
   })
 
+## Add button to choose between absolut and relative value
+actionButton('abs_rel_country', "Absolute/relative value")
+
+abs_rel_country <- eventReactive(input$abs_rel_country,{
+ifelse(input$abs_rel_country %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
+
+
 ## Create plot
 renderPlotly({
-  plot02_data_country <- filter(dat_ii, ctry_name %in% selectedRow_ctry() & ipc_3 == "all" & abs_rel == "abs")
+  plot02_data_country <- filter(dat_ii, Country %in% selectedRow_ctry() & ipc_3 == "all" & abs_rel %in% abs_rel_country())
 
           # make the plot
                  ggplotly(
-                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
+                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_inv, color = Country, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -268,7 +291,7 @@ renderPlotly({
 pickerInput(
    inputId = "CTRY_NAME",
    label = "Choose countries",
-   choices = unique(na.omit(dat_ii$ctry_name)),
+   choices = unique(na.omit(dat_ii$Country)),
    selected = c("Switzerland", "Germany"),
    options = list(
      `actions-box` = TRUE,
@@ -320,7 +343,7 @@ pickerInput(
 renderPlotly({
 
                               plot2_data_ctry <- subset(dat_ii,
-                              ctry_name %in% input$CTRY_NAME &
+                              Country %in% input$CTRY_NAME &
                               ipc_3 %in% input$CTRY_IPC & 
                               abs_rel %in%  input$CTRY_ABS_REL)
   
@@ -328,7 +351,7 @@ renderPlotly({
                               
          # make the plot
                  abs <- ggplotly(
-                 ggplot(data = plot2_data_ctry, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
+                 ggplot(data = plot2_data_ctry, aes(x = p_year, y= share_inv, color = Country, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -398,19 +421,19 @@ HERE short description of the findings at the country level
 ### Regions
 ```{r, echo = F}
 
-select_regio <- distinct(dat_ii, Up_reg_label, geo)  %>% na.omit()
+select_regio <- distinct(dat_ii, Region, `Rank based on total patents`)  %>% na.omit()
 
 output$regio <- DT::renderDT(select_regio, server = F, extensions = 'Scroller',  
                   filter = "top", # location of column filters
                   rownames= FALSE,
                   class = "display nowrap compact", 
-                  selection = list(mode = 'multiple', selected = which(select_regio$Up_reg_label %in% c("CH - Northwestern Switzerland "))),
+                  selection = list(mode = 'multiple', selected = which(select_regio$Region %in% c("CH - Northwestern Switzerland "))),
                   options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
          			columnDefs = list(list(className = 'dt-center', targets = 1))))
 
 
 selectedRow_regio <- eventReactive(input$regio_rows_selected,{
-   select_regio[input$regio_rows_selected, "Up_reg_label"]
+   select_regio[input$regio_rows_selected, "Region"]
   })
 
 DT::dataTableOutput('regio')
@@ -422,13 +445,20 @@ observeEvent(input$clear_reg, {
     proxy %>% selectRows(NULL)
   })
 
+## Add button to choose between absolut and relative value
+actionButton('abs_rel_regio', "Absolute/relative value")
+
+abs_rel_regio <- eventReactive(input$abs_rel_regio,{
+ifelse(input$abs_rel_regio %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
+
+
 ## Create plot
 renderPlotly({
-  plot02_data_regio <- filter(dat_ii, Up_reg_label %in% selectedRow_regio() & ipc_3 == "all" & abs_rel == "abs")
+  plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & ipc_3 == "all" & abs_rel %in% abs_rel_regio())
 
           # make the plot
                  ggplotly(
-                 ggplot(data = plot02_data_regio, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
+                 ggplot(data = plot02_data_regio, aes(x = p_year, y= share_inv, color = Region, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -456,7 +486,7 @@ renderPlotly({
 pickerInput(
    inputId = "REGIO_NAME",
    label = "Choose regions",
-   choices = unique(na.omit(dat_ii$Up_reg_label)),
+   choices = unique(na.omit(dat_ii$Region)),
    selected = c("Northwestern Switzerland", "Massachusetts"),
    options = list(
      `actions-box` = TRUE,
@@ -505,7 +535,7 @@ pickerInput(
 
 ```{r, echo = F}
 plot2_data <- reactive({plot2_data <- subset(dat_ii,
-                              Up_reg_label %in% input$REGIO_NAME &
+                              Region %in% input$REGIO_NAME &
                               ipc_3 %in% input$REGIO_IPC &
                               abs_rel %in%  input$REGIO_ABS_REL)})
 ```
@@ -517,7 +547,7 @@ plot2_data <- reactive({plot2_data <- subset(dat_ii,
 renderPlotly({
          # make the plot
                  abs <- ggplotly(
-                 ggplot(data = plot2_data(), aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
+                 ggplot(data = plot2_data(), aes(x = p_year, y= share_inv, color = Region, shape = ipc_3)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
