@@ -125,8 +125,12 @@ num_pat_16 <- rbind.fill(num_pat_16, num_pat_16_2, num_pat_16_3, num_pat_16_4)
 })
 ) %>% 
 saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
-num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
+## Add relative share
+num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
+rbind(readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds")), 
+      setDT(num_pat_16)[, c("share_inv", "geo_one_inv") := list(share_inv[geo_one_inv == "no"]/share_inv[geo_one_inv == "yes"], "no_yes"), .(p_year, ipc_3, geo, abs_rel)]) %>% 
+saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
 
 ##################################################
@@ -162,8 +166,12 @@ world_class_16 <- rbind.fill(world_class_16, world_class_16_2, world_class_16_3,
 })
 ) %>% 
 saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
-world_class_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
 
+## Add relative share
+world_class_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
+rbind(readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds")), 
+      setDT(world_class_16)[, c("share_inv", "geo_one_inv") := list(share_inv[geo_one_inv == "no"]/share_inv[geo_one_inv == "yes"], "no_yes"), .(p_year, ipc_3, geo, abs_rel, cit_cat_y_5)]) %>% 
+saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
 
 
 
