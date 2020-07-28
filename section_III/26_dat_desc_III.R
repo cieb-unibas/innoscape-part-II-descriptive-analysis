@@ -52,6 +52,10 @@ total_year <- NULL
 grad_dat <- mutate(grad_dat, female_share_graduates = Value / total_graduates)
 grad_dat <- grad_dat[is.nan(grad_dat$female_share_graduates) == FALSE &
                        is.na(grad_dat$female_share_graduates) == FALSE, ]
+grad_dat$COUNTRY <- countrycode(grad_dat$COUNTRY, "iso3c", "iso2c")
+grad_dat <- rename(grad_dat, Ctry_code = COUNTRY, p_year = YEAR, 
+                   N_female_graduates = Value)
+grad_dat <- select(grad_dat, - SEX)
 print("Data on university graduates loaded")
 
 ## Load names and regions of pharma patents' inventors -------------------------
@@ -74,9 +78,9 @@ paste("number of inventors with gender information:", nrow(gender))
 inv_reg <- left_join(x = inv_reg, y = gender, by = "inventor_id")
 print("All necessary data is loaded")
 
-##############################################
-## Assign gender to inventors based on name ##
-##############################################
+################################################################
+##### Assign gender to inventors based on their first name #####
+################################################################
 
 # subset to those inventors without gender information
 gender <- subset(inv_reg, !gender %in% c("1", "0")) %>% select(name, gender)
@@ -159,9 +163,9 @@ print("Gender information added to inventor data")
 # dat$correct <- dat$gender == dat$pred_gender
 # dat[dat$correct == FALSE, ]
 
-####################################################
-## Analysis: Gender shares among patent inventors ##
-####################################################
+################################################################################
+######## create datasets for regions/countries for subsequent analysis #########
+################################################################################
 
 ## clean the data --------------------------------------------------------------
 inv_reg <- inv_reg[is.na(inv_reg$gender) == FALSE, ] # drop NA's
@@ -172,22 +176,24 @@ dat <- inv_reg # to keep original inv_reg dataframe
 ## For robustness checks: subset to inventors with observed gender status
 # dat <- inv_reg[!rownames(inv_reg) %in% gender_idx, ]
 
-## overall gender shares among patent inventors
+## overall gender shares among patent inventors --------------------------------
 table(inv_reg$gender)/nrow(inv_reg) 
 # => slightly lower gender share when considering USPTO inventors only
 
-## calculate shares of female inventors per region and p_year ------------------
-
-## regional level:
+## calculate shares of female inventors per region and p_year
 female_inv_shares_reg <- dat %>% 
   group_by(Up_reg_code, Ctry_code, p_year) %>%
   summarise(total_inventors_reg = n(),
             female_inventors_reg = sum(gender == 0, na.rm = TRUE),
             female_inventor_share_reg = female_inventors_reg / total_inventors_reg)%>%
   filter(total_inventors_reg > 30)
-# !! relatively many observations have NA with regional code
+female_inv_shares_reg <- merge(female_inv_shares_reg, 
+                               inv_reg[!duplicated(inv_reg$Up_reg_code), c("Up_reg_code", "Up_reg_label")],
+                               by = "Up_reg_code", all.x = TRUE)
+# => relatively many observations have NA as regional code
+# => use this for a table
 
-## country level:
+## calculate shares of female inventors per country and p_year:
 female_inv_shares_ctry <- dat %>% 
   group_by(Ctry_code, p_year) %>%
   summarise(total_inventors_ctry = n(),
@@ -195,25 +201,20 @@ female_inv_shares_ctry <- dat %>%
             female_inventor_share_ctry = female_inventors_ctry / total_inventors_ctry)%>%
   filter(total_inventors_ctry > 30)
 
-## bring graduate and inventor data together------------------------------------
-grad_dat$COUNTRY <- countrycode(grad_dat$COUNTRY, "iso3c", "iso2c")
-grad_dat <- rename(grad_dat, Ctry_code = COUNTRY, p_year = YEAR, 
-                   N_female_graduates = Value)
-grad_dat <- select(grad_dat, - SEX)
+## merge female graduate shares and female inventor shares together ------------
 female_inv_shares_ctry <- merge(female_inv_shares_ctry, grad_dat, 
                     by = c("Ctry_code", "p_year"), all = TRUE)
+female_inv_shares_ctry$Ctry_label <- countrycode(female_inv_shares_ctry$Ctry_code,
+                                                 "iso2c", "country.name")
 
-# calculate female share inventors among master & PhD biology graduates 
+# overall female shares among graduates (2010-2017)
 tmp <- female_inv_shares_ctry %>%
-  filter(FIELD == "F051", ISC11_LEVEL == "L7") %>%
-  group_by(Ctry_code) %>%
+  group_by(Ctry_code, FIELD, ISC11_LEVEL) %>%
   summarise(N_female_graduates_overall = sum(N_female_graduates, na.rm = TRUE),
             total_graduates_overall = sum(total_graduates, na.rm = TRUE),
             female_share_graduates_overall = N_female_graduates_overall / total_graduates_overall,
             female_inventor_share_ctry_overall = sum(female_inventors_ctry, na.rm = TRUE) /
               sum(total_inventors_ctry, na.rm = TRUE))
-tmp$FIELD <- "F051"
-tmp$ISC11_LEVEL <- "L7"
 female_inv_shares_ctry <- merge(female_inv_shares_ctry, tmp, 
                                 by = c("Ctry_code", "FIELD", "ISC11_LEVEL"),
                                 all.x =TRUE)
@@ -230,7 +231,8 @@ names(gender_dat) <- c("region", "country")
 ## Premliminary Analysis -------------------------------------------------------
 
 ## Plot female inventor shares per country over time:
-selected_countries <- c("CH", "US", "DE", "DK", "NL", "AT")
+selected_countries <- c("CH", "US", 
+                        "CN", "KR", "JP", "TW", "SG", "HK")
 plot_data <- gender_dat[["country"]] %>%
   filter(Ctry_code %in% selected_countries,
          p_year >= 1990, p_year < 2017,
@@ -238,7 +240,7 @@ plot_data <- gender_dat[["country"]] %>%
 plot_data$isoyear <- paste0(plot_data$Ctry_code, plot_data$p_year)
 plot_data <- plot_data[!duplicated(plot_data$isoyear), ]
 ggplot(plot_data, aes(x = p_year, y = female_inventor_share_ctry, color = Ctry_code))+
-  geom_line()+geom_point(aes(shape = Ctry_code))+ylim(c(0, 0.4))
+  geom_line()+geom_point(aes(shape = Ctry_code))+ylim(c(0, 0.7))
 
 ## overall share of female biology graduates between 2010-2017
 plot_data <- filter(gender_dat[["country"]] , FIELD == "F051", ISC11_LEVEL == "L7")
@@ -246,7 +248,7 @@ plot_data <- plot_data[!duplicated(plot_data$Ctry_code), ]
 plot_data %>% select(Ctry_code, female_share_graduates_overall) %>% 
   arrange(desc(female_share_graduates_overall))
 
-## plot shares of female biology master graduate over time
+## plot shares of female graduates over time
 selected_countries <- c("CH", "US", "DE", "DK", "NL", "AT")
 plot_data <- gender_dat[["country"]] %>%
   filter(Ctry_code %in% selected_countries,
@@ -261,17 +263,18 @@ ggplot(plot_data, aes(y = female_share_graduates_overall, x= Ctry_code, fill = C
                  " (ISC-Level ", plot_data$ISC11_LEVEL[1],")"))
 
 ## plot ratios over time
-selected_countries <- c("CH", "US", "DE", "DK", "NL", "AT")
-plot_data <- gender_dat[["country"]] %>%
-  filter(Ctry_code %in% selected_countries,
-         ISC11_LEVEL == "L7",
-         FIELD == "F051",
-         p_year >= 1990,
-         total_graduates > 50,
-         total_inventors_ctry > 30)
-ggplot(plot_data, aes(x = p_year, y = inventor_graduate_ratio, color = Ctry_code))+
-  geom_line()+geom_point(aes(shape = Ctry_code))+
-  ylim(c(0.2, 1))
+# selected_countries <- c("CH", "US", "DE", "DK", "NL", "AT")
+# plot_data <- gender_dat[["country"]] %>%
+#   filter(Ctry_code %in% selected_countries,
+#          ISC11_LEVEL == "L7",
+#          FIELD == "F051",
+#          p_year >= 1990,
+#          total_graduates > 50,
+#          total_inventors_ctry > 30)
+# ggplot(plot_data, aes(x = p_year, y = inventor_graduate_ratio, color = Ctry_code))+
+#   geom_line()+geom_point(aes(shape = Ctry_code))+
+#   ylim(c(0.2, 1))
+# => not very interesting because it is rather stable
 
 ## correlation plot graduates vs. inventors
 selected_countries <- c("CH", "US", "DE", "DK", "NL", "AT")
@@ -285,7 +288,13 @@ plot_data <- gender_dat[["country"]] %>%
 ggplot(plot_data, aes(x = female_share_graduates_overall, 
                       y = female_inventor_share_ctry_overall))+
   geom_point(aes(size = total_graduates), alpha = 0.5, color = "steelblue")+
-  xlim(0.5, 1)+ylim(0.2, 0.7)+geom_abline(intercept = 0, slope = 1)+
+  geom_text(aes(label = Ctry_code), size = 3, nudge_y = 0.01, nudge_x = -0.01)+
+  xlim(0.4, 0.85)+ylim(0.2, 0.6)+theme(legend.position = "none")+
+  geom_vline(xintercept = mean(plot_data$female_share_graduates_overall), 
+             linetype = "dotted")+
+  geom_hline(yintercept = mean(plot_data$female_inventor_share_ctry_overall), 
+             linetype = "dotted")
+# => could also add here a color that indicates how familiy friendly an economy is.
 
 #########################################################
 ## Assign ethnic groups and nationalities to inventors ##
