@@ -11,10 +11,13 @@ require(plyr)
 mainDir1 <- c("/scicore/home/weder/GROUP/Innovation/01_patent_data")
 tech_field_start <- 16
 
-## Check where the patent inventors from the cluster basel are coming from
+## Load data created in 20 and 21
 inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, ".rds")) 
-## Considering only firms having patents applied from Switzerland
 firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg_", tech_field_start, ".rds"))
+
+inv_firm <- full_join(inv_reg, firm_reg, by = c("p_year", "ipc_main", "p_key"))
+
+## Considering only firms having patents applied from Switzerland
 firm_ch  <- filter(firm_reg, country == "CH" & p_year > 1989) %>% mutate(n = 1)
 
 
