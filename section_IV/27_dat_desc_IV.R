@@ -1,5 +1,5 @@
 #######################################################################
-print("27: Create analysis for cluster basel: where are inventions registered and where do they actually happen/ CR 28.7.2020")
+print("27: Create analysis for cluster basel: where are inventions registered and where do they actually happen/ CR 30.7.2020")
 #######################################################################
 require(data.table)
 require(ggplot2)
@@ -12,10 +12,18 @@ mainDir1 <- c("/scicore/home/weder/GROUP/Innovation/01_patent_data")
 tech_field_start <- 16
 
 ## Load data created in 20 and 21
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, ".rds")) 
-firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg_", tech_field_start, ".rds"))
+inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg/inv_reg_us_", tech_field_start, ".rds")) %>% dplyr::select(p_key, name, inventor_id, lat, lng, ctry_code, Up_reg_label, patent_id)
+inv_reg <- setDT(inv_reg)[, num_inv := .N, .(p_key)]
+firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg/firm_reg_us_", tech_field_start, ".rds")) %>% dplyr::select(p_key, organization, lat, lng, country, Up_reg_label)
+inv_firm <- inner_join(inv_reg, firm_reg, by = c("p_key"))
+inv_firm <- mutate(inv_firm, lat_diff = abs(lat.x -lat.y), lng_diff = abs(lng.x - lng.y))
+inv_firm <- setDT(inv_firm)[, ctry_in := ctry_code %in% country, .(p_key)]
 
-inv_firm <- full_join(inv_reg, firm_reg, by = c("p_year", "ipc_main", "p_key"))
+inv_firm <- mutate(inv_firm, cross_board = ifelse(ctry_in == FALSE & lat_diff < 0.5 & lng_diff < 0.5, "yes", "no"))
+inv_firm <- distinct(inv_firm, p_key, inventor_id, .keep_all = T)
+inv_firm <- setDT(inv_firm)[, cbind("num_inv", "num_cross") := list(.N, sum(cross_board == "yes")), .(p_key)]
+
+inv_firm_sub <- filter(inv_firm, num_cross == num_inv)
 
 ## Considering only firms having patents applied from Switzerland
 firm_ch  <- filter(firm_reg, country == "CH" & p_year > 1989) %>% mutate(n = 1)
@@ -43,7 +51,7 @@ inv_ch <- left_join(inv_ch, q, by = "p_key")
 ########################################################################
 ## Some analysis on whether patent is from academia or private firm#####
 ########################################################################
-firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg_", tech_field_start, ".rds"))
+firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg/firm_reg_", tech_field_start, ".rds"))
 firm_reg <- filter(firm_reg, granted == "yes") ## consider only granted patents
 firm_reg <- setDT(firm_reg)[, c("num", "num_uni") := list(.N, sum(uni)), .(p_key)]
 firm_reg <- mutate(firm_reg, uni_firm = ifelse(num_uni == num, "uni", ifelse(num_uni > 0, "uni_firm", "firm")))
