@@ -11,7 +11,6 @@ library("tidyverse")
 library("data.table")
 library("countrycode")
 library("stringi")
-#library("OECD")
 
 # directories ------------------------------------------------------------------
 mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
