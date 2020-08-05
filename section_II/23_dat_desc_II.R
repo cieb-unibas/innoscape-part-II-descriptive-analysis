@@ -22,7 +22,7 @@ tech_field_start <- 16
 ## Load data on geography of inventors ##
 #########################################
 ## Load regions of patents' inventors
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg_", tech_field_start, ".rds")) 
+inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg/inv_reg_", tech_field_start, ".rds")) 
 inv_reg <- filter(inv_reg, is.na(tech_field) != T)
 inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"), Up_reg_label = paste0(ctry_code, " - ", Up_reg_label))
