@@ -7,37 +7,44 @@ require(dplyr)
 require(geosphere)
 require(fuzzyjoin)
 require(plyr)
+require(stringr)
+require(stringdist)
 
 mainDir1 <- c("/scicore/home/weder/GROUP/Innovation/01_patent_data")
 tech_field_start <- 16
 
 ## Load data created in 20 and 21
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg/inv_reg_us_", tech_field_start, ".rds")) %>% dplyr::select(p_key, name, inventor_id, lat, lng, ctry_code, Up_reg_label, patent_id)
-inv_reg <- setDT(inv_reg)[, num_inv := .N, .(p_key)]
-firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg/firm_reg_us_", tech_field_start, ".rds")) %>% dplyr::select(p_key, organization, lat, lng, country, Up_reg_label)
-inv_firm <- inner_join(inv_reg, firm_reg, by = c("p_key"))
-inv_firm <- mutate(inv_firm, lat_diff = abs(lat.x -lat.y), lng_diff = abs(lng.x - lng.y))
-inv_firm <- setDT(inv_firm)[, ctry_in := ctry_code %in% country, .(p_key)]
+inv_reg_us <- readRDS(paste0(mainDir1, "/created data/inv_reg/inv_reg_us_", tech_field_start, ".rds")) %>% dplyr::select(p_key, name, inventor_id, lat, lng, ctry_code, Up_reg_label, patent_id)
+inv_reg_us <- setDT(inv_reg_us)[, num_inv := .N, .(p_key)]
+inv_reg_us <- distinct(inv_reg_us, p_key, name, .keep_all =  T)
 
-inv_firm <- mutate(inv_firm, cross_board = ifelse(ctry_in == FALSE & lat_diff < 0.5 & lng_diff < 0.5, "yes", "no"))
+firm_reg_us <- readRDS(paste0(mainDir1, "/created data/firm_reg/firm_reg_us_", tech_field_start, ".rds")) %>% dplyr::select(p_key, organization, lat, lng, country, Up_reg_label)
+firm_reg_us <- distinct(firm_reg_us, p_key, organization, lat, lng, .keep_all = T)
+
+## Use country of EP patents if there are equivalents between US and EP patents
+firm_reg <- readRDS(paste0(mainDir1, "/created data/firm_reg/firm_reg_", tech_field_start, ".rds")) %>% dplyr::select(p_key, organization, lat, lng, country, pub_nbr)
+firm_reg <- filter(firm_reg, substr(pub_nbr, 1, 2) == "EP")
+firm_reg_both <- inner_join(firm_reg_us, firm_reg, by = "p_key")
+firm_reg_both <- mutate(firm_reg_both, organization.x = tolower(organization.x),  organization.y = tolower(organization.y)) %>% mutate(diff = stringdist(organization.x, organization.y))
+firm_reg_both <- setDT(firm_reg_both)[order(diff), .SD[1], .(p_key, organization.x)][diff<10]
+firm_reg_both <- dplyr::select(firm_reg_both, p_key, organization.x, lat.x, lng.x, country.y) %>% dplyr::rename(organization = organization.x, lat = lat.x, lng = lng.x, country = country.y)
+firm_reg_both <- mutate(firm_reg_both, lat = ifelse(str_detect(organization, "hoffmann") & country == "CH", 47.5584, lat), lng = ifelse(str_detect(organization, "hoffmann") & country == "CH", 7.5733, lng))
+
+firm_reg_us <- filter(firm_reg_us, !(p_key %in% firm_reg_both$p_key))
+# firm_reg_us <- mutate(firm_reg_us, lat = ifelse(str_detect(organization, "Hoffmann-La Roche"), 47.5584, lat), lng = ifelse(str_detect(organization, "Hoffmann-La Roche"), 7.5733, lng), country = ifelse(str_detect(organization, "Hoffmann-La Roche"), "CH", country))
+firm_reg_us <- rbind.fill(firm_reg_us, firm_reg_both)
+
+
+## Find crossborder-commuters
+inv_firm <- inner_join(inv_reg_us, firm_reg_us, by = c("p_key"))
+inv_firm <- mutate(inv_firm, lat_diff = abs(lat.x -lat.y), lng_diff = abs(lng.x - lng.y)) %>%  mutate(dist = lat_diff^2 + lng_diff^2, max_dist = ifelse(lat_diff < 1 & lng_diff < 1, 0, 1))
+inv_firm <- setDT(inv_firm)[order(dist), .SD[1], .(p_key, inventor_id)]
+inv_firm <- mutate(inv_firm, cross_board = ifelse(ctry_code != country & max_dist == 0, "yes", "no")) ## crossborder-commuter if inventor life not in the same country as location of firm AND both geographic locations are not too far away
+
+## Detect patents which are developed only by crossborder-commuters and thus cannot be seen in statistics
+inv_firm <- setDT(inv_firm)[, cbind("num_inv", "num_cross") := list(.N, sum(cross_board == "yes", na.action = NULL)), .(p_key)]
+inv_firm <- mutate(inv_firm, pat_only_crossbord = ifelse(num_inv == num_cross, "yes", "no"))
 inv_firm <- distinct(inv_firm, p_key, inventor_id, .keep_all = T)
-inv_firm <- setDT(inv_firm)[, cbind("num_inv", "num_cross") := list(.N, sum(cross_board == "yes")), .(p_key)]
-
-inv_firm_sub <- filter(inv_firm, num_cross == num_inv)
-
-## Considering only firms having patents applied from Switzerland
-firm_ch  <- filter(firm_reg, country == "CH" & p_year > 1989) %>% mutate(n = 1)
-
-
-inv_ch <- filter(inv_reg, p_key %in% firm_ch$p_key)
-inv_ch   <- setDT(inv_ch)[, num := ifelse(Ctry_code %in% c("CH", "DE", "FR"), 1, 0), .(p_key)]
-inv_ch <- filter(inv_ch, num != 0 & Up_reg_label %in% c("Freiburg", "Alsace", "Rhône-Alpes") | str_detect(Ctry_code, "CH") == T)
-inv_ch <- distinct(inv_ch, Pub_nbr, Ctry_code, .keep_all = T)
-inv_ch <- setDT(inv_ch)[order(Ctry_code), ctr := paste(Ctry_code, collapse = "-"), .(Pub_nbr)]
-
-patent_inv <- aggregate(num ~ ctr + cit_cat_y_5, FUN = sum, data = distinct(inv_ch, p_key, .keep_all = T))
-patent_inv <- mutate(patent_inv, status = ifelse(str_detect(ctr, "CH") & !(str_detect(ctr, "FR|DE")), "only ch", ifelse(str_detect(ctr, "CH") & (str_detect(ctr, "FR|DE")), "ch and cross-border", "only cross-border")))
-setDT(patent_inv)[, ges_per_status := sum(num), .(status, cit_cat_y_5)]
 
 
 ## Add forward citations
