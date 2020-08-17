@@ -40,14 +40,20 @@ library(data.table)
 ```{r, echo = F}
 # Load data
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, ipc_3 == "all")
+dat_ii <- filter(dat_ii, n_ipc > 1000)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
 
 dat_ii <- mutate(dat_ii, geo_level = case_when(is.na(conti) != T ~ "conti", is.na(ctry_code) != T ~ " ctry", is.na(Up_reg_label) != T ~ "regio"))
 dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(geo)]
 dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
 
+## Calculate yearly share of an geographic region 
+dat_ii <- setDT(dat_ii)[, ges_pat_year := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(p_year)]
+dat_ii <- setDT(dat_ii)[, ges_pat_geo_year := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(geo, p_year)]
+dat_ii <- mutate(dat_ii, share_geo = ges_pat_geo_year / ges_pat_year)
 
+dat_ii <- dplyr::rename(dat_ii, Continent = conti, Region = Up_reg_label, Country = ctry_name)
+dat_ii <- as.data.frame(dat_ii)
 ```
 
 
@@ -102,7 +108,7 @@ selectedRow_conti <- eventReactive(input$conti_rows_selected,{
   })
 
 ## Add button to choose between absolut and relative value
-actionButton('abs_rel_conti', "Absolute value / relative to 1990")
+actionButton('abs_rel_conti', "Absolute/relative value")
 abs_rel_conti <- eventReactive(input$abs_rel_conti,{
 ifelse(input$abs_rel_conti %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
 
@@ -111,14 +117,12 @@ actionButton('geo_one_inv_conti', "Region count as share or share/one")
 geo_one_inv_conti <- eventReactive(input$geo_one_inv_conti,{
 ifelse(input$geo_one_inv_conti %in% c(0, seq(2, 1000, 2)), "no", "no_yes")}, ignoreNULL = FALSE)
 
-## Add button to choose between absolute value or share relative to overall patents for a given year
-actionButton('geo_share', "Absolute value / relative to all patents")
-geo_share <- eventReactive(input$geo_share,{
-ifelse(input$geo_share %in% c(0, seq(2, 1000, 2)), "abs", "rel")}, ignoreNULL = FALSE)
+
+# renderText(selectedRow_conti())
 
 renderPlotly({
   plot02_data_conti <- filter(dat_ii, Continent %in% selectedRow_conti() & ipc_3 == "all" & abs_rel %in% abs_rel_conti() & geo_one_inv %in% geo_one_inv_conti())
-if(geo_share() == "abs"){
+
           # make the plot
                  ggplotly(
                  ggplot(data =   plot02_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = ipc_3)) +
@@ -138,26 +142,6 @@ if(geo_share() == "abs"){
                  layout(xaxis = list(fixedrange=F, 
                                 rangeslider = list(type = "date", visible=T, thickness=0.1))) %>%
                  layout(yaxis = list(fixedrange=F)) 
-} else {
-                 ggplotly(
-                 ggplot(data =   plot02_data_conti, aes(x = p_year, y= share_geo, color = geo, shape = ipc_3)) +
-                 geom_point(alpha = 0.7) +
-                 geom_line() +
-                 # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-                 xlab("Priority Year")+
-                 ylab("Number of patents")+
-                 guides(color = FALSE)+
-                 scale_x_continuous(breaks = seq(min(plot02_data_conti$p_year), max(plot02_data_conti$p_year), by = 5)) +
-                 # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
-                 theme(axis.title = element_text(face="bold",size = 10),
-                       panel.background = element_blank(),
-                       axis.line = element_line()), 
-                 dynamicTicks = FALSE) %>%
-                 config(displayModeBar = F) %>%
-                 layout(xaxis = list(fixedrange=F, 
-                                rangeslider = list(type = "date", visible=T, thickness=0.1))) %>%
-                 layout(yaxis = list(fixedrange=F))   
-}
          })
 
         
