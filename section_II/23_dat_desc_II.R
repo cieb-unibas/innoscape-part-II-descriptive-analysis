@@ -132,6 +132,16 @@ rbind(readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive a
       setDT(num_pat_16)[, c("share_inv", "geo_one_inv") := list(share_inv[geo_one_inv == "no"]/share_inv[geo_one_inv == "yes"], "no_yes"), .(p_year, ipc_3, geo, abs_rel)]) %>% 
 saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
+## Add yearly share of an geographic region 
+num_pat_16 <- readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
+num_pat_16  <- setDT(num_pat_16)[, ges_pat_year := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(p_year)]
+num_pat_16  <- setDT(num_pat_16)[, ges_pat_geo_year := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(geo, p_year)]
+num_pat_16  <- mutate(num_pat_16, share_geo = ges_pat_geo_year / ges_pat_year)
+num_pat_16  <- filter(num_pat_16, abs_rel %in% c("abs"))
+rbind(readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds")), 
+      setDT(num_pat_16)[, c("share_geo", "abs_rel") := list(share_geo/share_geo[p_year == 1990], "rel_1990"), .(ipc_3, geo)]) 
+
+saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
 ##################################################
 ## Get inventors shares for world class patents ##
