@@ -1,0 +1,38 @@
+```{r, echo=FALSE}
+
+
+# Input panels for indicator and industry
+      radioButtons("variable", "Choose a variable",
+                   choices = list("Number of employed"="num.emp", 
+                                  "Share of employed"="share.emp"),
+                   selected = "share.emp")
+
+      selectizeInput("country", "Choose a country",
+                     choices = c(ilo$country),multiple = TRUE, selected = "CHE")
+    
+```
+
+
+```{r, echo=FALSE}
+
+# filter out only pharma
+ilo <- readRDS("iloemp_2020_final.rds")
+ilo <- subset(ilo,ind.code=="21")
+
+  renderPlotly({
+
+# subset the data accoding to the input:
+  dr <- reactive({ilo %>%
+                  filter(variable %in% input$variable,
+                         country %in% input$country)
+      }) 
+
+# make the plot
+  ggplotly(  
+          ggplot(dr(),aes(x = year, y = value, group = country, colour = country)) +
+          geom_line()
+      )
+    
+  })
+
+```
