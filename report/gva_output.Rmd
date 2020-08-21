@@ -1,30 +1,25 @@
-```{r, echo=FALSE}
-
-
-# Input panels for indicator and industry
-
-    radioButtons("variable", "Choose a variable",
-          choices = list("GVA in millions CHF"="gva_abs", 
-                         "Share in total GVA"="gva_share",
-                         "GVA percentage change"="gva_prchange"),
-          selected = "gva_share")
-          
-    selectizeInput("ind.name", "Choose industry",
-          choices = c(gva$ind.name),multiple = TRUE, selected = "Manufacture of basic pharmaceutical products and pharmaceutical preparations")
-    
-```
-
 
 ```{r, echo=FALSE}
 
   gva <- readRDS("gva_data_ch.rds")
 
+# Input panels for indicator and industry
+radioButtons("variable_gva", "Choose a variable",
+          choices = list("GVA in millions CHF"="gva_abs", 
+                         "Share in total GVA"="gva_share",
+                         "GVA percentage change"="gva_prchange"),
+          selected = "gva_share")
+          
+    selectizeInput("ind.name_gva", "Choose industry",
+          choices = c(gva$ind.name),multiple = TRUE, selected = "Manufacture of basic pharmaceutical products and pharmaceutical preparations")
+    
+
   renderPlotly({
 
 # subset the data accoding to the input:
   dr <- reactive({ gva %>%
-                    filter(variable %in% input$variable,
-                           ind.name %in% input$ind.name)
+                    filter(variable %in% input$variable_gva,
+                           ind.name %in% input$ind.name_gva)
       }) 
 
 # make the plot

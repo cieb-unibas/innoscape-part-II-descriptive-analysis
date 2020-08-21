@@ -1,16 +1,3 @@
-```{r, echo=FALSE}
-
-
-# Input panels for indicator and industry
-      radioButtons("variable", "Choose a variable",
-                   choices = list("Number of employed"="num.emp", 
-                                  "Share of employed"="share.emp"),
-                   selected = "share.emp")
-
-      selectizeInput("country", "Choose a country",
-                     choices = c(ilo$country),multiple = TRUE, selected = "CHE")
-    
-```
 
 
 ```{r, echo=FALSE}
@@ -19,12 +6,21 @@
 ilo <- readRDS("iloemp_2020_final.rds")
 ilo <- subset(ilo,ind.code=="21")
 
+# Input panels for indicator and industry
+      radioButtons("variable_emp", "Choose a variable",
+                   choices = list("Number of employed"="num.emp", 
+                                  "Share of employed"="share.emp"),
+                   selected = "share.emp")
+
+      selectizeInput("country_emp", "Choose a country",
+                     choices = c(ilo$country),multiple = TRUE, selected = "CHE")
+
   renderPlotly({
 
 # subset the data accoding to the input:
   dr <- reactive({ilo %>%
-                  filter(variable %in% input$variable,
-                         country %in% input$country)
+                  filter(variable %in% input$variable_emp,
+                         country %in% input$country_emp)
       }) 
 
 # make the plot

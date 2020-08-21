@@ -41,7 +41,7 @@ source_rmd <- function(rmd_file){
 <!-- </head> -->
 
 ```{r, echo = F}
-# Load data
+# Load data for part II
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
 dat_ii <- filter(dat_ii, n_ipc > 1000)
 dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
@@ -67,7 +67,6 @@ dat_ii <- as.data.frame(dat_ii)
 
 
 <br>
-
 <br>
 
 #### <font color='grey'> **Development of the Pharma Sector in Switzerland ** </font>
@@ -75,6 +74,28 @@ dat_ii <- as.data.frame(dat_ii)
 
 <br>
 <br>
+
+
+### 
+
+### Value added
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")}
+```
+
+### Employment
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")}
+```
+
+### Labor productivity
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")}
+```
+
+### Exports
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
+```
+
+
+
 
 ## {.tabset}
 

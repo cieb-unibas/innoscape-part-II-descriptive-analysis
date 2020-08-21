@@ -1,29 +1,24 @@
-```{r, echo=FALSE}
-
-
-# Input panels for indicator and industry
-
-  checkboxGroupInput("variable", "Choose a productivity indicator with:", 
-                         choices = list("Only domestic workers"="ilo_prod", 
-                                        "Total jobs in firms"="bfs_prod",
-                                        "Domestic and cross-border workers"="ilocross_prod"),
-                         selected = "ilo_prod")
-  selectizeInput("ind.name", "Choose industry",
-                         choices = c(labprod$ind.name),multiple = TRUE, selected = "Manufacture of pharmaceutical products")
-    
-```
-
 
 ```{r, echo=FALSE}
 
 labprod <- readRDS("lab_prod_final_ch.rds")
 
+# Input panels for indicator and industry
+
+  checkboxGroupInput("variable_prod", "Choose a productivity indicator with:", 
+                         choices = list("Only domestic workers"="ilo_prod", 
+                                        "Total jobs in firms"="bfs_prod",
+                                        "Domestic and cross-border workers"="ilocross_prod"),
+                         selected = "ilo_prod")
+  selectizeInput("ind.name_prod", "Choose industry",
+                         choices = c(labprod$ind.name),multiple = TRUE, selected = "Manufacture of pharmaceutical products")
+    
   renderPlotly({
 
 # subset the data accoding to the input:
   dr <- reactive({labprod %>%
-                        filter(variable %in% input$variable,
-                               ind.name %in% input$ind.name)
+                        filter(variable %in% input$variable_prod,
+                               ind.name %in% input$ind.name_prod)
       }) 
 
 # make the plot
