@@ -1,6 +1,6 @@
 ```{r, echo = F}
-
 select_country <- distinct(dat_ii, Country, `Rank based on total patents`)  %>% na.omit()
+
 
 output$country <- DT::renderDT(select_country, server = F, extensions = 'Scroller',  
                   filter = "top", # location of column filters
@@ -29,28 +29,23 @@ observeEvent(input$clear_ctry, {
 
 
 ## Add button to choose between absolut and relative value
-actionButton('abs_rel_country', "Absolute/relative value")
+actionButton('abs_rel_country', "Absolute value / relative to 1990")
 abs_rel_country <- eventReactive(input$abs_rel_country,{
 ifelse(input$abs_rel_country %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
 
-## Add button to choose between count each region as one (ie, 3 inventors in three regions, each region counts as one for this patent) or count the relative share of each region (ie, 3 inventors in three regions, each region counts as 1/3 for this patent) 
-actionButton('geo_one_inv_country', "Region count as share or share/one")
-geo_one_inv_country <- eventReactive(input$geo_one_inv_country,{
-ifelse(input$geo_one_inv_country %in% c(0, seq(2, 1000, 2)), "no", "no_yes")}, ignoreNULL = FALSE)
-
 ## Add button to choose between absolute value or share relative to overall patents for a given year
-actionButton("geo_share_ctry", "Absolute value / relative to all patents")
+actionButton("geo_share_ctry", "Absolute value / share")
 geo_share_ctry <- eventReactive(input$geo_share_ctry, {ifelse(input$geo_share_ctry %in% c(0, seq(2, 1000, 2)), "abs", "rel")}, ignoreNULL = FALSE)
 
 
 ## Create plot
 renderPlotly({
-  plot02_data_country <- filter(dat_ii, Country %in% selectedRow_ctry() & ipc_3 == "all" & abs_rel %in% abs_rel_country() & geo_one_inv %in% geo_one_inv_country())
+  plot02_data_country <- filter(dat_ii, Country %in% selectedRow_ctry() & abs_rel %in% abs_rel_country())
  if(geo_share_ctry() == "abs"){
 
           # make the plot
                  ggplotly(
-                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_inv, color = Country, shape = ipc_3)) +
+                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_inv, color = Country, shape = geo)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -68,7 +63,7 @@ renderPlotly({
                  layout(yaxis = list(fixedrange=F)) 
  } else {
                 ggplotly(
-                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_geo, color = Country, shape = ipc_3)) +
+                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_geo, color = Country, shape = geo)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+

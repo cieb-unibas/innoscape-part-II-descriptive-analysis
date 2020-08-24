@@ -43,17 +43,18 @@ source_rmd <- function(rmd_file){
 ```{r, echo = F}
 # Load data for part II
 dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, n_ipc > 1000)
-dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
-dat_ii <- mutate(dat_ii, geo_level = case_when(is.na(conti) != T ~ "conti", is.na(ctry_code) != T ~ " ctry", is.na(Up_reg_label) != T ~ "regio"))
-dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(geo)]
+dat_ii <- filter(dat_ii, p_year < 2016)
+dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[abs_rel == "abs"]), .(geo)]
 dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
-## Calculate yearly share of an geographic region 
-dat_ii <- setDT(dat_ii)[, ges_pat_year := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(p_year)]
-dat_ii <- setDT(dat_ii)[, ges_pat_geo_year := sum(share_inv[abs_rel == "abs" & ipc_3 == "all"]), .(geo, p_year)]
-dat_ii <- mutate(dat_ii, share_geo = ges_pat_geo_year / ges_pat_year)
-dat_ii <- dplyr::rename(dat_ii, Continent = conti, Region = Up_reg_label, Country = ctry_name)
 dat_ii <- as.data.frame(dat_ii)
+
+dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
+dat_ii_world <- filter(dat_ii_world, p_year < 2016)
+dat_ii_world <- setDT(dat_ii_world)[, ges_pat_geo := sum(share_inv[abs_rel == "abs"]), .(geo)]
+dat_ii_world <- setDT(dat_ii_world)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
+dat_ii_world <- as.data.frame(dat_ii_world)
+
+
 ```
 
 
@@ -101,16 +102,23 @@ dat_ii <- as.data.frame(dat_ii)
 
 ### Continents
 
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "conti_func.RMD")}
-```
+<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "conti_func.RMD")} -->
+<!-- # ``` -->
 
 HERE short description of the findings at the continent level
 
 
 ### Countries
 
-```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func.Rmd")}
+<!-- # ```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func.Rmd")} -->
+<!-- ``` -->
+
+### Countries
+
+
+```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func_world_class.Rmd")}
 ```
+
 
 
 HERE short description of the findings at the country level
@@ -118,8 +126,8 @@ HERE short description of the findings at the country level
 
 ### Regions
 
-```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"),'regio_func.Rmd')}
-```
+<!-- # ```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"),'regio_func.Rmd')} -->
+<!-- # ``` -->
 
 
 
