@@ -64,10 +64,9 @@ get_cut_off <- dcast(get_cut_off, pub_year ~ class, value.var = "cut_off")
 colnames(get_cut_off) <- c("filing", paste0("class_", seq(1, 3, 1))) 
 get_cut_off <- mutate(get_cut_off, filing = as.character(filing))
 pat_past <- left_join(pat_past, get_cut_off, by = "filing")
-pat_past <- mutate(pat_past, cit_cat_y_5 = case_when(fwd_cits5 <= class_2 ~ 0, fwd_cits5 > class_2 & fwd_cits5 < class_3 ~ 1, fwd_cits5 >= class_3 ~ 2), num = 1)
-pat_past <- dplyr::select(pat_past, p_key, cit_cat_y_5) %>% mutate(p_key = as.character(p_key))
+pat_past <- mutate(pat_past, cit_cat_y_5 = case_when(fwd_cits5 <= class_2 ~ 0, fwd_cits5 > class_2 & fwd_cits5 < class_3 ~ 1, fwd_cits5 >= class_3 ~ 2))
+pat_past <- dplyr::select(pat_past, p_key, cit_cat_y_5, pat_off) %>% mutate(p_key = as.character(p_key))
 pat_past <- filter(pat_past, is.na(cit_cat_y_5) != T)
-pat_past <- mutate(pat_past, p_key = as.character(p_key))
 
 ## Add together with data on patents
 inv_reg <- left_join(inv_reg, pat_past, by = c("p_key"))
