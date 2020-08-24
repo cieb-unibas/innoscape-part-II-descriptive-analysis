@@ -1,4 +1,4 @@
-print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / CR 23.7.2020")
+print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / CR 24.8.2020")
 
 library(tidyr)
 library(dplyr)
@@ -17,32 +17,57 @@ mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
 # vers <- c("201907_")
 vers <- c("202001_")
 tech_field_start <- 16
-
+## Latest year to calculate world class patents
+max_year_past    <- 2015 
 #########################################
 ## Load data on geography of inventors ##
 #########################################
-## Load regions of patents' inventors
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg/inv_reg_", tech_field_start, ".rds")) 
-inv_reg <- filter(inv_reg, is.na(tech_field) != T)
-inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code)
+## Load regions of patents' inventors -> NEW: adjusted by cross-border commuters
+inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
+inv_reg <- filter(inv_reg, is.na(tech_field) != T & tech_field == tech_field_start)
+## For the analysis, use ctry_pat and regio_pat 
+inv_reg <- dplyr::select(inv_reg, -Ctry_code, -Up_reg_label)
+inv_reg <- dplyr::rename(inv_reg, ctry_code = ctry_pat, Up_reg_label = regio_pat)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"), Up_reg_label = paste0(ctry_code, " - ", Up_reg_label))
 inv_reg <- setDT(inv_reg)[, share_inv := 1/.N, .(p_key)]
+inv_reg <- mutate(inv_reg, ipc_3 = substr(ipc_main, 1, 3)) %>% dplyr::select(-ipc_main)
 
-## Add list of IPC per patent created in 08b_p_key_ipc.R
-ipc <- readRDS(paste0(mainDir1, "/created data/ipc_list.rds"))%>% dplyr::select(-ipc_main)
-inv_reg <- left_join(inv_reg, ipc, by = c("p_key"))
+## Add list of IPC per patent created in 08b_p_key_ipc.R -> could be used later on to add different technology fields
+# ipc <- readRDS(paste0(mainDir1, "/created data/ipc_list.rds"))
+# ipc <- setDT(ipc)[, .SD[1], .(p_key)]
+# ipc <- dplyr::select(ipc, -ipc_main, -ipc_list, -ipc_3_list, -ict, -ai)
+# inv_reg <- left_join(inv_reg, ipc, by = c("p_key"))
 
 ## Load name of IPC
 ipc_name <- read.csv2(paste0(mainDir1, "/raw data/ipc_3_digit.csv")) %>% dplyr::select(Code.1, Description)
 inv_reg <- left_join(inv_reg, ipc_name, by = c("ipc_3" = "Code.1"))
 
-## Use backward citations to classify world-class patents
-q <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds"))
-q <- setDT(q)[order(-fwd_cits5), .SD[1], .(p_key)]
-q <- mutate(q, cit_cat_y_5 = case_when(fwd_cits5 <= 1 ~ 0, fwd_cits5 >= 2 & fwd_cits5 < 16 ~ 1, fwd_cits5 > 15 ~ 2))
-q <- dplyr::select(q, p_key, cit_cat_y_5) %>% mutate(p_key= as.character(p_key))
+## Use backward citations to classify world-class patents -> top patent if among 10% most cited on a yearly basis / use filing year to calculate top-10 patents / Using only US-patents, since EPO-patents are significantly less cited
+cit_quant <- function(pat_office, q, data, year){
+  pat <- data
+  pat  <- mutate(pat, pat_off = substr(pub_nbr, 1, 2))
+  pat  <- filter(pat, pat_off %in% pat_office)
+  pat  <- setDT(pat)[order(filing), .SD[1], .(p_key)]
+  pat <- filter(pat, filing %in% year)
+  pat  <- data.frame(pat)
+  quant <- quantile(pat[, "fwd_cits5"], q)
+  quant <- data.frame(class = seq(1, 3, 1), cut_off = quant, pub_year = year)
+  return(quant)
+}
 
-inv_reg <- left_join(inv_reg, q, by = c("p_key"))
+pat_past <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds"))
+pat_past <- mutate(pat_past, filing = as.character(filing))
+get_cut_off <- do.call(rbind, lapply(seq(1990, max_year_past, 1), function(x) cit_quant(c("US"), c(0, 0.6, 0.9), pat_past, x)))
+get_cut_off <- dcast(get_cut_off, pub_year ~ class, value.var = "cut_off")
+colnames(get_cut_off) <- c("filing", paste0("class_", seq(1, 3, 1))) 
+get_cut_off <- mutate(get_cut_off, filing = as.character(filing))
+pat_past <- left_join(pat_past, get_cut_off, by = "filing")
+pat_past <- mutate(pat_past, cit_cat_y_5 = case_when(fwd_cits5 <= class_2 ~ 0, fwd_cits5 > class_2 & fwd_cits5 < class_3 ~ 1, fwd_cits5 >= class_3 ~ 2), num = 1)
+pat_past <- dplyr::select(pat_past, p_key, cit_cat_y_5) %>% mutate(p_key = as.character(p_key))
+pat_past <- filter(pat_past, is.na(cit_cat_y_5) != T)
+pat_past <- mutate(pat_past, p_key = as.character(p_key))
+
+inv_reg <- left_join(inv_reg, pat_past, by = c("p_key"))
 
 #######################################################
 ## b.	Swiss Pharma in the Domestic Economy (Why Pharma?) #
