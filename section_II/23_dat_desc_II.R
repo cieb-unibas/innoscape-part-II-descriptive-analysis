@@ -67,6 +67,7 @@ pat_past <- dplyr::select(pat_past, p_key, cit_cat_y_5) %>% mutate(p_key = as.ch
 pat_past <- filter(pat_past, is.na(cit_cat_y_5) != T)
 pat_past <- mutate(pat_past, p_key = as.character(p_key))
 
+## Add together with data on patents
 inv_reg <- left_join(inv_reg, pat_past, by = c("p_key"))
 
 #######################################################
@@ -96,7 +97,7 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class, geo_
   
   if(geo_level == "ctry_code"){
     list_geo <- imp[1:15, geo_level]
-  } else if(geo_level == "Up_reg_code"){
+  } else if(geo_level == "Up_reg_label"){
     list_geo <- imp[1:80, geo_level]
   } else if(geo_level == "conti"){
     list_geo <- c( "Europe", "Oceania", "Americas", "Asia", "Africa")
@@ -121,7 +122,7 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class, geo_
 do.call(rbind, lapply(c("no", "yes"), function(geo_one_inv){
 num_pat_conti <- num_pat_geo("conti", "conti", tech_field_start, "no", geo_one_inv) 
 num_pat_ctry <- num_pat_geo("ctry_code", "ctry_name", tech_field_start, "no", geo_one_inv) 
-num_pat_reg <- num_pat_geo("Up_reg_code", "Up_reg_label", tech_field_start, "no", geo_one_inv) 
+num_pat_reg <- num_pat_geo("Up_reg_label", "Up_reg_label", tech_field_start, "no", geo_one_inv) 
 num_pat_16 <- rbind.fill(num_pat_conti, num_pat_ctry, num_pat_reg) %>% mutate(geo = ifelse(is.na(conti) == T, ifelse(is.na(ctry_name) == T, Up_reg_label, ctry_name), conti), abs_rel = "abs") 
 
 ## Create some relative outputs used in innoscape_pharma.Rmd
@@ -164,8 +165,7 @@ num_pat_16  <- setDT(num_pat_16)[, ges_pat_geo_year := sum(share_inv[abs_rel == 
 num_pat_16  <- mutate(num_pat_16, share_geo = ges_pat_geo_year / ges_pat_year)
 num_pat_16  <- filter(num_pat_16, abs_rel %in% c("abs"))
 rbind(readRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds")), 
-      setDT(num_pat_16)[, c("share_geo", "abs_rel") := list(share_geo/share_geo[p_year == 1990], "rel_1990"), .(ipc_3, geo)]) 
-
+      setDT(num_pat_16)[, c("share_geo", "abs_rel") := list(share_geo/share_geo[p_year == 1990], "rel_1990"), .(ipc_3, geo)]) %>% 
 saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
 
 ##################################################
@@ -183,7 +183,7 @@ world_class_16_2 <- world_class_16
 world_class_16_2 <- setDT(world_class_16_2)[, share_inv := share_inv/share_inv[p_year == 1990], .(geo, ipc_3)] 
 world_class_16_2 <- mutate(world_class_16_2, abs_rel = "rel_1990")
 
-## relative share of IPC to all patents per year and RCA (relative share of IPC to all patents per country to relative share of IPC to all patetnets of all countries)
+## patent per country to all patents per year and RCA (relative share of IPC to all patents per country to relative share of IPC to all patetnets of all countries)
 world_class_conti <- dplyr::filter(world_class_16, is.na(conti) != T) 
 world_class_conti <- cbind(geo = "world", aggregate(share_inv ~ p_year + ipc_3, FUN = sum, data = world_class_conti))
 world_class_16_3  <- rbind.fill(world_class_16, world_class_conti) 
