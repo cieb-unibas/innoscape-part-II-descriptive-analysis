@@ -48,12 +48,11 @@ dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[abs_rel == "abs"]), .(geo
 dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
 dat_ii <- as.data.frame(dat_ii)
 
-dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
-dat_ii_world <- filter(dat_ii_world, p_year < 2016)
-dat_ii_world <- setDT(dat_ii_world)[, ges_pat_geo := sum(share_inv[abs_rel == "abs"]), .(geo)]
-dat_ii_world <- setDT(dat_ii_world)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
-dat_ii_world <- as.data.frame(dat_ii_world)
-
+# dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
+# dat_ii_world <- filter(dat_ii_world, p_year < 2016)
+# dat_ii_world <- setDT(dat_ii_world)[, ges_pat_geo := sum(share_inv[abs_rel == "abs"]), .(geo)]
+# dat_ii_world <- setDT(dat_ii_world)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
+# dat_ii_world <- as.data.frame(dat_ii_world)
 
 ```
 
@@ -110,14 +109,9 @@ HERE short description of the findings at the continent level
 
 ### Countries
 
-<!-- # ```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func.Rmd")} -->
-<!-- ``` -->
-
-### Countries
-
-
-```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func_world_class.Rmd")}
+```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func.Rmd")}
 ```
+
 
 
 
@@ -126,8 +120,8 @@ HERE short description of the findings at the country level
 
 ### Regions
 
-<!-- # ```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"),'regio_func.Rmd')} -->
-<!-- # ``` -->
+```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"),'regio_func.Rmd')}
+```
 
 
 

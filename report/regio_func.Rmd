@@ -37,7 +37,7 @@ geo_share_regio <- eventReactive(input$geo_share_regio, {ifelse(input$geo_share_
 ## Create plot
 renderPlotly({
   plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & abs_rel %in% abs_rel_regio())
- if(geo_share_regio() == "abs"){
+
           # make the plot
                  ggplotly(
                  ggplot(data = plot02_data_regio, aes(x = p_year, y= share_inv, color = Region, shape = geo)) +
@@ -57,26 +57,7 @@ renderPlotly({
                  layout(xaxis = list(fixedrange=F, 
                                 rangeslider = list(type = "date", visible=T))) %>%
                  layout(yaxis = list(fixedrange=F)) 
- } else {
-                    ggplotly(
-                 ggplot(data = plot02_data_regio, aes(x = p_year, y= share_geo, color = Region, shape = geo)) +
-                 geom_point(alpha = 0.7) +
-                 geom_line() +
-                 # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-                 xlab("Priority Year")+
-                 ylab("Number of patents")+
-                 guides(color = FALSE)+
-                 scale_x_continuous(breaks = seq(min(plot02_data_regio$p_year), max(plot02_data_regio$p_year), by = 5)) +
-                 theme(axis.title = element_text(face="bold",size = 10),
-                       panel.background = element_blank(),
-                       axis.line = element_line()
-                       ),
-                 dynamicTicks = T) %>%
-                 config(displayModeBar = F) %>%
-                 layout(xaxis = list(fixedrange=F, 
-                                rangeslider = list(type = "date", visible=T))) %>%
-                 layout(yaxis = list(fixedrange=F)) 
- }
+
          })
 
         

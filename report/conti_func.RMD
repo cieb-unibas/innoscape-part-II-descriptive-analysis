@@ -37,7 +37,6 @@ geo_share_conti <- eventReactive(input$geo_share_conti, {ifelse(input$geo_share_
 
 renderPlotly({
   plot02_data_conti <- filter(dat_ii, Continent %in% selectedRow_conti()  & abs_rel %in% abs_rel_conti())
-  if(geo_share_conti() == "abs"){
     # make the plot
     ggplotly(
       ggplot(data =   plot02_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = geo)) +
@@ -57,26 +56,7 @@ renderPlotly({
       layout(xaxis = list(fixedrange=F, 
                           rangeslider = list(type = "date", visible=T, thickness=0.1))) %>%
       layout(yaxis = list(fixedrange=F)) 
-  } else  {
-    ggplotly(
-      ggplot(data =   plot02_data_conti, aes(x = p_year, y= share_geo, color = geo, shape = geo)) +
-        geom_point(alpha = 0.7) +
-        geom_line() +
-        # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
-        xlab("Priority Year")+
-        ylab("Number of patents")+
-        guides(color = FALSE)+
-        scale_x_continuous(breaks = seq(min(plot02_data_conti$p_year), max(plot02_data_conti$p_year), by = 5)) +
-        # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
-        theme(axis.title = element_text(face="bold",size = 10),
-              panel.background = element_blank(),
-              axis.line = element_line()), 
-      dynamicTicks = FALSE) %>%
-      config(displayModeBar = F) %>%
-      layout(xaxis = list(fixedrange=F, 
-                          rangeslider = list(type = "date", visible=T, thickness=0.1))) %>%
-      layout(yaxis = list(fixedrange=F)) 
-  }
+
 })
 
 
