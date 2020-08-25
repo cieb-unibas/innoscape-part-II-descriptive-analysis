@@ -36,7 +36,7 @@ actionButton("geo_share_conti", "Absolute value / share")
 geo_share_conti <- eventReactive(input$geo_share_conti, {ifelse(input$geo_share_conti %in% c(0, seq(2, 1000, 2)), "abs", "rel")}, ignoreNULL = FALSE)
 
 renderPlotly({
-  plot02_data_conti <- filter(dat_ii, Continent %in% selectedRow_conti()  & abs_rel %in% abs_rel_conti())
+  plot02_data_conti <- filter(dat_ii, Continent %in% selectedRow_conti()  & indicator %in% abs_rel_conti())
     # make the plot
     ggplotly(
       ggplot(data =   plot02_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = geo)) +

@@ -36,7 +36,7 @@ geo_share_regio <- eventReactive(input$geo_share_regio, {ifelse(input$geo_share_
 
 ## Create plot
 renderPlotly({
-  plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & abs_rel %in% abs_rel_regio())
+  plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & indicator %in% abs_rel_regio())
 
           # make the plot
                  ggplotly(
