@@ -19,12 +19,19 @@ vers <- c("202001_")
 tech_field_start <- 16
 ## Latest year to calculate world class patents
 max_year_past    <- 2015 
+
+
+num_pats_geo_func <- function(tech_field_start, max_year_past){
 #########################################
 ## Load data on geography of inventors ##
 #########################################
 ## Load regions of patents' inventors -> NEW: adjusted by cross-border commuters
-inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
+inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds"), p_year <= max_year_past) 
+if(tech_field_start == "all"){
+inv_reg <- distinct(inv_reg, p_key, name, .keep_all = T)  
+}  else {
 inv_reg <- filter(inv_reg, is.na(tech_field) != T & tech_field == tech_field_start)
+}
 ## For the analysis, use ctry_pat and regio_pat 
 inv_reg <- dplyr::select(inv_reg, -Ctry_code, -Up_reg_label)
 inv_reg <- dplyr::rename(inv_reg, ctry_code = ctry_pat, Up_reg_label = regio_pat)
@@ -42,6 +49,8 @@ inv_reg <- mutate(inv_reg, ipc_3 = substr(ipc_main, 1, 3)) %>% dplyr::select(-ip
 # ipc_name <- read.csv2(paste0(mainDir1, "/raw data/ipc_3_digit.csv")) %>% dplyr::select(Code.1, Description)
 # inv_reg <- left_join(inv_reg, ipc_name, by = c("ipc_3" = "Code.1"))
 
+## World-class patents only considered when calculating data for a tech_field 
+if(tech_field_start != "all"){
 ## Use backward citations to classify world-class patents -> top patent if among 10% most cited on a yearly basis / use filing year to calculate top-10 patents / Using only US-patents, since EPO-patents are significantly less cited
 cit_quant <- function(pat_office, q, data, year){
   pat <- data
@@ -57,7 +66,7 @@ cit_quant <- function(pat_office, q, data, year){
 
 pat_past <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds"))
 ## keep only USPTO patents
-pat_past <- filter(pat_past, pat_off == "US")
+pat_past <- filter(pat_past, pat_off == "US" & tech_field %in% tech_field_start)
 pat_past <- mutate(pat_past, filing = as.character(filing))
 get_cut_off <- do.call(rbind, lapply(seq(1990, max_year_past, 1), function(x) cit_quant(c("US"), c(0, 0.6, 0.9), pat_past, x)))
 get_cut_off <- dcast(get_cut_off, pub_year ~ class, value.var = "cut_off")
@@ -70,13 +79,15 @@ pat_past <- filter(pat_past, is.na(cit_cat_y_5) != T)
 
 ## Add together with data on patents
 inv_reg <- left_join(inv_reg, pat_past, by = c("p_key"))
+} 
+
 
 #######################################################
 ## b.	Swiss Pharma in the Domestic Economy (Why Pharma?) #
 ##########################################################
 ## Function to calculate number of patents per geographic entity
 num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
-  inv_reg <- filter(inv_reg, tech_field %in% tech_field_start)
+  # inv_reg <- filter(inv_reg, tech_field %in% tech_field_start)
 
   ## find important countries and regions
   imp <- aggregate(as.formula(paste0("share_inv ~", geo_level)), data = filter(inv_reg, p_year > 1989), FUN = sum)
@@ -101,13 +112,19 @@ num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
     reg <- mutate(reg, share_geo = ges_pat_geo_year / ges_pat_year)
 }
   
-
-  
-  if(geo_level == "ctry_code"){
-    list_geo <- imp[1:15, geo_level]
+if(geo_level == "ctry_code"){
+  if(tech_field_start == "all"){
+    list_geo <- imp[, geo_level]
+  } else {
+        list_geo <- imp[1:15, geo_level]
+  }
   } else if(geo_level == "Up_reg_label"){
-    list_geo <- imp[1:80, geo_level]
-  } else if(geo_level == "conti"){
+    if(tech_field_start == "all"){
+      list_geo <- imp[, geo_level]
+    } else {
+      list_geo <- imp[1:80, geo_level]
+  }
+  }  else if(geo_level == "conti"){
     list_geo <- c( "Europe", "Oceania", "Americas", "Asia", "Africa")
   }
   
@@ -140,11 +157,13 @@ num_pat_16 <- dplyr::rename(num_pat_16, Continent = conti, Region = Up_reg_label
 num_pat_16 <- filter(num_pat_16, str_detect(geo, "- NA") != T)
 
 num_pat_16 %>% 
-saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", tech_field_start, ".rds"))
+saveRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/num_pat_", tech_field_start, ".rds"))
+
 
 ##################################################
 ## Get inventors shares for world class patents ##
 ##################################################
+if(tech_field_start != "all"){
 world_class_conti <- num_pat_geo("conti", "conti", tech_field_start, "yes") 
 world_class_ctry <- num_pat_geo("ctry_code", "ctry_name", tech_field_start, "yes") 
 world_class_reg <- num_pat_geo("Up_reg_label", "Up_reg_label", tech_field_start, "yes") 
@@ -166,5 +185,41 @@ world_class_16 <- dplyr::rename(world_class_16, Continent = conti, Region = Up_r
 world_class_16 <- filter(world_class_16, str_detect(geo, "- NA") != T & cit_cat_y_5 == 2)
 
 world_class_16 %>% 
-  saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/world_class_", tech_field_start, ".rds"))
+  saveRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/world_class_", tech_field_start, ".rds"))
+}
+}
+
+lapply(c(16, "all"), function(x) num_pats_geo_func(x, 2015))
+
+
+## Add different calculations together
+all <- readRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/num_pat_", "all", ".rds"))
+pharma <- readRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/num_pat_", 16, ".rds"))
+
+## Calculate share of geo of all patents of tech_field
+pharma_share <- dplyr::select(pharma, -share_inv) %>% dplyr::rename(share_inv = share_geo) %>% mutate(indicator = case_when(abs_rel == "abs" ~ "share_pharma", abs_rel == "rel_1990" ~ "share_pharma_rel_1990"))
+pharma_share <- pharma_share  %>% filter(world_class == "no") %>% dplyr::select(-world_class)
+## Calculate share of tech_field 
+pharma_all <- rbind.fill(all, pharma)
+pharma_all <- filter(pharma_all, world_class == "no" & abs_rel == "abs") %>% dplyr::select(-world_class, -abs_rel)
+pharma_all_geo <- dcast(pharma_all, p_year + geo + geo_level + ctry_code + Country + Region ~ tech_field, value.var = "share_inv")
+pharma_all_geo <- mutate(pharma_all_geo, share_inv = `16`/all, indicator = "share_pharma_total", tech_field = 16) %>% dplyr::select(-all, -`16`)
+
+## Calculate total number patents 
+pharma_all_world <- filter(pharma_all, geo == "Europe")
+pharma_all_world <- distinct(pharma_all_world, tech_field, p_year, .keep_all = T)
+pharma_all_world <- dcast(pharma_all_world, p_year~ tech_field, value.var = "ges_pat_year")
+pharma_all_world <- mutate(pharma_all_world , inv_share_world = `16`/all) %>% dplyr::select(p_year, inv_share_world)
+
+## Calculate RCA of geo_level: share_geo/share_world
+pharma_all_rca <- left_join(pharma_all_geo, pharma_all_world, by = c("p_year"))
+pharma_all_rca <- mutate(pharma_all_rca, share_inv = share_inv / inv_share_world, indicator = "rca_pharma_total", tech_field = 16) %>% dplyr::select(-inv_share_world)
+
+## Put all together
+pharma <- dplyr::rename(pharma, indicator = abs_rel) %>% filter(world_class == "no") %>% dplyr::select(-world_class)
+pharma <- rbind.fill(pharma, pharma_share, pharma_all_geo, pharma_all_rca )
+pharma <- dplyr::select(pharma, -ges_pat_year, -ges_pat_geo_year, -abs_rel, -share_geo)
+pharma <- filter(pharma, is.na(share_inv) != T)
+pharma %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", 16, ".rds"))
+
 
