@@ -1,6 +1,5 @@
 ```{r, echo = F}
-select_country <- distinct(dat_ii, Country, `Rank based on total patents`)  %>% na.omit()
-
+select_country <- distinct(dat_ii_world, Country, `Rank based on total patents`)  %>% na.omit()
 
 output$country <- DT::renderDT(select_country, server = F, extensions = 'Scroller',  
                   filter = "top", # location of column filters
@@ -40,10 +39,10 @@ geo_share_ctry <- eventReactive(input$geo_share_ctry, {ifelse(input$geo_share_ct
 
 ## Create plot
 renderPlotly({
-  plot02_data_country <- filter(dat_ii, Country %in% selectedRow_ctry() & indicator %in% abs_rel_country())
+  plot02_data_country <- filter(dat_ii_world, Country %in% selectedRow_ctry() & abs_rel %in% abs_rel_country())
+ if(geo_share_ctry() == "abs"){
 
-
-        # make the plot
+          # make the plot
                  ggplotly(
                  ggplot(data = plot02_data_country, aes(x = p_year, y= share_inv, color = Country, shape = geo)) +
                  geom_point(alpha = 0.7) +
@@ -61,7 +60,25 @@ renderPlotly({
                  layout(xaxis = list(fixedrange=F, 
                                 rangeslider = list(type = "date", visible=T))) %>%
                  layout(yaxis = list(fixedrange=F)) 
-
+ } else {
+                ggplotly(
+                 ggplot(data = plot02_data_country, aes(x = p_year, y= share_geo, color = Country, shape = geo)) +
+                 geom_point(alpha = 0.7) +
+                 geom_line() +
+                 # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
+                 xlab("Priority Year")+
+                 ylab("Number of patents")+
+                 guides(color = FALSE)+
+                 scale_x_continuous(breaks = seq(min(plot02_data_country$p_year), max(plot02_data_country$p_year), by = 5)) +
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()
+                       ), dynamicTicks = T) %>%
+                 config(displayModeBar = F) %>%
+                 layout(xaxis = list(fixedrange=F, 
+                                rangeslider = list(type = "date", visible=T))) %>%
+                 layout(yaxis = list(fixedrange=F)) 
+ }
          })
 
         
