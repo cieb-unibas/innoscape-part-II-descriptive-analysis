@@ -1,20 +1,5 @@
 ```{r, echo=FALSE}
 
-# Input panels for continent(group) and year
-
-  pickerInput("group","Origin of citation", 
-                         choices=c("Africa","Americas", "Asia", "Europe", "Oceania"),
-                         options = list(`actions-box` = TRUE),   # build buttons for collective selection
-                         multiple = T)
-  
-  sliderInput("p_year_citing", "Year of citation", min=1990, max=2015, value=1990, sep="")
-
-
-```
-
-
-```{r, echo=FALSE}
-
 #Data preparation,labeling and initial filtering
   citflow <- readRDS("back_citations_16.rds")
   
@@ -73,8 +58,21 @@
   colnames(coord_f) <- c("tech_field_cited", "x", "y")
   citflow_ctry<-merge(citflow_ctry,coord_f)
 
+
+# Input panels for continent(group) and year
+
+  pickerInput("group","Origin of citation", 
+                         choices=c("Africa","Americas", "Asia", "Europe", "Oceania"),
+                         options = list(`actions-box` = TRUE),   # build buttons for collective selection
+                         multiple = T)
+  
+  sliderInput("p_year_citing", "Year of citation", min=1990, max=2015, value=1990, sep="")
+
+
+
 renderVisNetwork({
-# subset the data accoding to the input:
+  
+# subset the data according to the input:
     datreact <- reactive({
         filtered <- citflow_ctry %>%
                     filter(
