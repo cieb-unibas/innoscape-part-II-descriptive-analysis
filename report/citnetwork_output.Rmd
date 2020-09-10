@@ -1,6 +1,6 @@
 ```{r, echo=FALSE}
 
-#Data preparation,labeling and initial filtering
+# (1) Data preparation,labeling and initial filtering
   citflow <- readRDS("back_citations_16.rds")
   
   techlab <- readRDS("oecd_tech_field.rds")
@@ -38,9 +38,9 @@
     group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
     summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) 
 
-# Creating coordinates for each unique technology that is cited in a c
-  # credit: https://stackoverflow.com/users/1465387/sebastian-c on
-  # https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
+# (2) Creating coordinates for each unique technology that is cited in a c
+# credit: https://stackoverflow.com/users/1465387/sebastian-c on
+# https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
   eq_spacing <- function(n, r = 1){
     polypoints <- seq(0, 2*pi, length.out=n+1)
     polypoints <- polypoints[-length(polypoints)]
@@ -64,101 +64,106 @@
     summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
     bind_rows(citflow_ctry, .)
 
+# (3) Input panels for continent (group) and year
 
-
-# Input panels for continent(group) and year
-
-  pickerInput("group","Origin of citation", 
-                         choices=c("All", "Africa", "Americas", "Asia", "Europe", "Oceania"),
-                          selected = c("All"),
-                         options = list(`actions-box` = TRUE),   # build buttons for collective selection
-                         multiple = FALSE)
+  pickerInput(inputId = "group",
+              label = "Origin of citation", 
+              choices=c("All", "Africa", "Americas", "Asia", "Europe", "Oceania"),
+              selected = c("All"),
+              options = list(`actions-box` = TRUE),
+              multiple = FALSE)
   
   sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
               min=1990, max=2015, value=1990, sep="")
 
-
-
+# (4) make the plot
 renderVisNetwork({
   
-# subset the data according to the input:
-    datreact <- reactive({
-        filtered <- citflow_ctry %>%
-                    filter(
-                           group %in% input$group,
-                           p_year_citing %in% input$p_year_citing
-                           )
-    }) 
+# (a) subset the data according to the input and store it for determining nodes and edges:
+  
+  # @DRAGAN: I changed something here. It looked to me as the reactivness did not work for some reason.
+  # the renderVisNetwork() function is a reactive function already. So when we added the reactive()
+  # function below, we basically introduced a reactive function within a reactive function. This seems to
+  # be ok with renderplotly() but maybe it has caused problems for renderVisNetwork(). As soon as I didnt
+  # use the reactive() function below, it started working.
+  # Furthermore, you called the reactive() within the subset() function. I changed this as well now as this
+  # might (dont know though) also disturb the subset() call. Instead I first define the nodes and edges data.frames
+  # and then only subset them.
+  
+  # datreact <- reactive({
+  #       filtered <- citflow_ctry %>%
+  #                   filter(
+  #                          group %in% input$group,
+  #                          p_year_citing %in% input$p_year_citing
+  #                          )
+  # })
+  # nodes <- datreact()
+  nodes <- citflow_ctry %>% filter(group %in% input$group, 
+                                   p_year_citing %in% input$p_year_citing)
+  edges <- nodes
     
-#Creating NODES from the reactive (filtered) data
-    nodes <- subset(datreact(), select = c("tech_field_cited", "tech_name", "group", "x", "y"))
-    colnames(nodes) <- c("id", "label", "group", "x", "y")
+# (b) Creating NODES from the reactive (filtered) data
+  nodes <- subset(nodes, select = c("tech_field_cited", "tech_name", "group", "x", "y"))
+  colnames(nodes) <- c("id", "label", "group", "x", "y")
+  nodes$label<- ifelse(nodes$label == "Pharmaceuticals", "Swiss Pharmaceuticals", nodes$label)
       
-    nodes$label<- ifelse(nodes$label == "Pharmaceuticals", "Swiss Pharmaceuticals", nodes$label)
+  nodes %>% group_by(id, label, x, y) %>%
+    summarize(group = paste(sort(unique(group)),collapse=", ")) -> nodes
       
-    nodes %>% group_by(id, label, x, y) %>%
-        summarize(group = paste(sort(unique(group)),collapse=", ")) -> nodes
-      
-    mutate(nodes, x = case_when(
+  mutate(nodes, x = case_when(
         label == "Swiss Pharmaceuticals" ~ 0, 
         TRUE   ~ x )) -> nodes
        
-    mutate(nodes, y = case_when(
+  mutate(nodes, y = case_when(
         label == "Swiss Pharmaceuticals" ~ 0, 
         TRUE   ~ y )) -> nodes
       
       
-  #Creating EDGES from the reactive (filtered) data    
-    edges <- subset(datreact(), select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited"))
-    colnames(edges) <- c("from", "to", "value")
-      
-    # edges <- edges %>% 
-    #     group_by(from,to) %>% 
-    #     summarise(value = sum(value))
-      
-    edges <- filter(edges, value != 0)
-      
-    edges$title <- paste0(round(edges$value, 2))
+# (c) Creating EDGES from the reactive (filtered) data    
+  edges <- subset(edges, select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited"))
+  colnames(edges) <- c("from", "to", "value")
+  edges <- filter(edges, value != 0)
+  edges$title <- paste0(round(edges$value, 2))
     
   
-  # Creating Network Plot
-    visNetwork(nodes, edges, width = "100%") %>%
-        visIgraphLayout(layout = "layout_nicely") %>%
-       # visEvents(type = "once", startStabilizing = "function() {
-       #         this.moveTo({scale:0.55})}") %>%
+# (d) Creating Network Plot
+  visNetwork(nodes, edges, width = "100%") %>%
+      visIgraphLayout(layout = "layout_nicely") %>%
+     # visEvents(type = "once", startStabilizing = "function() {
+     #         this.moveTo({scale:0.55})}") %>%
       visPhysics(stabilization = FALSE) %>%
-        visNodes(
-          fixed = TRUE,
-          shape = "dot",
-          color = "red",
-          shadow = list(enabled = F, size = 20)
+      visNodes(
+        fixed = TRUE,
+        shape = "dot",
+        color = "red",
+        shadow = list(enabled = F, size = 20)
         ) %>%
-        visEdges(
-          value="value",
-          scaling = list(min = 1, max = 10),
-          arrows = "to",
-          color="lightgrey",
-          selfReferenceSize = F,
-          shadow = FALSE,
-          smooth = FALSE) %>%
-        visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
-        visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
-        visGroups(groupname = "Americas", color = "lightblue") %>%
-        visGroups(groupname = "Asia", color = "lightblue") %>%
-        visGroups(groupname = "Europe", color = "lightblue") %>%
-        visGroups(groupname = "Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Africa", color = "lightblue") %>%
-        visGroups(groupname = "Americas, Asia, Europe, Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Americas, Asia, Europe", color = "lightblue") %>%
-        visGroups(groupname = "Africa, Americas, Asia, Europe", color = "lightblue") %>%
-        visGroups(groupname = "Americas, Asia", color = "lightblue") %>%
-        visGroups(groupname = "Americas, Europe", color = "lightblue") %>%
-        visGroups(groupname = "Americas, Europe, Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Europe, Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Asia, Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Americas, Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Africa, Americas, Asia, Europe, Oceania", color = "lightblue") %>%
-        visGroups(groupname = "Asia, Europe", color = "lightblue")
+    visEdges(
+        value="value",
+        scaling = list(min = 1, max = 10),
+        arrows = "to",
+        color="lightgrey",
+        selfReferenceSize = F,
+        shadow = FALSE,
+        smooth = FALSE) %>%
+    visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
+    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
+    visGroups(groupname = "Americas", color = "lightblue") %>%
+    visGroups(groupname = "Asia", color = "lightblue") %>%
+    visGroups(groupname = "Europe", color = "lightblue") %>%
+    visGroups(groupname = "Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Africa", color = "lightblue") %>%
+    visGroups(groupname = "Americas, Asia, Europe, Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Americas, Asia, Europe", color = "lightblue") %>%
+    visGroups(groupname = "Africa, Americas, Asia, Europe", color = "lightblue") %>%
+    visGroups(groupname = "Americas, Asia", color = "lightblue") %>%
+    visGroups(groupname = "Americas, Europe", color = "lightblue") %>%
+    visGroups(groupname = "Americas, Europe, Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Europe, Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Asia, Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Americas, Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Africa, Americas, Asia, Europe, Oceania", color = "lightblue") %>%
+    visGroups(groupname = "Asia, Europe", color = "lightblue")
   })    
 
 ```
