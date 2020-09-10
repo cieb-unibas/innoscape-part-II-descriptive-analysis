@@ -24,6 +24,9 @@ library(shinyWidgets)
 library(plyr)
 library(dplyr)
 library(data.table)
+library("countrycode")
+library("visNetwork")
+
 source_rmd <- function(rmd_file){
   knitr::knit(rmd_file, output = tempfile())
 }
@@ -94,7 +97,9 @@ dat_ii <- as.data.frame(dat_ii)
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
 ```
 
-
+### Citations
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
+```
 
 
 ## {.tabset}

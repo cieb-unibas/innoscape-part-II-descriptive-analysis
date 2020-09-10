@@ -33,9 +33,10 @@
                                     origin = "country.name",
                                     destination = "continent") # Creating continent var (group)
   
+  # Agregation summing, without cited pharma patents
   citflow_ctry <- citflow_ctry %>% 
     group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
-    summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"])) # Agregation summing, without cited pharma patents
+    summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) 
 
 # Creating coordinates for each unique technology that is cited in a c
   # credit: https://stackoverflow.com/users/1465387/sebastian-c on
@@ -63,10 +64,12 @@
 
   pickerInput("group","Origin of citation", 
                          choices=c("Africa","Americas", "Asia", "Europe", "Oceania"),
+                          selected = c("Africa","Americas", "Asia", "Europe", "Oceania"),
                          options = list(`actions-box` = TRUE),   # build buttons for collective selection
-                         multiple = T)
+                         multiple = TRUE)
   
-  sliderInput("p_year_citing", "Year of citation", min=1990, max=2015, value=1990, sep="")
+  sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
+              min=1990, max=2015, value=1990, sep="")
 
 
 
@@ -111,8 +114,8 @@ renderVisNetwork({
     
   edges$title <- paste0(round(edges$value, 2))
   
-    
-#Creating Network Plot    
+
+# Creating Network Plot
   visNetwork(nodes, edges, width = "100%") %>%
       visIgraphLayout(layout = "layout_nicely") %>%
      # visEvents(type = "once", startStabilizing = "function() {
