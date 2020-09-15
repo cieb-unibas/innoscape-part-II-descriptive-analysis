@@ -1,8 +1,6 @@
 ```{r, echo=FALSE}
 
 # (1) Data preparation,labeling and initial filtering
-  citflow <- readRDS("back_citations_16.rds")
-  
   techlab <- readRDS("oecd_tech_field.rds")
   colnames(techlab) <- c("tech_field_cited", "tech_name")
   
@@ -71,7 +69,7 @@
               choices=c("All", "Africa", "Americas", "Asia", "Europe", "Oceania"),
               selected = c("All"),
               options = list(`actions-box` = TRUE),
-              multiple = FALSE)
+              multiple = T)
   
   sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
               min=1990, max=2015, value=1990, sep="")
@@ -149,10 +147,10 @@ renderVisNetwork({
     visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
     visGroups(groupname = "Americas", color = "lightblue") %>%
-    visGroups(groupname = "Asia", color = "lightblue") %>%
+    visGroups(groupname = "Asia", color = "green") %>%
     visGroups(groupname = "Europe", color = "lightblue") %>%
     visGroups(groupname = "Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Africa", color = "lightblue") %>%
+    visGroups(groupname = "Africa", color = "lightblue")  %>%
     visGroups(groupname = "Americas, Asia, Europe, Oceania", color = "lightblue") %>%
     visGroups(groupname = "Americas, Asia, Europe", color = "lightblue") %>%
     visGroups(groupname = "Africa, Americas, Asia, Europe", color = "lightblue") %>%

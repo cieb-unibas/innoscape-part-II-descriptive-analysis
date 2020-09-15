@@ -1,6 +1,5 @@
 ```{r, echo=FALSE}
 
-  tradedata <- readRDS("oecd_trade_ch_final.rds")
 
 # filter the data to leave only Switzerland:
   volumes <- subset(tradedata,rep.code=="CHE")

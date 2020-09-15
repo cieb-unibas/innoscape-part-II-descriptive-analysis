@@ -1,7 +1,6 @@
 
 ```{r, echo=FALSE}
 
-labprod <- readRDS("lab_prod_final_ch.rds")
 
 # Input panels for indicator and industry
 

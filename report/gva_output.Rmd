@@ -1,7 +1,6 @@
 
 ```{r, echo=FALSE}
 
-  gva <- readRDS("gva_data_ch.rds")
 
 # Input panels for indicator and industry
 radioButtons("variable_gva", "Choose a variable",

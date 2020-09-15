@@ -26,10 +26,25 @@ library(dplyr)
 library(data.table)
 library("countrycode")
 library("visNetwork")
-
+library(gganimate)
 source_rmd <- function(rmd_file){
-  knitr::knit(rmd_file, output = tempfile())
-}
+  knitr::knit(rmd_file, output = tempfile())}
+```
+
+```{r, context="data", include=FALSE}
+# Load data 
+dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
+dat_ii <- filter(dat_ii, p_year < 2016)
+dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[indicator == "abs"]), .(geo)]
+dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
+dat_ii <- as.data.frame(dat_ii)  
+
+tradedata <- readRDS("oecd_trade_ch_final.rds")
+citflow <- readRDS("back_citations_16.rds")
+labprod <- readRDS("lab_prod_final_ch.rds")
+gva <- readRDS("gva_data_ch.rds")
+ilo <- readRDS("iloemp_2020_final.rds")
+ilo <- subset(ilo,ind.code=="21")
 ```
 
 <!-- <head> -->
@@ -42,22 +57,6 @@ source_rmd <- function(rmd_file){
 <!--   gtag('config', 'UA-71167447-1'); -->
 <!-- </script> -->
 <!-- </head> -->
-
-```{r, echo = F}
-# Load data for part II
-dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, p_year < 2016)
-dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[indicator == "abs"]), .(geo)]
-dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
-dat_ii <- as.data.frame(dat_ii)
-
-# dat_ii_world <- readRDS("world_class_16.rds") %>% data.frame()
-# dat_ii_world <- filter(dat_ii_world, p_year < 2016)
-# dat_ii_world <- setDT(dat_ii_world)[, ges_pat_geo := sum(share_inv[indicator == "abs"]), .(geo)]
-# dat_ii_world <- setDT(dat_ii_world)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
-# dat_ii_world <- as.data.frame(dat_ii_world)
-
-```
 
 
 <br>
@@ -94,8 +93,8 @@ dat_ii <- as.data.frame(dat_ii)
 ```
 
 ### Exports
-<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
-<!-- # ``` -->
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
+```
 
 ### Citations
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
