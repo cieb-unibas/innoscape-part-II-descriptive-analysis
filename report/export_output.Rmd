@@ -1,6 +1,6 @@
 ```{r, echo=FALSE}
 
-  tradedata <- readRDS("/scicore/home/weder/GROUP/Innovation/02_section_I_data/oecd_trade_final_2020_gps_par_rep_new_final.rds")
+  tradedata <- readRDS("oecd_trade_ch_final.rds")
 
 # filter the data to leave only Switzerland:
   volumes <- subset(tradedata,rep.code=="CHE")
@@ -15,10 +15,6 @@
                               "% in Industry Exports"="share_in_tot2"),
                                 selected = "val_export")
 
-  selectizeInput("ind.code_exp", "Industry", 
-                 choices = c(volumes$ind.code),multiple = TRUE, 
-                                selected = "21")
-  
   sliderInput("year", "Year", min=1990, max=2019, value=2000, sep="")
   
 # Create the world map:
@@ -30,7 +26,6 @@
 # subset the data accoding to the input:
     dr <- reactive({volumes %>%
                     filter(variable %in% input$variable_exp,
-                           ind.code %in% input$ind.code_exp,
                            year %in% input$year)
     }) 
 
