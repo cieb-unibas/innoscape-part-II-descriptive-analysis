@@ -91,8 +91,8 @@ dat_ii <- as.data.frame(dat_ii)
 ```
 
 ### Exports
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
-```
+<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
+<!-- # ``` -->
 
 
 
@@ -127,12 +127,3 @@ HERE short description of the findings at the country level
 HERE short description of the findings at the regional level
 
 ## {.unlisted .unnumbered}
-
-
-
-HERE short description of the findings at the regional level
-
-## {.unlisted .unnumbered}
-
-
-=======
