@@ -1,11 +1,5 @@
 ```{r, echo=FALSE}
-
 # (1) Data preparation,labeling and initial filtering
-  techlab <- readRDS("oecd_tech_field.rds")
-  colnames(techlab) <- c("tech_field_cited", "tech_name")
-  
-  citflow_final<-merge(citflow, techlab)
-  
   citflow_ctry <- filter(citflow_final, geo %in% c("ctry"))
   citflow_ctry <- subset(citflow_ctry, 
                          select = c("p_year_citing", 
@@ -35,7 +29,6 @@
   citflow_ctry <- citflow_ctry %>% 
     group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
     summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) 
-
 # (2) Creating coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
 # https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
@@ -61,19 +54,16 @@
     group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing,x,y) %>% 
     summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
     bind_rows(citflow_ctry, .)
-
 # (3) Input panels for continent (group) and year
-
   pickerInput(inputId = "group",
               label = "Origin of citation", 
               choices=c("All", "Africa", "Americas", "Asia", "Europe", "Oceania"),
               selected = c("All"),
               options = list(`actions-box` = TRUE),
-              multiple = T)
+              multiple = FALSE)
   
   sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
               min=1990, max=2015, value=1990, sep="")
-
 # (4) make the plot
 renderVisNetwork({
   
@@ -101,16 +91,20 @@ renderVisNetwork({
   edges <- nodes
     
 # (b) Creating NODES from the reactive (filtered) data
-  nodes <- subset(nodes, select = c("tech_field_cited", "tech_name", "group", "x", "y"))
+  nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y)
+  # nodes <- subset(nodes, select = c("tech_field_cited", "tech_name", "group", "x", "y"))
   colnames(nodes) <- c("id", "label", "group", "x", "y")
   nodes$label<- ifelse(nodes$label == "Pharmaceuticals", "Swiss Pharmaceuticals", nodes$label)
       
   nodes %>% group_by(id, label, x, y) %>%
-    summarize(group = paste(sort(unique(group)),collapse=", ")) -> nodes
+    summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
+    ungroup()  -> nodes
       
   mutate(nodes, x = case_when(
         label == "Swiss Pharmaceuticals" ~ 0, 
         TRUE   ~ x )) -> nodes
+
+    print(head(nodes))
        
   mutate(nodes, y = case_when(
         label == "Swiss Pharmaceuticals" ~ 0, 
@@ -147,10 +141,10 @@ renderVisNetwork({
     visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
     visGroups(groupname = "Americas", color = "lightblue") %>%
-    visGroups(groupname = "Asia", color = "green") %>%
+    visGroups(groupname = "Asia", color = "lightblue") %>%
     visGroups(groupname = "Europe", color = "lightblue") %>%
     visGroups(groupname = "Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Africa", color = "lightblue")  %>%
+    visGroups(groupname = "Africa", color = "lightblue") %>%
     visGroups(groupname = "Americas, Asia, Europe, Oceania", color = "lightblue") %>%
     visGroups(groupname = "Americas, Asia, Europe", color = "lightblue") %>%
     visGroups(groupname = "Africa, Americas, Asia, Europe", color = "lightblue") %>%
@@ -163,5 +157,4 @@ renderVisNetwork({
     visGroups(groupname = "Africa, Americas, Asia, Europe, Oceania", color = "lightblue") %>%
     visGroups(groupname = "Asia, Europe", color = "lightblue")
   })    
-
 ```

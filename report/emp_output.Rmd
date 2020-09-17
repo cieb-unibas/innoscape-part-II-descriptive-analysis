@@ -1,6 +1,9 @@
 
 
 ```{r, echo=FALSE}
+# filter out only pharma	
+ilo <- readRDS("iloemp_2020_final.rds")	
+ilo <- subset(ilo,ind.code=="21")
 
 # Input panels for indicator and industry
       radioButtons("variable_emp", "Choose a variable",
