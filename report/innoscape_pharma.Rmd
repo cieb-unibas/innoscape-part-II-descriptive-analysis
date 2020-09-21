@@ -60,6 +60,7 @@ gva <- readRDS("gva_data_ch.rds")
 ilo <- readRDS("iloemp_2020_final.rds")
 ilo <- subset(ilo,ind.code=="21")
 
+numpat_data <- readRDS("numpat_data_final.rds")
 citflow <- readRDS("back_citations_16.rds")
 techlab <- readRDS("oecd_tech_field.RDS")
 colnames(techlab) <- c("tech_field_cited", "tech_name")
@@ -114,10 +115,13 @@ citflow_final<-merge(citflow, techlab)
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
 ```
 
+### Patent count and shares
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "numpat_output.Rmd")}
+```
+
 ### Citations
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
 ```
-
 
 ## {.tabset}
 

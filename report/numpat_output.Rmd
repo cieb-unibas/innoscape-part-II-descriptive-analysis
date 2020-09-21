@@ -1,6 +1,5 @@
 ```{r, echo=FALSE}
 
-numpat_data <- readRDS("numpat_data_final.rds")
 
 # Input panels for indicator and industry
       radioButtons("indicator", "Choose an indicator",
