@@ -1,0 +1,31 @@
+```{r, echo=FALSE}
+
+numpat_data <- readRDS("numpat_data_final.rds")
+
+# Input panels for indicator and industry
+      radioButtons("indicator", "Choose an indicator",
+                   choices = list("Absolute numbers"="abs",
+                                  "% total patents"="share_pharma_total", 
+                                  "RCA pharma patents"="rca_pharma_total"),
+                   selected = "share_pharma_total")
+
+      selectizeInput("Country", "Choose a country",
+                     choices = c(numpat_data$Country),multiple = TRUE, selected = "Switzerland")
+
+  renderPlotly({
+
+# subset the data accoding to the input:
+  dr <- reactive({numpat_data %>%
+                  filter(indicator %in% input$indicator,
+                         Country %in% input$Country)
+      }) 
+
+# make the plot
+  ggplotly(  
+      ggplot(dr(),aes(x = p_year, y = share_inv, group = Country, colour = Country)) +
+      geom_line()
+      )
+    
+  })
+
+```
