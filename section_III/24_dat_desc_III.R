@@ -22,11 +22,14 @@ vers <- c("202001_")
 ## Load data on technology field
 q_new <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds")) %>% distinct(p_key, tech_field) %>% mutate(p_key = as.character(p_key))
 
-## Load regions of patents' inventors
-inv_reg <- readRDS(paste0(mainDir1, "/created data/inv_reg.rds")) 
-
 ## Using following file to consider cross-border commuters to Switzerland
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
+
+## Focus only on subset of triadic patents
+tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))
+inv_reg <- mutate(inv_reg, triadic = ifelse(p_key %in% unique(tpf$p_key) | patent_id %in% unique(tpf$patent_id), 1, 0))
+inv_reg <- setDT(inv_reg)[, ind_triad := sum(triadic, na.rm = T), .(p_key)]
+inv_reg <- filter(inv_reg, ind_triad > 0)
 
 ## Using following subset to only consider granted patents. It, however, overwrites the existing .RDS files
 ## inv_reg <- filter(inv_reg, granted == "yes")

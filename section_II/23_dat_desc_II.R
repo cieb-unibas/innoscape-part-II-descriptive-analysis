@@ -1,4 +1,4 @@
-print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / CR 24.8.2020")
+print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / only triadic patents are used and inventors are adjusted for cross-border commuters to Switzerland / CR 23.9.2020")
 
 library(tidyr)
 library(dplyr)
@@ -25,6 +25,13 @@ max_year_past    <- 2015
 #########################################
 ## NEW: adjusted by cross-border commuters
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
+
+## Focus only on subset of triadic patents
+tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))
+
+inv_reg <- mutate(inv_reg, triadic = ifelse(p_key %in% unique(tpf$p_key) | patent_id %in% unique(tpf$patent_id), 1, 0))
+inv_reg <- setDT(inv_reg)[, ind_triad := sum(triadic, na.rm = T), .(p_key)]
+inv_reg <- filter(inv_reg, ind_triad > 0)
 
 ## By following subset only granted patents are considered. It, however, overwrites the existing .RDS files
 ## inv_reg <- filter(inv_reg, granted == "yes")
