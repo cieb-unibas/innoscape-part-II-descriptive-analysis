@@ -21,8 +21,20 @@
 
 # make the plot
   ggplotly(  
-          ggplot(dr(),aes(x = year, y = value, group = country, colour = country)) +
-          geom_line()
+          ggplot(dr(),aes(x = as.character(year), y = value, group = country, colour = country)) +
+            geom_point(alpha = 0.7) +  
+            geom_line()+
+            xlab("Year")+
+            ylab(input$variable_emp)+
+            guides(color = FALSE)+
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()
+                       ), dynamicTicks = T) %>%
+                          config(displayModeBar = F) %>%
+                          layout(xaxis = list(fixedrange=F, 
+                          rangeslider = list(type = "date", visible=T))) %>%
+                          layout(yaxis = list(fixedrange=F)
       )
     
   })

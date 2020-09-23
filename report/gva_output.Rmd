@@ -23,8 +23,20 @@ radioButtons("variable_gva", "Choose a variable",
 
 # make the plot
   ggplotly(  
-    ggplot(dr(),aes(x = year, y = value, group = ind.name, colour = ind.name)) +
-        geom_line()
+    ggplot(dr(),aes(x = as.character(year), y = value, group = ind.name, colour = ind.name)) +
+        geom_point(alpha = 0.7) +  
+            geom_line()+
+            xlab("Year")+
+            ylab(input$variable_gva)+
+            guides(color = FALSE)+
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()
+                       ), dynamicTicks = T) %>%
+                          config(displayModeBar = F) %>%
+                          layout(xaxis = list(fixedrange=F, 
+                          rangeslider = list(type = "date", visible=T))) %>%
+                          layout(yaxis = list(fixedrange=F)
       )
     
   })
