@@ -24,6 +24,7 @@ q_new <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds")) %>% disti
 
 ## Using following file to consider cross-border commuters to Switzerland
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
+inv_reg <- dplyr::rename(inv_reg, Up_reg_label = regio_pat, Ctry_code = ctry_pat)
 
 ## Focus only on subset of triadic patents
 tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))

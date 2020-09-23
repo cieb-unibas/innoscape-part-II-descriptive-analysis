@@ -25,6 +25,7 @@ max_year_past    <- 2015
 #########################################
 ## NEW: adjusted by cross-border commuters
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
+inv_reg <- dplyr::rename(inv_reg, Up_reg_label = regio_pat, Ctry_code = ctry_pat)
 
 ## Focus only on subset of triadic patents
 tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))
@@ -44,8 +45,8 @@ inv_reg <- distinct(inv_reg, p_key, name, .keep_all = T)
 inv_reg <- filter(inv_reg, is.na(tech_field) != T & tech_field == tech_field_start)
 }
 ## For the analysis, use ctry_pat and regio_pat 
-inv_reg <- dplyr::select(inv_reg, -Ctry_code, -Up_reg_label)
-inv_reg <- dplyr::rename(inv_reg, ctry_code = ctry_pat, Up_reg_label = regio_pat)
+# inv_reg <- dplyr::select(inv_reg, -Ctry_code, -Up_reg_label)
+# inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code , Up_reg_label = regio_pat)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"), Up_reg_label = paste0(ctry_code, " - ", Up_reg_label))
 inv_reg <- setDT(inv_reg)[, share_inv := 1/.N, .(p_key)]
 inv_reg <- mutate(inv_reg, ipc_3 = substr(ipc_main, 1, 3)) %>% dplyr::select(-ipc_main)
