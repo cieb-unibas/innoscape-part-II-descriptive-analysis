@@ -25,7 +25,7 @@ max_year_past    <- 2015
 #########################################
 ## NEW: adjusted by cross-border commuters
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
-inv_reg <- dplyr::rename(inv_reg, Up_reg_label = regio_pat, Ctry_code = ctry_pat)
+inv_reg <- dplyr::rename(inv_reg, Up_reg_label = regio_pat, ctry_code = ctry_pat)
 
 ## Focus only on subset of triadic patents
 tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))

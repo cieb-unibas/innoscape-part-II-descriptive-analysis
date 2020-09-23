@@ -73,12 +73,12 @@ return(reg)
 
 
 ## Calculations for continent-pairs
-collab_conti <- rbind.fill(lapply(seq(2018, 2019, 1), function(x) geo_col("conti", x, 16)))
+collab_conti <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) geo_col("conti", x, 16)))
 collab_conti <- mutate(collab_conti, conti_1 = reg_code_1, conti_2 = reg_code_2)
 collab_conti %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/collab_conti_16.rds")
 
 ## Calculations for country-pairs
-collab_ctry <- rbind.fill(lapply(seq(2018, 2019, 1), function(x) geo_col("ctry_code", x, 16)))
+collab_ctry <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) geo_col("ctry_code", x, 16)))
 collab_ctry <- mutate(collab_ctry, ctry_1 = countrycode(reg_code_1, "iso2c", "country.name.en"), ctry_2 = countrycode(reg_code_2, "iso2c", "country.name.en"))
 collab_ctry %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/collab_ctry_16.rds")
 
