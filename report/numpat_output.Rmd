@@ -21,12 +21,13 @@
 
 # make the plot
   ggplotly(  
-      ggplot(dr(),aes(x = as.character(p_year), y = share_inv, group = Country, colour = Country)) +
+      ggplot(dr(),aes(x = as.numeric(p_year), y = share_inv, group = Country, colour = Country)) +
 geom_point(alpha = 0.7) +  
             geom_line()+
             xlab("Year")+
             ylab(input$indicator)+
             guides(color = FALSE)+
+            scale_x_continuous(breaks = seq(min(dr()$p_year), max(dr()$p_year), by = 5)) +
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
                        axis.line = element_line()

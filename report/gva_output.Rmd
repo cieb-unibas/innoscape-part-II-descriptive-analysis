@@ -23,12 +23,13 @@ radioButtons("variable_gva", "Choose a variable",
 
 # make the plot
   ggplotly(  
-    ggplot(dr(),aes(x = as.character(year), y = value, group = ind.name, colour = ind.name)) +
+    ggplot(dr(),aes(x = as.numeric(year), y = value, group = ind.name, colour = ind.name)) +
         geom_point(alpha = 0.7) +  
             geom_line()+
             xlab("Year")+
             ylab(input$variable_gva)+
             guides(color = FALSE)+
+            scale_x_continuous(breaks = seq(min(dr()$year), max(dr()$year), by = 5)) +
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
                        axis.line = element_line()
