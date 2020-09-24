@@ -33,15 +33,6 @@ inv_reg <- mutate(inv_reg, triadic = ifelse(p_key %in% unique(tpf$p_key) | paten
 inv_reg <- setDT(inv_reg)[, ind_triad := sum(triadic, na.rm = T), .(p_key)]
 inv_reg <- filter(inv_reg, ind_triad > 0)
 
-## Some checks whether all triadic patents have been detected
-num_triad <- distinct(tpf, fam_id)
-nrow(num_triad)
-num_pat <- distinct(inv_reg, p_key)
-nrow(num_pat)/nrow(num_triad)
-tpf <- mutate(tpf, p_key = as.character(p_key))
-inv_reg_t <- left_join(inv_reg, tpf, by= "p_key")
-inv_reg_t <- setDT(inv_reg_t)[, num_fam_p_key := uniqueN(p_key), .(fam_id)]
-
 ## Using following subset to only consider granted patents. It, however, overwrites the existing .RDS files
 ## inv_reg <- filter(inv_reg, granted == "yes")
 
