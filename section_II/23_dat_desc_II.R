@@ -234,5 +234,3 @@ pharma <- rbind.fill(pharma, pharma_share, pharma_all_geo, pharma_all_rca )
 pharma <- dplyr::select(pharma, -ges_pat_year, -ges_pat_geo_year, -abs_rel, -share_geo)
 pharma <- filter(pharma, is.na(share_inv) != T)
 pharma %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", 16, ".rds"))
-
-

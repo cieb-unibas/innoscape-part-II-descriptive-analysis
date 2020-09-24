@@ -25,12 +25,22 @@ q_new <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds")) %>% disti
 ## Using following file to consider cross-border commuters to Switzerland
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
 inv_reg <- dplyr::rename(inv_reg, Up_reg_label = regio_pat, Ctry_code = ctry_pat)
+inv_reg <- dplyr::select(inv_reg, -tech_field)
 
 ## Focus only on subset of triadic patents
 tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))
 inv_reg <- mutate(inv_reg, triadic = ifelse(p_key %in% unique(tpf$p_key) | patent_id %in% unique(tpf$patent_id), 1, 0))
 inv_reg <- setDT(inv_reg)[, ind_triad := sum(triadic, na.rm = T), .(p_key)]
 inv_reg <- filter(inv_reg, ind_triad > 0)
+
+## Some checks whether all triadic patents have been detected
+num_triad <- distinct(tpf, fam_id)
+nrow(num_triad)
+num_pat <- distinct(inv_reg, p_key)
+nrow(num_pat)/nrow(num_triad)
+tpf <- mutate(tpf, p_key = as.character(p_key))
+inv_reg_t <- left_join(inv_reg, tpf, by= "p_key")
+inv_reg_t <- setDT(inv_reg_t)[, num_fam_p_key := uniqueN(p_key), .(fam_id)]
 
 ## Using following subset to only consider granted patents. It, however, overwrites the existing .RDS files
 ## inv_reg <- filter(inv_reg, granted == "yes")
@@ -73,17 +83,17 @@ return(reg)
 
 
 ## Calculations for continent-pairs
-collab_conti <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) geo_col("conti", x, 16)))
+collab_conti <- rbind.fill(lapply(seq(1990, 2018, 1), function(x) geo_col("conti", x, 16)))
 collab_conti <- mutate(collab_conti, conti_1 = reg_code_1, conti_2 = reg_code_2)
 collab_conti %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/collab_conti_16.rds")
 
 ## Calculations for country-pairs
-collab_ctry <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) geo_col("ctry_code", x, 16)))
+collab_ctry <- rbind.fill(lapply(seq(1990, 2018, 1), function(x) geo_col("ctry_code", x, 16)))
 collab_ctry <- mutate(collab_ctry, ctry_1 = countrycode(reg_code_1, "iso2c", "country.name.en"), ctry_2 = countrycode(reg_code_2, "iso2c", "country.name.en"))
 collab_ctry %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/collab_ctry_16.rds")
 
 ## Calculations for region-pairs
-collab_reg <- rbind.fill(lapply(seq(1990, 2019, 1), function(x) geo_col("Up_reg_code", x, 16)))
+collab_reg <- rbind.fill(lapply(seq(1990, 2018, 1), function(x) geo_col("Up_reg_code", x, 16)))
 regio <- read.csv2(paste0(mainDir1, "/raw data/REGPAT_REGIONS.txt"), sep = "|") %>% dplyr::select(-Ctry_code) %>% distinct(Up_reg_code, Up_reg_label)
 collab_reg <- left_join(collab_reg, regio, by = c("reg_code_1" = "Up_reg_code")) %>% dplyr::rename(reg_lab_1 = Up_reg_label)
 collab_reg <- left_join(collab_reg, regio, by = c("reg_code_2" = "Up_reg_code")) %>% dplyr::rename(reg_lab_2 = Up_reg_label)
@@ -115,8 +125,8 @@ cit_flows <- function(tech_field_start, cit, p_year_start, geo_citing, geo_cited
     fwd   <- filter(fwd, p_year_citing %in% p_year_start)
     fwd   <- inner_join(q_sub, fwd, by = c("p_key" = "key_cited")) %>% dplyr::rename(tech_field_cited = tech_field, key_cited = p_key)
     fwd   <- left_join(fwd, q_new, by = c("key_citing" = "p_key")) %>% dplyr::rename(tech_field_citing = tech_field)
-    fwd   <- left_join(fwd, inv_reg, by = c("key_cited" = "p_key"))  %>% dplyr::rename(conti_cited = conti, reg_code_cited = Reg_code, reg_label_cited = reg_label, up_reg_label_cited = Up_reg_label, up_reg_code_cited = Up_reg_code, ctry_cited = ctry_code, ctry_name_cited = ctry_name, share_inv_cited = share_inv, name_cited = name)
-    fwd   <- left_join(fwd, inv_reg, by = c("key_citing" = "p_key")) %>% dplyr::rename(conti_citing = conti, reg_code_citing = Reg_code, reg_label_citing = reg_label, up_reg_label_citing = Up_reg_label, up_reg_code_citing = Up_reg_code, ctry_citing = ctry_code, ctry_name_citing = ctry_name, share_inv_citing = share_inv, name_citing = name)
+    fwd   <- left_join(fwd, inv_reg, by = c("key_cited" = "p_key"))  %>% dplyr::rename(conti_cited = conti, up_reg_label_cited = Up_reg_label, up_reg_code_cited = Up_reg_code, ctry_cited = ctry_code, ctry_name_cited = ctry_name, share_inv_cited = share_inv, name_cited = name)
+    fwd   <- left_join(fwd, inv_reg, by = c("key_citing" = "p_key")) %>% dplyr::rename(conti_citing = conti, up_reg_label_citing = Up_reg_label, up_reg_code_citing = Up_reg_code, ctry_citing = ctry_code, ctry_name_citing = ctry_name, share_inv_citing = share_inv, name_citing = name)
     #Q: how to deal with citing patent if it has been invented by persons from different countries?-> at the moment just add knowledge flow of 1 if at least one inventor from a country
     fwd   <- distinct(fwd, key_cited, !!geo_cited, key_citing, name_citing, .keep_all = T)
     cit_flows <- aggregate(as.formula(paste("share_inv_citing~", paste(c("p_year_citing", geo_citing, geo_cited, "tech_field_citing", "tech_field_cited"), collapse="+"))), FUN = sum, na.rm = T, data = fwd)
@@ -129,8 +139,8 @@ cit_flows <- function(tech_field_start, cit, p_year_start, geo_citing, geo_cited
     fwd   <- filter(fwd, p_year_citing %in% p_year_start)
     fwd   <- inner_join(q_sub, fwd, by = c("p_key" = "key_citing")) %>% dplyr::rename(tech_field_citing = tech_field, key_citing = p_key)
     fwd   <- left_join(fwd, q_new, by = c("key_cited" = "p_key")) %>% dplyr::rename(tech_field_cited = tech_field)
-    fwd   <- left_join(fwd, inv_reg, by = c("key_cited" = "p_key"))  %>% dplyr::rename(conti_cited = conti, reg_code_cited = Reg_code, reg_label_cited = reg_label, up_reg_label_cited = Up_reg_label, up_reg_code_cited = Up_reg_code, ctry_cited = ctry_code, ctry_name_cited = ctry_name, share_inv_cited = share_inv, name_cited = name)
-    fwd   <- left_join(fwd, inv_reg, by = c("key_citing" = "p_key")) %>% dplyr::rename(conti_citing = conti, reg_code_citing = Reg_code, reg_label_citing = reg_label, up_reg_label_citing = Up_reg_label, up_reg_code_citing = Up_reg_code, ctry_citing = ctry_code, ctry_name_citing = ctry_name, share_inv_citing = share_inv, name_citing = name)
+    fwd   <- left_join(fwd, inv_reg, by = c("key_cited" = "p_key"))  %>% dplyr::rename(conti_cited = conti, up_reg_label_cited = Up_reg_label, up_reg_code_cited = Up_reg_code, ctry_cited = ctry_code, ctry_name_cited = ctry_name, share_inv_cited = share_inv, name_cited = name)
+    fwd   <- left_join(fwd, inv_reg, by = c("key_citing" = "p_key")) %>% dplyr::rename(conti_citing = conti, up_reg_label_citing = Up_reg_label, up_reg_code_citing = Up_reg_code, ctry_citing = ctry_code, ctry_name_citing = ctry_name, share_inv_citing = share_inv, name_citing = name)
     #Q: how to deal with citing patent if it has been invented by persons from different countries?-> at the moment just add knowledge flow of 1 if at least one inventor from a country
     fwd   <- distinct(fwd, key_citing, !!geo_citing, key_cited, name_cited, .keep_all = T)
     cit_flows <- aggregate(as.formula(paste("share_inv_cited~", paste(c("p_year_citing", geo_citing, geo_cited, "tech_field_citing", "tech_field_cited"), collapse="+"))), FUN = sum, na.rm = T, data = fwd)
@@ -141,15 +151,15 @@ cit_flows <- function(tech_field_start, cit, p_year_start, geo_citing, geo_cited
 }
 
 ## Create data at the continent-level
-rbind.fill(lapply(seq(1990, 2019, 1), function(x) cit_flows(16, "forw_cit", x, "conti_citing", "conti_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_conti_16.rds")
+rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "forw_cit", x, "conti_citing", "conti_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_conti_16.rds")
 rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "back_cit", x, "conti_citing", "conti_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_conti_16.rds")
 
 ## Create data at the country-level
-rbind.fill(lapply(seq(1990, 2019, 1), function(x) cit_flows(16, "forw_cit", x, "ctry_name_citing", "ctry_name_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_ctry_16.rds")
+rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "forw_cit", x, "ctry_name_citing", "ctry_name_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_ctry_16.rds")
 rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "back_cit", x, "ctry_name_citing", "ctry_name_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_ctry_16.rds")
 
 ## Create data at the regional-level
-rbind.fill(lapply(seq(1990, 2019, 1), function(x) cit_flows(16, "forw_cit", x, "up_reg_label_citing", "up_reg_label_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_regio_16.rds")
+rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "forw_cit", x, "up_reg_label_citing", "up_reg_label_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_regio_16.rds")
 rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "back_cit", x, "up_reg_label_citing", "up_reg_label_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_regio_16.rds")
 print("part b. done")
 
