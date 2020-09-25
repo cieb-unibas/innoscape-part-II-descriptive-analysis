@@ -57,7 +57,7 @@
 # (3) Input panels for continent (group) and year
   pickerInput(inputId = "group",
               label = "Origin of citation", 
-              choices=c("All", "Africa", "Americas", "Asia", "Europe", "Oceania"),
+              choices=c("All", "Americas", "Asia", "Europe"),
               selected = c("All"),
               options = list(`actions-box` = TRUE),
               multiple = FALSE)
@@ -121,8 +121,8 @@ renderVisNetwork({
 # (d) Creating Network Plot
   visNetwork(nodes, edges, width = "100%") %>%
       visIgraphLayout(layout = "layout_nicely") %>%
-     # visEvents(type = "once", startStabilizing = "function() {
-     #         this.moveTo({scale:0.55})}") %>%
+      visEvents(type = "once", startStabilizing = "function() {
+              this.moveTo({scale:0.5})}") %>%
       visPhysics(stabilization = FALSE) %>%
       visNodes(
         fixed = TRUE,
@@ -143,18 +143,6 @@ renderVisNetwork({
     visGroups(groupname = "Americas", color = "lightblue") %>%
     visGroups(groupname = "Asia", color = "lightblue") %>%
     visGroups(groupname = "Europe", color = "lightblue") %>%
-    visGroups(groupname = "Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Africa", color = "lightblue") %>%
-    visGroups(groupname = "Americas, Asia, Europe, Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Americas, Asia, Europe", color = "lightblue") %>%
-    visGroups(groupname = "Africa, Americas, Asia, Europe", color = "lightblue") %>%
-    visGroups(groupname = "Americas, Asia", color = "lightblue") %>%
-    visGroups(groupname = "Americas, Europe", color = "lightblue") %>%
-    visGroups(groupname = "Americas, Europe, Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Europe, Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Asia, Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Americas, Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Africa, Americas, Asia, Europe, Oceania", color = "lightblue") %>%
-    visGroups(groupname = "Asia, Europe", color = "lightblue")
+    visGroups(groupname = "All", color = "lightblue")
   })    
 ```

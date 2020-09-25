@@ -60,7 +60,7 @@ gva <- readRDS("gva_data_ch.rds")
 ilo <- readRDS("iloemp_2020_final.rds")
 ilo <- subset(ilo,ind.code=="21")
 
-numpat_data <- readRDS("numpat_data_final.rds")
+numpat_data <- readRDS("num_pat_16.rds")
 citflow <- readRDS("back_citations_16.rds")
 techlab <- readRDS("oecd_tech_field.RDS")
 colnames(techlab) <- c("tech_field_cited", "tech_name")
