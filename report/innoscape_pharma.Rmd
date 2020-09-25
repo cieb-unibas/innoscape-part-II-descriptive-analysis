@@ -64,7 +64,7 @@ numpat_data <- readRDS("num_pat_16.rds")
 citflow <- readRDS("back_citations_16.rds")
 techlab <- readRDS("oecd_tech_field.RDS")
 colnames(techlab) <- c("tech_field_cited", "tech_name")
-citflow_final<-merge(citflow, techlab)
+citflow_final <- merge(citflow, techlab)
 ```	
 
 <!-- <head> -->

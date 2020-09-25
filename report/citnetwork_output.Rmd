@@ -9,8 +9,19 @@
                                     "share_inv_cited", 
                                     "ctry_name_citing", 
                                     "ctry_name_cited"))
-  citflow_ctry <- filter(citflow_ctry, ctry_name_cited != "Switzerland" & ctry_name_citing=="Switzerland")
   
+  # Create new data in order to be able to consider citations made to pharma patents
+  citflow_ctry_temp <- filter(citflow_ctry, tech_field_cited == 16)
+  citflow_ctry_temp$tech_name <- "Cited Pharmaceuticals"
+  citflow_ctry_temp$tech_field_cited <- 40
+  
+  citflow_ctry <- rbind(citflow_ctry_temp, citflow_ctry)
+  
+  citflow_ctry <- filter(citflow_ctry, ctry_name_cited != "Switzerland" & ctry_name_citing=="Switzerland" | ctry_name_cited == "Switzerland" & tech_name == "Pharmaceuticals")
+
+  # citflow_ctry <- mutate(citflow_ctry, tech_name = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", "Pharma other than Swiss", tech_name),
+  #                                      tech_field_cited = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", 40, tech_field_cited))
+
   citflow_ctry <-subset(citflow_ctry, select = c("tech_field_cited", 
                                                  "tech_name", 
                                                  "tech_field_citing",
@@ -28,7 +39,14 @@
   # Agregation summing, without cited pharma patents
   citflow_ctry <- citflow_ctry %>% 
     group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
-    summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) 
+    summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
+
+  # Create normalized shares per year
+  citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited), .(p_year_citing)] %>%
+                  mutate(share_inv_cited = share_inv_cited / total_num)
+
+  
+  
 # (2) Creating coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
 # https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
@@ -126,6 +144,7 @@ renderVisNetwork({
       visPhysics(stabilization = FALSE) %>%
       visNodes(
         fixed = TRUE,
+        scaling = list(min = 1, max = 10),
         shape = "dot",
         color = "red",
         shadow = list(enabled = F, size = 20)
