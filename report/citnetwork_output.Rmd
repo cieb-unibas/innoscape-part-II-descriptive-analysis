@@ -45,10 +45,17 @@
   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited), .(p_year_citing)] %>%
                   mutate(share_inv_cited = share_inv_cited / total_num)
   
+  # Creating a All (continents) group
+    citflow_ctry<-citflow_ctry %>% 
+    group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing) %>% 
+    summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
+    bind_rows(citflow_ctry, .)
 
+  # Create tech_field_cited by group
+  citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited))
   
-  
-# (2) Creating coordinates for each unique technology that is cited in a c
+    
+  # (2) Creating coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
 # https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
   eq_spacing <- function(n, r = 1){
@@ -68,12 +75,7 @@
   coord_f<-cbind(coord, numbers)
   colnames(coord_f) <- c("tech_field_cited", "x", "y")
   citflow_ctry<-merge(citflow_ctry,coord_f)
-  
-  citflow_ctry<-citflow_ctry %>% # Creating a All (continents) group
-    group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing,x,y) %>% 
-    summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
-    bind_rows(citflow_ctry, .)
-  
+    
   
 # (3) Input panels for continent (group) and year
   pickerInput(inputId = "group",
@@ -133,17 +135,28 @@ renderVisNetwork({
       
       
 # (c) Creating EDGES from the reactive (filtered) data    
-  edges <- subset(edges, select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited"))
-  colnames(edges) <- c("from", "to", "value")
+  edges <- subset(edges, select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited", "group"))
+  colnames(edges) <- c("from", "to", "value", "group")
   edges <- filter(edges, value != 0)
   edges$title <- paste0(round(edges$value, 2))
    
 # (d) keep only observations above a min threshold
   edges <- filter(edges, value > 0.02)
   nodes <- filter(nodes, id %in% edges$to | id == 16)
-  nodes <- mutate(nodes, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = "red")
   
-# (e) Creating Network Plot
+# (e) Define different colors for different regions
+  nodes <- mutate(nodes, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "red",
+                                                                                            group == "Europe" ~ "blue",
+                                                                                            group == "Americas" ~ "green", 
+                                                                                            group == "Asia" ~ "lightblue"),
+                  group = ifelse(group %in% c("All", "Europe", "Asia", "Americas"), group, NA))
+  
+# (f) create data frame for legend 
+ nodes_temp <- filter(nodes, is.na(group) != T)
+ ledges <- data.frame(color = unique(nodes_temp$color), 
+ label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
+ 
+# (g) Creating Network Plot
   visNetwork(nodes, edges, height = "100%",  width = "100%") %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
@@ -164,13 +177,14 @@ renderVisNetwork({
         shadow = FALSE,
         smooth = FALSE) %>%
     visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
-    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
+    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
+     visLegend(position = "right", useGroups = F, addNodes = ledges)
   
-  
-  %>%
-    visGroups(groupname = "Americas", color = "lightblue") %>%
-    visGroups(groupname = "Asia", color = "lightblue") %>%
-    visGroups(groupname = "Europe", color = "lightblue") %>%
-    visGroups(groupname = "All", color = "lightblue")
+  # 
+  # %>%
+  #   visGroups(groupname = "Americas", color = "lightblue") %>%
+  #   visGroups(groupname = "Asia", color = "lightblue") %>%
+  #   visGroups(groupname = "Europe", color = "lightblue") %>%
+  #   visGroups(groupname = "All", color = "lightblue")
   })    
 ```
