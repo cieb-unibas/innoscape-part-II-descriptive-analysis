@@ -44,6 +44,7 @@
   # Create normalized shares per year
   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited), .(p_year_citing)] %>%
                   mutate(share_inv_cited = share_inv_cited / total_num)
+  
 
   
   
@@ -72,13 +73,15 @@
     group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing,x,y) %>% 
     summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
     bind_rows(citflow_ctry, .)
+  
+  
 # (3) Input panels for continent (group) and year
   pickerInput(inputId = "group",
               label = "Origin of citation", 
               choices=c("All", "Americas", "Asia", "Europe"),
               selected = c("All"),
               options = list(`actions-box` = TRUE),
-              multiple = FALSE)
+              multiple = TRUE)
   
   sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
               min=1990, max=2015, value=1990, sep="")
@@ -109,12 +112,12 @@ renderVisNetwork({
   edges <- nodes
     
 # (b) Creating NODES from the reactive (filtered) data
-  nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y)
+  nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y, share_inv_cited)
   # nodes <- subset(nodes, select = c("tech_field_cited", "tech_name", "group", "x", "y"))
-  colnames(nodes) <- c("id", "label", "group", "x", "y")
+  colnames(nodes) <- c("id", "label", "group", "x", "y", "value_nodes")
   nodes$label<- ifelse(nodes$label == "Pharmaceuticals", "Swiss Pharmaceuticals", nodes$label)
       
-  nodes %>% group_by(id, label, x, y) %>%
+  nodes %>% group_by(id, label, x, y, value_nodes) %>%
     summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
     ungroup()  -> nodes
       
@@ -134,17 +137,20 @@ renderVisNetwork({
   colnames(edges) <- c("from", "to", "value")
   edges <- filter(edges, value != 0)
   edges$title <- paste0(round(edges$value, 2))
-    
+   
+# (d) keep only observations above a min threshold
+  edges <- filter(edges, value > 0.02)
+  nodes <- filter(nodes, id %in% edges$to | id == 16)
+  nodes <- mutate(nodes, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = "red")
   
-# (d) Creating Network Plot
-  visNetwork(nodes, edges, width = "100%") %>%
+# (e) Creating Network Plot
+  visNetwork(nodes, edges, height = "100%",  width = "100%") %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
-              this.moveTo({scale:0.5})}") %>%
+               this.moveTo({scale:0.5})}") %>%
       visPhysics(stabilization = FALSE) %>%
       visNodes(
         fixed = TRUE,
-        scaling = list(min = 1, max = 10),
         shape = "dot",
         color = "red",
         shadow = list(enabled = F, size = 20)
@@ -158,7 +164,10 @@ renderVisNetwork({
         shadow = FALSE,
         smooth = FALSE) %>%
     visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
-    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
+    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
+  
+  
+  %>%
     visGroups(groupname = "Americas", color = "lightblue") %>%
     visGroups(groupname = "Asia", color = "lightblue") %>%
     visGroups(groupname = "Europe", color = "lightblue") %>%
