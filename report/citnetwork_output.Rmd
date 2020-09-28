@@ -1,59 +1,63 @@
 ```{r, echo=FALSE}
-# (1) Data preparation,labeling and initial filtering
-  citflow_ctry <- filter(citflow_final, geo %in% c("ctry"))
-  citflow_ctry <- subset(citflow_ctry, 
-                         select = c("p_year_citing", 
-                                    "tech_field_citing", 
-                                    "tech_name",
-                                    "tech_field_cited", 
-                                    "share_inv_cited", 
-                                    "ctry_name_citing", 
-                                    "ctry_name_cited"))
-  
-  # Create new data in order to be able to consider citations made to pharma patents
-  citflow_ctry_temp <- filter(citflow_ctry, tech_field_cited == 16)
-  citflow_ctry_temp$tech_name <- "Cited Pharmaceuticals"
-  citflow_ctry_temp$tech_field_cited <- 40
-  
-  citflow_ctry <- rbind(citflow_ctry_temp, citflow_ctry)
-  
-  citflow_ctry <- filter(citflow_ctry, ctry_name_cited != "Switzerland" & ctry_name_citing=="Switzerland" | ctry_name_cited == "Switzerland" & tech_name == "Pharmaceuticals")
-
-  # citflow_ctry <- mutate(citflow_ctry, tech_name = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", "Pharma other than Swiss", tech_name),
-  #                                      tech_field_cited = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", 40, tech_field_cited))
-
-  citflow_ctry <-subset(citflow_ctry, select = c("tech_field_cited", 
-                                                 "tech_name", 
-                                                 "tech_field_citing",
-                                                 "ctry_name_cited" ,
-                                                 "p_year_citing",
-                                                 "share_inv_cited"))
-  
-  citflow_ctry %>% 
-    mutate_if(is.factor, as.character) -> citflow_ctry # transforming factors into characters
-  
-  citflow_ctry$group <- countrycode(sourcevar = citflow_ctry[, "ctry_name_cited"],
-                                    origin = "country.name",
-                                    destination = "continent") # Creating continent var (group)
-  
-  # Agregation summing, without cited pharma patents
-  citflow_ctry <- citflow_ctry %>% 
-    group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
-    summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
-
-  # Create normalized shares per year
-  citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited), .(p_year_citing)] %>%
-                  mutate(share_inv_cited = share_inv_cited / total_num)
-  
-  # Creating a All (continents) group
-    citflow_ctry<-citflow_ctry %>% 
-    group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing) %>% 
-    summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
-    bind_rows(citflow_ctry, .)
-
-  # Create tech_field_cited by group
-  citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited))
-  
+# # (1) Data preparation,labeling and initial filtering
+#   citflow_ctry <- filter(citflow_final, geo %in% c("ctry"))
+#   citflow_ctry <- subset(citflow_ctry, 
+#                          select = c("p_year_citing", 
+#                                     "tech_field_citing", 
+#                                     "tech_name",
+#                                     "tech_field_cited", 
+#                                     "share_inv_cited", 
+#                                     "ctry_name_citing", 
+#                                     "ctry_name_cited"))
+#   
+#   # Create new data in order to be able to consider citations made to pharma patents
+#   citflow_ctry_temp <- filter(citflow_ctry, tech_field_cited == 16)
+#   citflow_ctry_temp$tech_name <- "Cited Pharmaceuticals"
+#   citflow_ctry_temp$tech_field_cited <- 40
+#   
+#   citflow_ctry <- rbind(citflow_ctry_temp, citflow_ctry)
+#   
+#   citflow_ctry <- filter(citflow_ctry, ctry_name_cited != "Switzerland" & ctry_name_citing=="Switzerland" | ctry_name_cited == "Switzerland" & tech_name == "Pharmaceuticals")
+# 
+#   # citflow_ctry <- mutate(citflow_ctry, tech_name = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", "Pharma other than Swiss", tech_name),
+#   #                                      tech_field_cited = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", 40, tech_field_cited))
+# 
+#   citflow_ctry <-subset(citflow_ctry, select = c("tech_field_cited", 
+#                                                  "tech_name", 
+#                                                  "tech_field_citing",
+#                                                  "ctry_name_cited" ,
+#                                                  "p_year_citing",
+#                                                  "share_inv_cited"))
+#   
+#   citflow_ctry %>% 
+#     mutate_if(is.factor, as.character) -> citflow_ctry # transforming factors into characters
+#   
+#   citflow_ctry$group <- countrycode(sourcevar = citflow_ctry[, "ctry_name_cited"],
+#                                     origin = "country.name",
+#                                     destination = "continent") # Creating continent var (group)
+#   
+#   # Keep Switzerland extra
+#   
+#   # Agregation summing, without cited pharma patents
+#   citflow_ctry <- citflow_ctry %>% 
+#     group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
+#     summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
+# 
+#   # Create normalized shares per year
+#   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited), .(p_year_citing)] %>%
+#                   mutate(share_inv_cited = share_inv_cited / total_num)
+#   
+#   # Creating a All (continents) group
+#     citflow_ctry<-citflow_ctry %>% 
+#     group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing) %>% 
+#     summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
+#     bind_rows(citflow_ctry, .)
+# 
+#   # Create tech_field_cited by group
+#   citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited))
+#   
+  # Load data created in section_II/prep_report.R
+  citflow_ctry <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/citflow_ctry.rds")
     
   # (2) Creating coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
@@ -69,7 +73,7 @@
   coord <- unique(citflow_ctry$tech_field_cited)
   coord <-data.frame(coord)
   
-  numbers<-eq_spacing(nrow(coord))
+  numbers <- eq_spacing(nrow(coord))
   numbers <-data.frame(numbers)
   
   coord_f<-cbind(coord, numbers)
@@ -85,9 +89,30 @@
               options = list(`actions-box` = TRUE),
               multiple = TRUE)
   
+# (3b) Input panels for first citation country
+    pickerInput(inputId = "cit_ctry",
+              label = "Citations by ", 
+              choices= unique(citflow_ctry$ctry_cited),
+              selected = c("Switzerland"),
+              options = list(`actions-box` = TRUE),
+              multiple = FALSE)
+    
+# (3b) Input panels for second citation country
+    pickerInput(inputId = "cit_ctry_2",
+              label = "Citations by ", 
+              choices= unique(citflow_ctry$ctry_cited),
+              selected = c("United States"),
+              options = list(`actions-box` = TRUE),
+              multiple = FALSE)
+  
   sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
               min=1990, max=2015, value=1990, sep="")
-# (4) make the plot
+
+  
+fluidPage(
+  fluidRow(
+    column(6,
+# (4) make the first plot
 renderVisNetwork({
   
 # (a) subset the data according to the input and store it for determining nodes and edges:
@@ -109,28 +134,28 @@ renderVisNetwork({
   #                          )
   # })
   # nodes <- datreact()
-  nodes <- citflow_ctry %>% filter(group %in% input$group, 
+  nodes<- citflow_ctry %>% filter(group %in% input$group, 
+                                   ctry_cited %in% input$cit_ctry,
                                    p_year_citing %in% input$p_year_citing)
   edges <- nodes
     
 # (b) Creating NODES from the reactive (filtered) data
   nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y, share_inv_cited)
-  # nodes <- subset(nodes, select = c("tech_field_cited", "tech_name", "group", "x", "y"))
   colnames(nodes) <- c("id", "label", "group", "x", "y", "value_nodes")
-  nodes$label<- ifelse(nodes$label == "Pharmaceuticals", "Swiss Pharmaceuticals", nodes$label)
+  nodes$label<- ifelse(nodes$label == "Pharmaceuticals", paste0(input$cit_ctry, " Pharmaceuticals"), nodes$label)
       
   nodes %>% group_by(id, label, x, y, value_nodes) %>%
     summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
     ungroup()  -> nodes
       
   mutate(nodes, x = case_when(
-        label == "Swiss Pharmaceuticals" ~ 0, 
+        label == paste0(input$cit_ctry, " Pharmaceuticals") ~ 0, 
         TRUE   ~ x )) -> nodes
 
     print(head(nodes))
        
   mutate(nodes, y = case_when(
-        label == "Swiss Pharmaceuticals" ~ 0, 
+        label == paste0(input$cit_ctry, " Pharmaceuticals") ~ 0, 
         TRUE   ~ y )) -> nodes
       
       
@@ -157,7 +182,7 @@ renderVisNetwork({
  label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes, edges, height = "100%",  width = "100%") %>%
+  visNetwork(nodes, edges, height = "100%",  width = "100%", main = input$cit_ctry) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -177,14 +202,101 @@ renderVisNetwork({
         shadow = FALSE,
         smooth = FALSE) %>%
     visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
-    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) %>%
+    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T))%>%
      visLegend(position = "right", useGroups = F, addNodes = ledges)
-  
-  # 
-  # %>%
-  #   visGroups(groupname = "Americas", color = "lightblue") %>%
-  #   visGroups(groupname = "Asia", color = "lightblue") %>%
-  #   visGroups(groupname = "Europe", color = "lightblue") %>%
-  #   visGroups(groupname = "All", color = "lightblue")
   })    
+), column(6,
+# make the 2nd plot
+renderVisNetwork({
+  
+# (a) subset the data according to the input and store it for determining nodes and edges:
+  
+  # @DRAGAN: I changed something here. It looked to me as the reactivness did not work for some reason.
+  # the renderVisNetwork() function is a reactive function already. So when we added the reactive()
+  # function below, we basically introduced a reactive function within a reactive function. This seems to
+  # be ok with renderplotly() but maybe it has caused problems for renderVisNetwork(). As soon as I didnt
+  # use the reactive() function below, it started working.
+  # Furthermore, you called the reactive() within the subset() function. I changed this as well now as this
+  # might (dont know though) also disturb the subset() call. Instead I first define the nodes and edges data.frames
+  # and then only subset them.
+  
+  # datreact <- reactive({
+  #       filtered <- citflow_ctry %>%
+  #                   filter(
+  #                          group %in% input$group,
+  #                          p_year_citing %in% input$p_year_citing
+  #                          )
+  # })
+  # nodes <- datreact()
+  nodes_2 <- citflow_ctry %>% filter(group %in% input$group, 
+                                   ctry_cited %in% input$cit_ctry_2,
+                                   p_year_citing %in% input$p_year_citing)
+  edges_2 <- nodes_2
+    
+# (b) Creating NODES from the reactive (filtered) data
+  nodes_2 <- dplyr::select(nodes_2, tech_field_cited, tech_name, group, x, y, share_inv_cited)
+  colnames(nodes_2) <- c("id", "label", "group", "x", "y", "value_nodes")
+  nodes_2$label<- ifelse(nodes_2$label == "Pharmaceuticals", paste0(input$cit_ctry_2, " Pharmaceuticals"), nodes_2$label)
+      
+  nodes_2 %>% group_by(id, label, x, y, value_nodes) %>%
+    summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
+    ungroup()  -> nodes_2
+      
+  mutate(nodes_2, x = case_when(
+        label == paste0(input$cit_ctry_2, " Pharmaceuticals") ~ 0, 
+        TRUE   ~ x )) -> nodes_2
+
+  mutate(nodes_2, y = case_when(
+        label == paste0(input$cit_ctry_2, " Pharmaceuticals") ~ 0, 
+        TRUE   ~ y )) -> nodes_2
+      
+      
+# (c) Creating EDGES from the reactive (filtered) data    
+  edges_2 <- subset(edges_2, select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited", "group"))
+  colnames(edges_2) <- c("from", "to", "value", "group")
+  edges_2 <- filter(edges_2, value != 0)
+  edges_2$title <- paste0(round(edges_2$value, 2))
+   
+# (d) keep only observations above a min threshold
+  edges_2 <- filter(edges_2, value > 0.02)
+  nodes_2 <- filter(nodes_2, id %in% edges_2$to | id == 16)
+  
+# (e) Define different colors for different regions
+  nodes_2 <- mutate(nodes_2, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "red",
+                                                                                            group == "Europe" ~ "blue",
+                                                                                            group == "Americas" ~ "green", 
+                                                                                            group == "Asia" ~ "lightblue"),
+                  group = ifelse(group %in% c("All", "Europe", "Asia", "Americas"), group, NA))
+  
+# (f) create data frame for legend 
+ # nodes_temp <- filter(nodes, is.na(group) != T)
+ # ledges <- data.frame(color = unique(nodes_temp$color), 
+ # label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
+ 
+# (g) Creating Network Plot
+  visNetwork(nodes_2, edges_2, height = "100%",  width = "100%", main = input$cit_ctry_2) %>%
+      visIgraphLayout(layout = "layout_nicely") %>%
+      visEvents(type = "once", startStabilizing = "function() {
+               this.moveTo({scale:0.5})}") %>%
+      visPhysics(stabilization = FALSE) %>%
+      visNodes(
+        fixed = TRUE,
+        shape = "dot",
+        color = "red",
+        shadow = list(enabled = F, size = 20)
+        ) %>%
+    visEdges(
+        value="value",
+        scaling = list(min = 1, max = 10),
+        arrows = "to",
+        color="lightgrey",
+        selfReferenceSize = F,
+        shadow = FALSE,
+        smooth = FALSE) %>%
+    visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
+    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
+  # %>%
+     # visLegend(position = "right", useGroups = F, addNodes = ledges)
+  }) 
+)))
 ```
