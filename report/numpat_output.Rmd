@@ -12,13 +12,14 @@ numpat_data <-subset(numpat_data, select = c("p_year", "tech_field", "tech_name"
 unique(numpat_data$indicator)
 numpat_data <- filter(numpat_data, indicator =="abs" | indicator =="share_pharma_total" | indicator =="rca_pharma_total")
 numpat_data <- filter(numpat_data, p_year <=2015)
+numpat_data <- dplyr::mutate(numpat_data, indicator = case_when(indicator == "abs" ~ "Absolute numbers", indicator == "share_pharma_total" ~ "% total patents", indicator == "rca_pharma_total" ~ "RCA pharma patents"))
 
 # Input panels for indicator and industry
       radioButtons("indicator", "Choose an indicator",
-                   choices = list("Absolute numbers"="abs",
-                                  "% total patents"="share_pharma_total", 
-                                  "RCA pharma patents"="rca_pharma_total"),
-                   selected = "share_pharma_total")
+                   choices = list("Absolute numbers"="Absolute numbers",
+                                  "% total patents"= "% total patents", 
+                                  "RCA pharma patents"="RCA pharma patents"),
+                   selected = "% total patents")
 
       selectizeInput("Country", "Choose a country",
                      choices = c(numpat_data$Country),multiple = TRUE, selected = "Switzerland")
@@ -36,7 +37,7 @@ numpat_data <- filter(numpat_data, p_year <=2015)
       ggplot(dr(),aes(x = as.numeric(p_year), y = share_inv, group = Country, colour = Country)) +
 geom_point(alpha = 0.7) +  
             geom_line()+
-            xlab("Year")+
+            xlab("Year") + 
             ylab(input$indicator)+
             guides(color = FALSE)+
             scale_x_continuous(breaks = seq(min(dr()$p_year), max(dr()$p_year), by = 5)) +
