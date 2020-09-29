@@ -143,7 +143,7 @@ labprod %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive an
 
 
 #################################
-# Create trade on patent counts #
+# Create data on patent counts #
 #################################
 
 # Load patent data 
