@@ -1,65 +1,6 @@
 ```{r, echo=FALSE}
-# # (1) Data preparation,labeling and initial filtering
-#   citflow_ctry <- filter(citflow_final, geo %in% c("ctry"))
-#   citflow_ctry <- subset(citflow_ctry, 
-#                          select = c("p_year_citing", 
-#                                     "tech_field_citing", 
-#                                     "tech_name",
-#                                     "tech_field_cited", 
-#                                     "share_inv_cited", 
-#                                     "ctry_name_citing", 
-#                                     "ctry_name_cited"))
-#   
-#   # Create new data in order to be able to consider citations made to pharma patents
-#   citflow_ctry_temp <- filter(citflow_ctry, tech_field_cited == 16)
-#   citflow_ctry_temp$tech_name <- "Cited Pharmaceuticals"
-#   citflow_ctry_temp$tech_field_cited <- 40
-#   
-#   citflow_ctry <- rbind(citflow_ctry_temp, citflow_ctry)
-#   
-#   citflow_ctry <- filter(citflow_ctry, ctry_name_cited != "Switzerland" & ctry_name_citing=="Switzerland" | ctry_name_cited == "Switzerland" & tech_name == "Pharmaceuticals")
-# 
-#   # citflow_ctry <- mutate(citflow_ctry, tech_name = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", "Pharma other than Swiss", tech_name),
-#   #                                      tech_field_cited = ifelse(tech_field_citing == tech_field_cited & ctry_name_cited != "Switzerland", 40, tech_field_cited))
-# 
-#   citflow_ctry <-subset(citflow_ctry, select = c("tech_field_cited", 
-#                                                  "tech_name", 
-#                                                  "tech_field_citing",
-#                                                  "ctry_name_cited" ,
-#                                                  "p_year_citing",
-#                                                  "share_inv_cited"))
-#   
-#   citflow_ctry %>% 
-#     mutate_if(is.factor, as.character) -> citflow_ctry # transforming factors into characters
-#   
-#   citflow_ctry$group <- countrycode(sourcevar = citflow_ctry[, "ctry_name_cited"],
-#                                     origin = "country.name",
-#                                     destination = "continent") # Creating continent var (group)
-#   
-#   # Keep Switzerland extra
-#   
-#   # Agregation summing, without cited pharma patents
-#   citflow_ctry <- citflow_ctry %>% 
-#     group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
-#     summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
-# 
-#   # Create normalized shares per year
-#   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited), .(p_year_citing)] %>%
-#                   mutate(share_inv_cited = share_inv_cited / total_num)
-#   
-#   # Creating a All (continents) group
-#     citflow_ctry<-citflow_ctry %>% 
-#     group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing) %>% 
-#     summarise(group = "All", share_inv_cited = sum(share_inv_cited)) %>%                 
-#     bind_rows(citflow_ctry, .)
-# 
-#   # Create tech_field_cited by group
-#   citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited))
-#   
-  # Load data created in section_II/prep_report.R
-  citflow_ctry <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/citflow_ctry.rds")
-    
-  # (2) Creating coordinates for each unique technology that is cited in a c
+
+# (2) Creating coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
 # https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
   eq_spacing <- function(n, r = 1){
@@ -118,24 +59,7 @@ fluidPage(
 renderVisNetwork({
   
 # (a) subset the data according to the input and store it for determining nodes and edges:
-  
-  # @DRAGAN: I changed something here. It looked to me as the reactivness did not work for some reason.
-  # the renderVisNetwork() function is a reactive function already. So when we added the reactive()
-  # function below, we basically introduced a reactive function within a reactive function. This seems to
-  # be ok with renderplotly() but maybe it has caused problems for renderVisNetwork(). As soon as I didnt
-  # use the reactive() function below, it started working.
-  # Furthermore, you called the reactive() within the subset() function. I changed this as well now as this
-  # might (dont know though) also disturb the subset() call. Instead I first define the nodes and edges data.frames
-  # and then only subset them.
-  
-  # datreact <- reactive({
-  #       filtered <- citflow_ctry %>%
-  #                   filter(
-  #                          group %in% input$group,
-  #                          p_year_citing %in% input$p_year_citing
-  #                          )
-  # })
-  # nodes <- datreact()
+
   nodes<- citflow_ctry %>% filter(group %in% input$group, 
                                    ctry_cited %in% input$cit_ctry,
                                    p_year_citing %in% input$p_year_citing)
@@ -212,24 +136,7 @@ renderVisNetwork({
 renderVisNetwork({
   
 # (a) subset the data according to the input and store it for determining nodes and edges:
-  
-  # @DRAGAN: I changed something here. It looked to me as the reactivness did not work for some reason.
-  # the renderVisNetwork() function is a reactive function already. So when we added the reactive()
-  # function below, we basically introduced a reactive function within a reactive function. This seems to
-  # be ok with renderplotly() but maybe it has caused problems for renderVisNetwork(). As soon as I didnt
-  # use the reactive() function below, it started working.
-  # Furthermore, you called the reactive() within the subset() function. I changed this as well now as this
-  # might (dont know though) also disturb the subset() call. Instead I first define the nodes and edges data.frames
-  # and then only subset them.
-  
-  # datreact <- reactive({
-  #       filtered <- citflow_ctry %>%
-  #                   filter(
-  #                          group %in% input$group,
-  #                          p_year_citing %in% input$p_year_citing
-  #                          )
-  # })
-  # nodes <- datreact()
+
   nodes_2 <- citflow_ctry %>% filter(group %in% input$group, 
                                    ctry_cited %in% input$cit_ctry_2,
                                    p_year_citing %in% input$p_year_citing)
