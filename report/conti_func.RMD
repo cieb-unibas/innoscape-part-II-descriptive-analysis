@@ -58,7 +58,8 @@ renderPlotly({
         # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
         theme(axis.title = element_text(face="bold",size = 10),
               panel.background = element_blank(),
-              axis.line = element_line()),
+              axis.line = element_line(),
+              legend.title = element_blank()),
       dynamicTicks = FALSE,  tooltip = c("label")) %>%
       config(displayModeBar = F) %>%
       layout(xaxis = list(fixedrange=F,
