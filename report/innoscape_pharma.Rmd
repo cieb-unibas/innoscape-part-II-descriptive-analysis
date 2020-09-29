@@ -1,9 +1,25 @@
 ---
-output: 
-   html_document:
-      css: style.css
-runtime: shiny
 fig_caption: yes
+output:
+  html_document:
+    css: style.css
+resource_files:
+- citnetwork_output.Rmd
+- conti_func.RMD
+- ctry_func.Rmd
+- emp_output.Rmd
+- export_output.Rmd
+- gva_output.Rmd
+- labprod_output.Rmd
+- regio_func.Rmd
+- back_citations_16.rds
+- citflow_ctry.rds
+- collab_inv_16.rds
+- ilo.rds
+- labprod.rds
+- map_data.rds
+- trad_data.rds
+runtime: shiny
 ---
 
 ```{r setup, include=FALSE}
@@ -42,7 +58,7 @@ numpat_data <- readRDS("numpat_data.rds")
 labprod <- readRDS("labprod.rds")
 
 # Load data on employment / prepared in section_II/prep_report.R
-ilo <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/ilo.rds")
+ilo <- readRDS("ilo.rds")
 
 # Load GVA data 
 gva <- readRDS("gva_data_ch.rds")
