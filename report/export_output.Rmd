@@ -7,7 +7,7 @@
                               "% of total Swiss Pharma Exports"="share_in_tot2"),
                                 selected = "val_export", inline = T)
 
-  sliderInput("year_exp", "Year", min=1990, max=2019, value=2000, sep="")
+  sliderInput(inputId =  "year_exp", "Year", min=1990, max=2019, value=2000, sep="")
   
 
 
@@ -15,8 +15,8 @@
 
 # subset the data accoding to the input:
     d_exp <- reactive({volumes %>%
-                    filter(variable %in% input_exp$variable_exp,
-                           year %in% input_exp$year)
+                    filter(variable %in% input$variable_exp,
+                           year %in% input$year_exp)
     }) 
 
 # make the plot

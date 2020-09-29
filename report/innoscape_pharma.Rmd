@@ -49,6 +49,14 @@ resource_files:
 - numpat_data.rds
 - trad_data.rds
 - cieb.png
+- citflow_ctry.rds
+- gva_data_ch.rds
+- ilo.rds
+- labprod.rds
+- map_data.rds
+- numpat_data.rds
+- trad_data.rds
+- cieb.png
 runtime: shiny
 ---
 
