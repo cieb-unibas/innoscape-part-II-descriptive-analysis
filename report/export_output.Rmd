@@ -1,29 +1,20 @@
 ```{r, echo=FALSE}
 
-
-# filter the data to leave only Switzerland:
-  volumes <- subset(tradedata,rep.code=="CHE")
-  volumes <-transform(volumes, year = as.numeric(year)) %>% # Transform to numeric values
-            mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep"), as.numeric)
-
-  # Input panels for indicator, industry and year
-
+# Input panels for indicator, industry and year 
   radioButtons("variable_exp", "Choose a variable",
-               choices = list("Values in thousand USD"="val_export", 
-                              "% in Destination Exports"="share_in_tot",
-                              "% in Industry Exports"="share_in_tot2"),
-                                selected = "val_export")
+               choices = list("Swiss Pharma exports in million USD"="val_export", 
+                              "% Share of pharma in destination imports from Switzerland"="share_in_tot",
+                              "% of total Swiss Pharma Exports"="share_in_tot2"),
+                                selected = "val_export", inline = T)
 
   sliderInput("year", "Year", min=1990, max=2019, value=2000, sep="")
   
-# Create the world map:
-  map_world <- map_data(map = "world") %>%
-               filter(region != "Antarctica")
+
 
   renderPlotly({
 
 # subset the data accoding to the input:
-    dr <- reactive({volumes %>%
+    d_exp <- reactive({volumes %>%
                     filter(variable %in% input$variable_exp,
                            year %in% input$year)
     }) 
@@ -34,18 +25,18 @@
               geom_polygon(data = map_world,
                            aes(long, lat, group = group, fill = region), 
                            show.legend = FALSE,
-                           alpha = 0.25,
-                           fill="lightgray",
+                           alpha = 0.4,
+                           fill="lightgreen",
                            color = "white") +
-              geom_curve(data = dr(), 
+              geom_curve(data = d_exp(), 
                          aes(x = long_rep, xend = long_par,
                              y = lat_rep, yend = lat_par),
                          curvature = 0.1, 
                          col="turquoise2", 
                          size = 0.10,
                          alpha = 0.5) +
-              geom_point(data = dr(),
-                         aes(long_par, lat_par, size = value), color = "chocolate1",alpha = 0.5) +
+              geom_point(data = d_exp(),
+                         aes(long_par, lat_par, size = value, label = Country), color = "chocolate1",alpha = 0.5) +
               theme_bw() +
               theme(axis.line = element_blank(),
                     panel.grid.major = element_blank(),
@@ -54,7 +45,8 @@
                     panel.border = element_blank(),
                     axis.ticks = element_blank(),
                     axis.title = element_blank(),
-                    axis.text = element_blank())
+                    axis.text = element_blank()),
+            dynamicTicks = T, tooltip = c("label")
       )
     
   })

@@ -1,6 +1,6 @@
 ```{r, echo = F}
 
-select_regio <- distinct(dat_ii, Region, `Rank based on total patents`)  %>% na.omit()
+select_regio <- distinct(numpat_data, Region, `Rank based on year 2000`)  %>% na.omit()
 
 output$regio <- DT::renderDT(select_regio, server = F, extensions = 'Scroller',  
                   filter = "top", # location of column filters
@@ -24,35 +24,39 @@ observeEvent(input$clear_reg, {
     proxy %>% selectRows(NULL)
   })
 
-## Add button to choose between absolut and relative value
-actionButton('abs_rel_regio', "Absolute value / relative to 1990")
-abs_rel_regio <- eventReactive(input$abs_rel_regio,{
-ifelse(input$abs_rel_regio %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
+# Input panels for indicator 
+radioButtons("ind_regio", "Choose an indicator",
+                   choices = list("Absolute numbers"="Absolute numbers",
+                                  "% of total patents"= "% of total patents", 
+                                  "RCA pharma patents"="RCA pharma patents"),
+                   selected = "% of total patents", 
+                   inline = T)
 
-## Add button to choose between absolute value or share relative to overall patents for a given year
-actionButton("geo_share_regio", "Absolute value / share")
-geo_share_regio <- eventReactive(input$geo_share_regio, {ifelse(input$geo_share_regio %in% c(0, seq(2, 1000, 2)), "abs", "rel")}, ignoreNULL = FALSE)
+# subset the data according to the input:
+plot02_data_regio <- reactive({numpat_data %>%
+                        filter(geo %in% selectedRow_regio(),
+                               indicator %in% input$ind_regio)
+      }) 
 
 
 ## Create plot
 renderPlotly({
-  plot02_data_regio <- filter(dat_ii, Region %in% selectedRow_regio() & indicator %in% abs_rel_regio())
-
-          # make the plot
+# make the plot
                  ggplotly(
-                 ggplot(data = plot02_data_regio, aes(x = p_year, y= share_inv, color = Region, shape = geo)) +
+                 ggplot(data = plot02_data_regio(), aes(x = p_year, y= share_inv, color = Region, shape = geo)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
                  xlab("Priority Year")+
                  ylab("Number of patents")+
                  guides(color = FALSE)+
-                 scale_x_continuous(breaks = seq(min(plot02_data_regio$p_year), max(plot02_data_regio$p_year), by = 5)) +
+                 scale_x_continuous(breaks = seq(min(plot02_data_regio()$p_year), max(plot02_data_regio()$p_year), by = 5)) +
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
-                       axis.line = element_line()
+                       axis.line = element_line(),
+                       legend.title = element_blank()
                        ),
-                 dynamicTicks = T) %>%
+                 dynamicTicks = T, tooltip = "label") %>%
                  config(displayModeBar = F) %>%
                  layout(xaxis = list(fixedrange=F, 
                                 rangeslider = list(type = "date", visible=T))) %>%

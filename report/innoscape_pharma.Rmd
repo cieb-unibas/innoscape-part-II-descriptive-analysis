@@ -24,28 +24,37 @@ library(shinyWidgets)
 library(plyr)
 library(dplyr)
 library(data.table)
+library(countrycode)
 library("countrycode")
 library("visNetwork")
-library(gganimate)
 source_rmd <- function(rmd_file){
-  knitr::knit(rmd_file, output = tempfile())}
+  knitr::knit(rmd_file, output = tempfile())
+}
 ```
 
 ```{r, context="data", include=FALSE}
-# Load data 
-dat_ii <- readRDS("num_pat_16.rds") %>% data.frame() 
-dat_ii <- filter(dat_ii, p_year < 2016)
-dat_ii <- setDT(dat_ii)[, ges_pat_geo := sum(share_inv[indicator == "abs"]), .(geo)]
-dat_ii <- setDT(dat_ii)[, `Rank based on total patents` := dense_rank(desc(ges_pat_geo)), .(geo_level)]
-dat_ii <- as.data.frame(dat_ii)  
+options(scipen=999)
 
-tradedata <- readRDS("oecd_trade_ch_final.rds")
-citflow <- readRDS("back_citations_16.rds")
-labprod <- readRDS("lab_prod_final_ch.rds")
+# Load data on patent counts / prepared in section_II/prep_report.R
+numpat_data <- readRDS("numpat_data.rds")
+
+# Load data on labor productivity / prepared in section_II/prep_report.R
+labprod <- readRDS("labprod.rds")
+
+# Load data on employment / prepared in section_II/prep_report.R
+ilo <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/ilo.rds")
+
+# Load GVA data 
 gva <- readRDS("gva_data_ch.rds")
-ilo <- readRDS("iloemp_2020_final.rds")
-ilo <- subset(ilo,ind.code=="21")
-```
+
+# Load data on exports / prepared in section_II/prep_report.R
+volumes <- readRDS("trad_data.rds")
+map_world <- readRDS("map_data.rds")
+
+# Load citation-flow data  / prepared in section_II/prep_report.R
+citflow_ctry <- readRDS("citflow_ctry.rds")
+
+```	
 
 <!-- <head> -->
 <!-- <!-- Global site tag (gtag.js) - Google Analytics --> -->
@@ -78,7 +87,6 @@ ilo <- subset(ilo,ind.code=="21")
 <br>
 
 
-### 
 
 ### Value added
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")}
@@ -95,11 +103,6 @@ ilo <- subset(ilo,ind.code=="21")
 ### Exports
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
 ```
-
-### Citations
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
-```
-
 
 ## {.tabset}
 
@@ -128,8 +131,15 @@ HERE short description of the findings at the country level
 ```
 
 
-
-
 HERE short description of the findings at the regional level
 
 ## {.unlisted .unnumbered}
+
+<!-- ### Patent count and shares -->
+<!-- ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "numpat_output.Rmd")} -->
+<!-- ``` -->
+
+### Citations
+```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
+```
+

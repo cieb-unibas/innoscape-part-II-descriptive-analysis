@@ -1,6 +1,7 @@
 ```{r, echo = F}
 
-select_conti <- distinct(dat_ii, Continent, `Rank based on total patents`)  %>% na.omit()
+select_conti <- distinct(numpat_data, Continent, `Rank based on year 2000`)  %>% na.omit()
+
 
 output$conti =  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
                              class = "display nowrap compact", # style
@@ -24,38 +25,46 @@ selectedRow_conti <- eventReactive(input$conti_rows_selected,{
   select_conti[input$conti_rows_selected, "Continent"]
 })
 
-## Add button to choose between absolut and relative value
-actionButton('abs_rel_conti', "Absolute value / relative to 1990")
-abs_rel_conti <- eventReactive(input$abs_rel_conti,{
-  ifelse(input$abs_rel_conti %in% c(0, seq(2, 1000, 2)), "abs", "rel_1990")}, ignoreNULL = FALSE)
 
 
 
-## Add button to choose between absolute value or share relative to overall patents for a given year
-actionButton("geo_share_conti", "Absolute value / share")
-geo_share_conti <- eventReactive(input$geo_share_conti, {ifelse(input$geo_share_conti %in% c(0, seq(2, 1000, 2)), "abs", "rel")}, ignoreNULL = FALSE)
+# Input panels for indicator 
+radioButtons("ind_conti", "Choose an indicator",
+                   choices = list("Absolute numbers"="Absolute numbers",
+                                  "% of total patents"= "% of total patents", 
+                                  "RCA pharma patents"="RCA pharma patents"),
+                   selected = "% of total patents", 
+                   inline = T)
+
+# subset the data according to the input:
+plot02_data_conti <- reactive({numpat_data %>%
+                        filter(geo %in% selectedRow_conti(),
+                               indicator %in% input$ind_conti)
+      }) 
+
+
 
 renderPlotly({
-  plot02_data_conti <- filter(dat_ii, Continent %in% selectedRow_conti()  & indicator %in% abs_rel_conti())
     # make the plot
     ggplotly(
-      ggplot(data =   plot02_data_conti, aes(x = p_year, y= share_inv, color = geo, shape = geo)) +
+      ggplot(data =   plot02_data_conti(), aes(x = p_year, y= share_inv, color = geo, shape = geo, label = Geo)) +
         geom_point(alpha = 0.7) +
         geom_line() +
         # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
         xlab("Priority Year")+
         ylab("Number of patents")+
         guides(color = FALSE)+
-        scale_x_continuous(breaks = seq(min(plot02_data_conti$p_year), max(plot02_data_conti$p_year), by = 5)) +
+        scale_x_continuous(breaks = seq(min(plot02_data_conti()$p_year, na.rm = T), max(plot02_data_conti()$p_year, na.rm = T), by = 5)) +
         # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
         theme(axis.title = element_text(face="bold",size = 10),
               panel.background = element_blank(),
-              axis.line = element_line()), 
-      dynamicTicks = FALSE) %>%
+              axis.line = element_line(),
+              legend.title = element_blank()),
+      dynamicTicks = FALSE,  tooltip = c("label")) %>%
       config(displayModeBar = F) %>%
-      layout(xaxis = list(fixedrange=F, 
+      layout(xaxis = list(fixedrange=F,
                           rangeslider = list(type = "date", visible=T, thickness=0.1))) %>%
-      layout(yaxis = list(fixedrange=F)) 
+      layout(yaxis = list(fixedrange=F))
 
 })
 
