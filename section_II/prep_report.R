@@ -89,7 +89,7 @@ citflow_ctry_data %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II desc
 
 options(scipen=999)
 # Load trade data
-tradedata <- readRDS("oecd_trade_ch_final.rds")
+tradedata <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_I/oecd_trade_ch_final.rds")
 tradedata_temp <- filter(tradedata, year == 2018 & variable == "val_export")
 tradedata_temp <- distinct(tradedata_temp, par.code, .keep_all = T)
 tradedata_temp <- setDT(tradedata_temp)[order(-value), .SD[1:60, ]]
@@ -112,7 +112,7 @@ map_world %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive 
 # Create data on employment #
 ##############################
 # Load data on employment
-ilo <- readRDS("iloemp_2020_final.rds")
+ilo <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_I/iloemp_2020_final.rds")
 ilo <- subset(ilo,ind.code=="21")
 
 # Rename countries from ISO to complete name
@@ -131,7 +131,7 @@ ilo %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analys
 
 
 # Load data on labor prod.
-labprod <- readRDS("lab_prod_final_ch.rds")
+labprod <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_I/lab_prod_final_ch.rds")
 
 # Prepare the data
 labprod <- mutate(labprod, variable = case_when(variable == "ilo_prod" ~ "Only domestic workers", 
@@ -147,10 +147,10 @@ labprod %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive an
 #################################
 
 # Load patent data 
-numpat_data <- readRDS("num_pat_16.rds")
+numpat_data <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_II/num_pat_16.rds")
 
 # Preparing tech field labels and filtering data
-tech_label <- readRDS("oecd_tech_field.RDS")
+tech_label <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_I/oecd_tech_field.RDS")
 colnames(tech_label) <- c("tech_field", "tech_name")
 
 numpat_data_temp <- filter(numpat_data, p_year == 2000 & indicator == "abs")

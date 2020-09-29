@@ -42,7 +42,7 @@ numpat_data <- readRDS("numpat_data.rds")
 labprod <- readRDS("labprod.rds")
 
 # Load data on employment / prepared in section_II/prep_report.R
-ilo <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/ilo.rds")
+ilo <- readRDS("ilo.rds")
 
 # Load GVA data 
 gva <- readRDS("gva_data_ch.rds")
