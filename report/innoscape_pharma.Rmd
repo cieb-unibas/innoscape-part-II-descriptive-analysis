@@ -19,6 +19,36 @@ resource_files:
 - labprod.rds
 - map_data.rds
 - trad_data.rds
+- numpat_data.rds
+- gva_data_ch.rds
+- citflow_ctry.rds
+- citnetwork_output.Rmd
+- ctry_func.Rmd
+- trad_data.rds
+- regio_func.Rmd
+- map_data.rds
+- labprod_output.Rmd
+- labprod.rds
+- ilo.rds
+- gva_output.Rmd
+- export_output.Rmd
+- emp_output.Rmd
+- citflow_ctry.rds
+- gva_data_ch.rds
+- cieb.png
+- ilo.rds
+- labprod.rds
+- map_data.rds
+- numpat_data.rds
+- trad_data.rds
+- citflow_ctry.rds
+- gva_data_ch.rds
+- ilo.rds
+- labprod.rds
+- map_data.rds
+- numpat_data.rds
+- trad_data.rds
+- cieb.png
 runtime: shiny
 ---
 
@@ -41,15 +71,14 @@ library(plyr)
 library(dplyr)
 library(data.table)
 library(countrycode)
-library("countrycode")
-library("visNetwork")
+library(igraph)
+library(visNetwork)
 source_rmd <- function(rmd_file){
   knitr::knit(rmd_file, output = tempfile())
 }
 ```
 
-```{r, context="data", include=FALSE}
-options(scipen=999)
+```{r context="data", echo=FALSE}
 
 # Load data on patent counts / prepared in section_II/prep_report.R
 numpat_data <- readRDS("numpat_data.rds")
@@ -69,7 +98,6 @@ map_world <- readRDS("map_data.rds")
 
 # Load citation-flow data  / prepared in section_II/prep_report.R
 citflow_ctry <- readRDS("citflow_ctry.rds")
-
 ```	
 
 <!-- <head> -->
@@ -86,11 +114,12 @@ citflow_ctry <- readRDS("citflow_ctry.rds")
 
 <br>
 
-[![Foo](cieb_logo.jpg){ width=18% }](http://cieb.unibas.ch/)&nbsp;&nbsp;
+<a href="http://cieb.unibas.ch/" target = "_blank">![Foo](cieb.png){ width=30% }</a>
 
-## <font color="grey"> **Innoscape: Descriptive Analysis of Pharma Innovations** </font>
 
-*June 2020* <a href="https://cieb.unibas.ch/de/team/dragan-filimonovic/" target = "_blank">Dragan Filimonovic</a>, <a href="https://cieb.unibas.ch/de/team/matthias-niggli/" target = "_blank">Matthias Niggli</a> and <a href="https://cieb.unibas.ch/de/team/dr-christian-rutzer/" target = "_blank">Christian Rutzer</a>
+## <font color='#68838B'>**Cross-border commuting and inventions 'Made in Switzerland'**</font>
+
+*October 2020* by <a href="https://wwz.unibas.ch/de/personen/dragan-filimonovic/" target = "_blank">Dragan Filimonovic</a>, <a href="https://wwz.unibas.ch/de/personen/matthias-niggli/" target = "_blank">Matthias Niggli</a> and <a href="https://wwz.unibas.ch/de/personen/christian-rutzer/" target = "_blank">Christian Rutzer</a>  
 
 
 <br>
