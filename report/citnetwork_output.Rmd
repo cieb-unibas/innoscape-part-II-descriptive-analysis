@@ -80,35 +80,37 @@
   colnames(coord_f) <- c("tech_field_cited", "x", "y")
   citflow_ctry<-merge(citflow_ctry,coord_f)
     
-  
+fluidPage(
+  fluidRow(
+    column(4,  
 # (3) Input panels for continent (group) and year
   pickerInput(inputId = "group",
               label = "Origin of citation", 
-              choices=c("All", "Americas", "Asia", "Europe"),
+              choices=c("All", "Americas", "Asia", "Europe", "Domestic"),
               selected = c("All"),
               options = list(`actions-box` = TRUE),
               multiple = TRUE)
-  
+), column(4,
 # (3b) Input panels for first citation country
     pickerInput(inputId = "cit_ctry",
-              label = "Citations by ", 
+              label = "Citations by (first country)", 
               choices= unique(citflow_ctry$ctry_cited),
               selected = c("Switzerland"),
               options = list(`actions-box` = TRUE),
               multiple = FALSE)
-    
+), column(4,    
 # (3b) Input panels for second citation country
     pickerInput(inputId = "cit_ctry_2",
-              label = "Citations by ", 
+              label = "Citations by (second country, for comparison)", 
               choices= unique(citflow_ctry$ctry_cited),
               selected = c("United States"),
               options = list(`actions-box` = TRUE),
               multiple = FALSE)
-  
-  sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
+)))
+
+sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
               min=1990, max=2015, value=1990, sep="")
 
-  
 fluidPage(
   fluidRow(
     column(6,
@@ -152,8 +154,7 @@ renderVisNetwork({
         label == paste0(input$cit_ctry, " Pharmaceuticals") ~ 0, 
         TRUE   ~ x )) -> nodes
 
-    print(head(nodes))
-       
+
   mutate(nodes, y = case_when(
         label == paste0(input$cit_ctry, " Pharmaceuticals") ~ 0, 
         TRUE   ~ y )) -> nodes
@@ -173,8 +174,9 @@ renderVisNetwork({
   nodes <- mutate(nodes, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "red",
                                                                                             group == "Europe" ~ "blue",
                                                                                             group == "Americas" ~ "green", 
-                                                                                            group == "Asia" ~ "lightblue"),
-                  group = ifelse(group %in% c("All", "Europe", "Asia", "Americas"), group, NA))
+                                                                                            group == "Asia" ~ "lightblue",
+                                                                                            group == "Domestic" ~ "green"),
+                  group = ifelse(group %in% c("All", "Europe", "Asia", "Americas", "Domestic"), group, NA))
   
 # (f) create data frame for legend 
  nodes_temp <- filter(nodes, is.na(group) != T)
@@ -195,7 +197,7 @@ renderVisNetwork({
         ) %>%
     visEdges(
         value="value",
-        scaling = list(min = 1, max = 10),
+        scaling = list(min = min(unique(edges$value), rm.na = T)*15, max = max(unique(edges$value), rm.na = T)*15),
         arrows = "to",
         color="lightgrey",
         selfReferenceSize = F,
@@ -265,8 +267,9 @@ renderVisNetwork({
   nodes_2 <- mutate(nodes_2, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "red",
                                                                                             group == "Europe" ~ "blue",
                                                                                             group == "Americas" ~ "green", 
-                                                                                            group == "Asia" ~ "lightblue"),
-                  group = ifelse(group %in% c("All", "Europe", "Asia", "Americas"), group, NA))
+                                                                                            group == "Asia" ~ "lightblue",
+                                                                                            group == "Domestic" ~ "green"),
+                  group = ifelse(group %in% c("All", "Europe", "Asia", "Americas", "Domestic"), group, NA))
   
 # (f) create data frame for legend 
  # nodes_temp <- filter(nodes, is.na(group) != T)
@@ -287,7 +290,7 @@ renderVisNetwork({
         ) %>%
     visEdges(
         value="value",
-        scaling = list(min = 1, max = 10),
+        scaling = list(min = min(unique(edges_2$value), rm.na = T)*15, max = max(unique(edges_2$value), rm.na = T)*15),
         arrows = "to",
         color="lightgrey",
         selfReferenceSize = F,
