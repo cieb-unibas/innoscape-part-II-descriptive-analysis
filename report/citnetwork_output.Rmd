@@ -34,7 +34,7 @@ fluidPage(
 ), column(4,
 # (3b) Input panels for first citation country
     pickerInput(inputId = "cit_ctry",
-              label = "Citations by (first country)", 
+              label = "Citations by", 
               choices= unique(citflow_ctry$ctry_cited),
               selected = c("Switzerland"),
               options = list(`actions-box` = TRUE),
@@ -42,7 +42,7 @@ fluidPage(
 ), column(4,    
 # (3b) Input panels for second citation country
     pickerInput(inputId = "cit_ctry_2",
-              label = "Citations by (second country, for comparison)", 
+              label = "Citations by (for comparison)", 
               choices= unique(citflow_ctry$ctry_cited),
               selected = c("United States"),
               options = list(`actions-box` = TRUE),
@@ -68,7 +68,7 @@ renderVisNetwork({
 # (b) Creating NODES from the reactive (filtered) data
   nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y, share_inv_cited)
   colnames(nodes) <- c("id", "label", "group", "x", "y", "value_nodes")
-  nodes$label<- ifelse(nodes$label == "Pharmaceuticals", paste0(input$cit_ctry, " Pharmaceuticals"), nodes$label)
+  nodes$label<- ifelse(nodes$label == "Pharmaceuticals", paste0(input$cit_ctry), nodes$label)
       
   nodes %>% group_by(id, label, x, y, value_nodes) %>%
     summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
@@ -95,11 +95,11 @@ renderVisNetwork({
   nodes <- filter(nodes, id %in% edges$to | id == 16)
   
 # (e) Define different colors for different regions
-  nodes <- mutate(nodes, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "red",
-                                                                                            group == "Europe" ~ "blue",
-                                                                                            group == "Americas" ~ "green", 
-                                                                                            group == "Asia" ~ "lightblue",
-                                                                                            group == "Domestic" ~ "green"),
+  nodes <- mutate(nodes, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "#F8766D",
+                                                                                            group == "Europe" ~ "#00BFC4",
+                                                                                            group == "Americas" ~ "#00BBDB", 
+                                                                                            group == "Asia" ~ "#7CAE00",
+                                                                                            group == "Domestic" ~ "#C77CFF"),
                   group = ifelse(group %in% c("All", "Europe", "Asia", "Americas", "Domestic"), group, NA))
   
 # (f) create data frame for legend 
@@ -108,7 +108,7 @@ renderVisNetwork({
  label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes, edges, height = "100%",  width = "100%", main = input$cit_ctry) %>%
+  visNetwork(nodes, edges, height = "130%",  width = "130%", main = paste(input$cit_ctry, "Pharmaceuticals")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -116,7 +116,6 @@ renderVisNetwork({
       visNodes(
         fixed = TRUE,
         shape = "dot",
-        color = "red",
         shadow = list(enabled = F, size = 20)
         ) %>%
     visEdges(
@@ -145,7 +144,7 @@ renderVisNetwork({
 # (b) Creating NODES from the reactive (filtered) data
   nodes_2 <- dplyr::select(nodes_2, tech_field_cited, tech_name, group, x, y, share_inv_cited)
   colnames(nodes_2) <- c("id", "label", "group", "x", "y", "value_nodes")
-  nodes_2$label<- ifelse(nodes_2$label == "Pharmaceuticals", paste0(input$cit_ctry_2, " Pharmaceuticals"), nodes_2$label)
+  nodes_2$label<- ifelse(nodes_2$label == "Pharmaceuticals", paste0(input$cit_ctry_2), nodes_2$label)
       
   nodes_2 %>% group_by(id, label, x, y, value_nodes) %>%
     summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
@@ -171,11 +170,11 @@ renderVisNetwork({
   nodes_2 <- filter(nodes_2, id %in% edges_2$to | id == 16)
   
 # (e) Define different colors for different regions
-  nodes_2 <- mutate(nodes_2, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "red",
-                                                                                            group == "Europe" ~ "blue",
-                                                                                            group == "Americas" ~ "green", 
-                                                                                            group == "Asia" ~ "lightblue",
-                                                                                            group == "Domestic" ~ "green"),
+  nodes_2 <- mutate(nodes_2, value = ifelse(x == 0 & y == 0, 1, value_nodes), color = case_when(group == "All" ~ "#F8766D",
+                                                                                            group == "Europe" ~ "#00BFC4",
+                                                                                            group == "Americas" ~ "#00BBDB", 
+                                                                                            group == "Asia" ~ "#7CAE00",
+                                                                                            group == "Domestic" ~ "#C77CFF"),
                   group = ifelse(group %in% c("All", "Europe", "Asia", "Americas", "Domestic"), group, NA))
   
 # (f) create data frame for legend 
@@ -184,7 +183,7 @@ renderVisNetwork({
  # label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes_2, edges_2, height = "100%",  width = "100%", main = input$cit_ctry_2) %>%
+  visNetwork(nodes_2, edges_2, height = "130%",  width = "130%", main = paste(input$cit_ctry_2, "Pharmaceuticals")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -192,7 +191,6 @@ renderVisNetwork({
       visNodes(
         fixed = TRUE,
         shape = "dot",
-        color = "red",
         shadow = list(enabled = F, size = 20)
         ) %>%
     visEdges(

@@ -16,7 +16,7 @@
     
   renderPlotly({
 
-# subset the data accoding to the input:
+# subset the data according to the input:
   d_output <- reactive({labprod %>%
                         filter(variable %in% input$variable_prod,
                                ind.name %in% input$ind.name_prod)

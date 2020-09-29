@@ -5,7 +5,7 @@
                                             variable == "gva_abs" ~ "GVA in millions CHF",
                                             variable == "gva_share" ~ "Share in GDP"
                                             )) %>%
-          mutate(Industry = paste0(" ", ind.name, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", round(value, 2)))
+          mutate(Industry = paste0(ind.name, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", round(value, 2)))
 
 
 # Input panels for indicator and industry
