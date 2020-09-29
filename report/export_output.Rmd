@@ -2,9 +2,9 @@
 
 # Input panels for indicator, industry and year 
   radioButtons("variable_exp", "Choose a variable",
-               choices = list("Values in millions USD"="val_export", 
-                              "% in Destination Exports"="share_in_tot",
-                              "% in Industry Exports"="share_in_tot2"),
+               choices = list("Swiss Pharma exports in million USD"="val_export", 
+                              "% Share of pharma in destination imports from Switzerland"="share_in_tot",
+                              "% of total Swiss Pharma Exports"="share_in_tot2"),
                                 selected = "val_export", inline = T)
 
   sliderInput("year", "Year", min=1990, max=2019, value=2000, sep="")
@@ -22,21 +22,21 @@
 # make the plot
   ggplotly(  
             ggplot() +
-              geom_polygon_interactive(data = map_world,
+              geom_polygon(data = map_world,
                            aes(long, lat, group = group, fill = region), 
                            show.legend = FALSE,
                            alpha = 0.4,
-                           fill= value,
+                           fill="lightgreen",
                            color = "white") +
-              # geom_curve(data = d_exp(),
-              #            aes(x = long_rep, xend = long_par,
-              #                y = lat_rep, yend = lat_par),
-              #            curvature = 0.1,
-              #            col="turquoise2",
-              #            size = 0.10,
-              #            alpha = 0.5) +
-              # geom_point(data = d_exp(),
-              #            aes(long_par, lat_par, size = value, label = Country), color = "chocolate1",alpha = 0.5) +
+              geom_curve(data = d_exp(), 
+                         aes(x = long_rep, xend = long_par,
+                             y = lat_rep, yend = lat_par),
+                         curvature = 0.1, 
+                         col="turquoise2", 
+                         size = 0.10,
+                         alpha = 0.5) +
+              geom_point(data = d_exp(),
+                         aes(long_par, lat_par, size = value, label = Country), color = "chocolate1",alpha = 0.5) +
               theme_bw() +
               theme(axis.line = element_blank(),
                     panel.grid.major = element_blank(),

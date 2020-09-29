@@ -25,7 +25,6 @@ library(plyr)
 library(dplyr)
 library(data.table)
 library(countrycode)
-library(ggiraph)
 library("countrycode")
 library("visNetwork")
 source_rmd <- function(rmd_file){
@@ -60,7 +59,10 @@ dat_ii <- as.data.frame(dat_ii)
 
 # Load trade data
 tradedata <- readRDS("oecd_trade_ch_final.rds")
-tradedata <- filter(tradedata, value > 0.01 & variable != "val_export" | variable == "val_export" & value > 1000)
+tradedata_temp <- filter(tradedata, year == 2018 & variable == "val_export")
+tradedata_temp <- distinct(tradedata_temp, par.code, .keep_all = T)
+tradedata_temp <- setDT(tradedata_temp)[order(-value), .SD[1:60, ]]
+tradedata <- filter(tradedata, par.code %in% unique(tradedata_temp$par.code))
 
 
 tradedata <- mutate(tradedata, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
@@ -69,16 +71,12 @@ tradedata <- mutate(tradedata, Country = paste0(countrycode(par.code, "iso3c", "
 volumes <-transform(tradedata, year = as.numeric(year)) %>% # Transform to numeric values
             mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep"), as.numeric)
 
-volumes <- mutate(volumes, ctry = countrycode(par.code, "iso3c", "country.name.en")) 
-
 # Create the world map:
-  map_world <- map_data(map = "world") %>%
+map_world <- map_data(map = "world") %>%
                filter(region != "Antarctica")
 
-  
-  map_world <- map_world[seq(1, nrow(map_world), 15), ]
-  # map_world <- filter(map_world, region %in% unique(volumes$ctry))
- 
+map_world <- map_world[seq(1, nrow(map_world), 18), ]
+
 # Load data on GVA
 gva <- readRDS("gva_data_ch.rds")
 
