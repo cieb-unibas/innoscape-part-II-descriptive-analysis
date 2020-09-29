@@ -163,5 +163,4 @@ renderVisNetwork({
     visGroups(groupname = "Africa, Americas, Asia, Europe, Oceania", color = "lightblue") %>%
     visGroups(groupname = "Asia, Europe", color = "lightblue")
   })    
-
 ```
