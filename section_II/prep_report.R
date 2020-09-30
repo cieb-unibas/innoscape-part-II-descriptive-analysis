@@ -1,7 +1,6 @@
 ## Calculate the final data used in the report II in order to reduce real-time calculations within r-markdown / CR 29.9.2020
 
 library(tidyr)
-library(dplyr)
 library(tidytext)
 library(stringr)
 require(plyr)
@@ -9,6 +8,7 @@ require(data.table)
 library(tidyverse)
 require(rio)
 require(countrycode)
+library(dplyr)
 
 #####################
 # Data on Citations #
@@ -59,19 +59,24 @@ citflow_ctry$group <- countrycode(sourcevar = citflow_ctry[, "ctry_name_cited"],
 citflow_ctry <- mutate(citflow_ctry, group = ifelse(ctry_name_cited == ctry_name_citing, "Domestic", group))
 
 # Agregation summing, without cited pharma patents
-citflow_ctry <- citflow_ctry %>% 
-  group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group, ctry_name_citing) %>% 
-  summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
+# citflow_ctry <- dplyr::group_by(citflow_ctry, tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
+#   summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
+citflow_ctry <- aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + group + ctry_name_citing, FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16"))
 
 # Creating a All (continents) group
-citflow_ctry<-citflow_ctry %>% 
-  group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing, ctry_name_citing) %>% 
-  summarise(group = "All", share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) %>%
-  bind_rows(citflow_ctry, .)
+# citflow_ctry<-citflow_ctry %>% 
+#   group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing, ctry_name_citing) %>% 
+#   summarise(group = "All", share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) %>%
+#   bind_rows(citflow_ctry, .)
+
+citflow_ctry_all <- data.frame(group = "All", aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + ctry_name_citing, 
+                                                        FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16")))
+
+citflow_ctry <- rbind(citflow_ctry, citflow_ctry_all)
 
 # Create normalized shares per year
   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited[group == "All"], na.rm = T), .(p_year_citing, ctry_name_citing)] %>%
-    mutate(share_inv_cited = share_inv_cited / total_num)
+    mutate(share_inv_cited_t = share_inv_cited / total_num)
   
 # Create tech_field_cited by group
 citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited), ctry_cited = ctry)
