@@ -126,9 +126,10 @@ renderVisNetwork({
         selfReferenceSize = F,
         shadow = FALSE,
         smooth = FALSE) %>%
-    visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
+    visInteraction(dragNodes = F, dragView = F, zoomView = T)%>%
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T))%>%
-     visLegend(position = "right", useGroups = F, addNodes = ledges)
+    visLegend(position = "right", useGroups = F, addNodes = ledges) %>%
+    visLayout(randomSeed = 123)
   })    
 ), column(6,
 # make the 2nd plot
@@ -201,7 +202,7 @@ renderVisNetwork({
         selfReferenceSize = F,
         shadow = FALSE,
         smooth = FALSE) %>%
-    visInteraction(dragNodes = T, dragView = T, zoomView = T)%>%
+    visInteraction(dragNodes = F, dragView = F, zoomView = T)%>%
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
   # %>%
      # visLegend(position = "right", useGroups = F, addNodes = ledges)

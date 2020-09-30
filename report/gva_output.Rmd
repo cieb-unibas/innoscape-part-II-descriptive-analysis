@@ -5,7 +5,7 @@
                                             variable == "gva_abs" ~ "GVA in millions CHF",
                                             variable == "gva_share" ~ "Share in GDP"
                                             )) %>%
-          mutate(Industry = paste0(ind.name, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", round(value, 2)))
+          mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", round(value, 2)))
 
 
 # Input panels for indicator and industry
@@ -41,10 +41,9 @@ renderPlotly({
                        legend.position="bottom"
                        ), dynamicTicks = T,  tooltip = c("label")) %>%
                           config(displayModeBar = F) %>%
-                          layout(xaxis = list(fixedrange=F 
-                          # , rangeslider = list(type = "date", visible=T)
+                          layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
                           )) %>%
-                          layout(yaxis = list(fixedrange=F),
+                          layout(yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
     
   })

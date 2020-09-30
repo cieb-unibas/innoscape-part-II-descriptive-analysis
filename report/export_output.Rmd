@@ -7,7 +7,7 @@
                               "% of total Swiss Pharma Exports"="share_in_tot2"),
                                 selected = "val_export", inline = T)
 
-  sliderInput(inputId =  "year_exp", "Year", min=1990, max=2019, value=2000, sep="")
+  sliderInput(inputId =  "year_exp", "Year", min=1994, max=2019, step = 5, value=1999, sep="")
   
 
 
@@ -47,7 +47,8 @@
                     axis.title = element_blank(),
                     axis.text = element_blank()),
             dynamicTicks = T, tooltip = c("label")
-      )
+      ) %>% config(displayModeBar = F) %>%
+      layout(xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
     
   })
 
