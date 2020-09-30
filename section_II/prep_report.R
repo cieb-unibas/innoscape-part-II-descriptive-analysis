@@ -90,10 +90,12 @@ citflow_ctry_data %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II desc
 options(scipen=999)
 # Load trade data
 tradedata <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_I/oecd_trade_ch_final.rds")
-tradedata_temp <- filter(tradedata, year == 2018 & variable == "val_export")
-tradedata_temp <- distinct(tradedata_temp, par.code, .keep_all = T)
-tradedata_temp <- setDT(tradedata_temp)[order(-value), .SD[1:60, ]]
-tradedata <- filter(tradedata, par.code %in% unique(tradedata_temp$par.code))
+# tradedata_temp <- filter(tradedata, year == 2018 & variable == "val_export")
+# tradedata_temp <- distinct(tradedata_temp, par.code, .keep_all = T)
+# tradedata_temp <- setDT(tradedata_temp)[order(-value), .SD[1:60, ]]
+# tradedata <- filter(tradedata, par.code %in% unique(tradedata_temp$par.code))
+
+tradedata <- filter(tradedata, year %in% c(1990, seq(1994, 2019, 5)))
 tradedata <- mutate(tradedata, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
 
 # filter the data to leave only Switzerland:
