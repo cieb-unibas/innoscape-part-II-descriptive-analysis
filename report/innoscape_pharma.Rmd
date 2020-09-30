@@ -125,7 +125,7 @@ citflow_ctry <- readRDS("citflow_ctry.rds")
 <a href="http://cieb.unibas.ch/" target = "_blank">![Foo](cieb.png){ width=30% }</a>
 
 
-## <font color='#68838B'>**Cross-border commuting and inventions 'Made in Switzerland'**</font>
+## <font color='#68838B'>**The swiss pharmaceutical industry in a global comparison**</font>
 
 *October 2020* by <a href="https://wwz.unibas.ch/de/personen/dragan-filimonovic/" target = "_blank">Dragan Filimonovic</a>, <a href="https://wwz.unibas.ch/de/personen/matthias-niggli/" target = "_blank">Matthias Niggli</a> and <a href="https://wwz.unibas.ch/de/personen/christian-rutzer/" target = "_blank">Christian Rutzer</a>  
 

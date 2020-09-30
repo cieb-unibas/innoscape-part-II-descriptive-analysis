@@ -62,8 +62,9 @@ renderPlotly({
               legend.title = element_blank()),
       dynamicTicks = FALSE,  tooltip = c("label")) %>%
       config(displayModeBar = F) %>%
-      layout(xaxis = list(fixedrange=F,
-                          rangeslider = list(type = "date", visible=T, thickness=0.1))) %>%
+      layout(xaxis = list(fixedrange=F
+                          # , rangeslider = list(type = "date", visible=T, thickness=0.1)
+                          )) %>%
       layout(yaxis = list(fixedrange=F))
 
 })

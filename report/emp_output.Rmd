@@ -36,8 +36,9 @@
                        axis.line = element_line()
                        ), dynamicTicks = T,  tooltip = c("label")) %>%
                           config(displayModeBar = F) %>%
-                          layout(xaxis = list(fixedrange=F, 
-                          rangeslider = list(type = "date", visible=T))) %>%
+                          layout(xaxis = list(fixedrange=F 
+                          # , rangeslider = list(type = "date", visible=T)
+                          )) %>%
                           layout(yaxis = list(fixedrange=F),
                                  legend = list(orientation = "h"))
     
