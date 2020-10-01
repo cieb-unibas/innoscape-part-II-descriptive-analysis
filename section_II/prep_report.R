@@ -13,16 +13,17 @@ library(dplyr)
 #####################
 # Data on Citations #
 #####################
-# Load data 
+# Create function to make calculations for backward or forward citations. Set type = "forw" or type = "back". Moreover, cut_off determines the min share 
+citations_func <- function(type = "back", cut_off = 0.01){
 
-
-citations_func <- function(type){
-type <- deparse(substitute(type))
-
-if(type == "forw"){
-  citflow <- readRDS(paste0(getwd(), "/section_III/forw_citations_16.rds"))
-  } else if(type == "back"){
+# Load the data
+if(type == "back"){
   citflow <- readRDS(paste0(getwd(), "/section_III/back_citations_16.rds"))
+  } else if(type == "forw"){
+    citflow <- readRDS(paste0(getwd(), "/section_III/forw_citations_16.rds"))
+    citflow <- dplyr::rename(citflow, conti_citing = conti_cited, conti_cited = conti_citing, tech_field_citing = tech_field_cited, tech_field_cited = tech_field_citing, share_inv_cited = share_inv_citing, 
+                           ctry_name_citing = ctry_name_cited, up_reg_label_citing = up_reg_label_cited,
+                           ctry_name_cited = ctry_name_citing, up_reg_label_cited = up_reg_label_citing)
   }else{
   print("Wrong type used")
 }
@@ -88,18 +89,32 @@ citflow_ctry <- rbind(citflow_ctry, citflow_ctry_all)
 
 # Create normalized shares per year
   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited[group == "All"], na.rm = T), .(p_year_citing, ctry_name_citing)] %>%
-    mutate(share_inv_cited_t = share_inv_cited / total_num)
+    mutate(share_inv_cited = share_inv_cited / total_num)
   
 # Create tech_field_cited by group
-citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited), ctry_cited = ctry)
+citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited), ctry_cited = ctry, type = type)
 }
 
 citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "United States", "Italy", "France", "China", "India", "Sweden", "Japan"), function(x) citflow_ctry_func(x)))
 
 # Keep only flows from Asia, Americas and Europe; others are irrelevant
 citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
-citflow_ctry_data %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry.rds")
+
+# Keep only observations above a cut-off
+citflow_ctry_data <- filter(citflow_ctry_data, share_inv_cited >= cut_off)
+
+# Change variable names again if type == "forw"
+if(type == "forw"){
+  citflow_ctry_data <- dplyr::rename(citflow_ctry_data, tech_field_citing = tech_field_cited, tech_field_cited = tech_field_citing, share_inv_citing = share_inv_cited, 
+                           ctry_citing = ctry_cited)}
+
+citflow_ctry_data %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".rds"))
 }
+
+# Run the previsouly created function
+lapply(list("back", "forw"), function(x) citations_func(x, 0.01))
+
+
 
 #####################
 # Create trade data #

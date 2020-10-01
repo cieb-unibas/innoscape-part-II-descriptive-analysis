@@ -154,21 +154,18 @@ rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "forw_cit", x, "
 rbind.fill(lapply(seq(1990, 2018, 1), function(x) cit_flows(16, "back_cit", x, "up_reg_label_citing", "up_reg_label_cited"))) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_regio_16.rds")
 print("part b. done")
 
-## Combine continent, region and country calculation to creat data set used in report
+## Combine continent, region and country calculation to create data set used in report
 ## Data on forward citations
 forw_conti <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_conti_16.rds") %>%  mutate(geo = "conti")
 forw_ctry  <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_ctry_16.rds") %>%  mutate(geo = "ctry")
 forw_reg   <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_regio_16.rds") %>%  mutate(geo = "regio")
-rbind.fill(forw_conti, forw_ctry, forw_reg) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/forw_citations_16.rds")
+rbind.fill(forw_conti, forw_ctry, forw_reg) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/forw_citations_16.rds")
 
 ## Data on backward citations
 back_conti <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_conti_16.rds") %>%  mutate(geo = "conti")
 back_ctry  <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_ctry_16.rds") %>%  mutate(geo = "ctry")
 back_reg   <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_regio_16.rds") %>%  mutate(geo = "regio")
-rbind.fill(back_conti, back_ctry, back_reg) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/back_citations_16.rds")
+rbind.fill(back_conti, back_ctry, back_reg) %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/section_III/back_citations_16.rds")
 
-
-back <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/back_citations_16.rds")
-forw <- readRDS("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/forw_citations_16.rds")
 
 
