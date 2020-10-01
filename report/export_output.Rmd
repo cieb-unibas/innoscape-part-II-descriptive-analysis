@@ -1,15 +1,23 @@
 ```{r, echo=FALSE}
 
 # Input panels for indicator, industry and year 
-  radioButtons("variable_exp", "Choose a variable",
-               choices = list("Swiss Pharma exports in million USD"="val_export", 
-                              "% Share of pharma in destination imports from Switzerland"="share_in_tot",
-                              "% of total Swiss Pharma Exports"="share_in_tot2"),
+  radioButtons(inputId = "variable_exp", label = "Choose a variable",
+               choices = list("in million USD"="val_export", 
+                              "% of total destination's Swiss exports"="share_in_tot",
+                              "% of total Swiss pharma exports"="share_in_tot2"),
                                 selected = "val_export", inline = T)
 
-  sliderInput(inputId =  "year_exp", "Year", min=1994, max=2019, step = 5, value=1999, sep="")
+  sliderInput(inputId =  "year_exp", label = "Year", min=1990, max=2019, step = 1, value=2000, sep="")
   
 
+# Create world map
+  world <- ggplot() +
+              geom_polygon(data = map_world,
+                           aes(long, lat, group = group, fill = region), 
+                           show.legend = FALSE,
+                           alpha = 0.4,
+                           fill="lightgreen",
+                           color = "white") 
 
   renderPlotly({
 
@@ -20,14 +28,7 @@
     }) 
 
 # make the plot
-  ggplotly(  
-            ggplot() +
-              geom_polygon(data = map_world,
-                           aes(long, lat, group = group, fill = region), 
-                           show.legend = FALSE,
-                           alpha = 0.4,
-                           fill="lightgreen",
-                           color = "white") +
+  ggplotly(  world  +
               geom_curve(data = d_exp(), 
                          aes(x = long_rep, xend = long_par,
                              y = lat_rep, yend = lat_par),

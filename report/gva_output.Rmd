@@ -1,7 +1,7 @@
 
 ```{r, echo=FALSE}
 # Input panels for indicator and industry
-radioButtons("variable_gva", "Choose a variable",
+radioButtons(inputId = "variable_gva", label = "Choose a variable",
           choices = list("Share in GDP" = "Share in GDP",
                          "GVA in millions CHF" = "GVA in millions CHF", 
                          "GVA percentage change" = "GVA percentage change"),
@@ -23,12 +23,14 @@ renderPlotly({
                            ind.name %in% input$ind.name_gva)
       })
   
-  # specify y axis title
+ 
+
+if(nrow(d_gva()) != 0){
+    # specify y axis title
   Y_AXIS_TITLE <- if(input$variable_gva == "Share in GDP"){"Share in GDP (in %)"}else{
     if(input$variable_gva == "GVA in millions CHF"){"GVA (in millions CHF)"}else{
-      "GVA change (in %)"}} 
-
-
+      "GVA change (in %)"}}
+  
 # make the plot
   ggplotly(  
     ggplot(d_gva(),aes(x = as.numeric(year), y = value, group = ind.name, colour = ind.name, label = Industry)) +
@@ -49,6 +51,7 @@ renderPlotly({
                           layout(yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
     
+  } else{}
   })
 
 ```

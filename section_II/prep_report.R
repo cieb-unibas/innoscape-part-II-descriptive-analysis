@@ -9,6 +9,7 @@ library(tidyverse)
 require(rio)
 require(countrycode)
 library(dplyr)
+library(fst)
 
 #####################
 # Data on Citations #
@@ -108,6 +109,8 @@ if(type == "forw"){
                            ctry_citing = ctry_cited)}
 
 citflow_ctry_data %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".rds"))
+citflow_ctry_data %>% write.fst(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".fst"))
+
 }
 
 # Run the previsouly created function
@@ -125,13 +128,13 @@ tradedata <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-a
 # tradedata_temp <- setDT(tradedata_temp)[order(-value), .SD[1:60, ]]
 # tradedata <- filter(tradedata, par.code %in% unique(tradedata_temp$par.code))
 
-tradedata <- filter(tradedata, year %in% c(1990, seq(1994, 2019, 5)))
 tradedata <- mutate(tradedata, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
 
 # filter the data to leave only Switzerland:
 volumes <-transform(tradedata, year = as.numeric(year)) %>% # Transform to numeric values
   mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep"), as.numeric)
 volumes %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/trad_data.rds")
+volumes %>% write.fst("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/trad_data.fst")
 
 # Create the world map
 map_world <- map_data(map = "world") %>%
@@ -139,6 +142,8 @@ map_world <- map_data(map = "world") %>%
 map_world <- map_world[seq(1, nrow(map_world), 18), ]
 
 map_world %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/map_data.rds")
+map_world %>% write.fst("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/map_data.fst")
+
 
 ##############################
 # Create data on employment #
@@ -157,12 +162,14 @@ ilo <- filter(ilo, num >= 6) %>% dplyr::select(-num)
 # Prepare the data
 ilo <- mutate(ilo, variable = case_when(variable == "share.emp" ~ "Share of employed", 
                                         variable == "num.emp" ~ "Number of employed in thousands")) %>%
-       mutate(Country = paste0(country, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", 
-                               ifelse(variable == "Share of employed", round(value, 4), round(value, 2))))
+       mutate(Country = paste0(country, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", 
+                               ifelse(variable == "Share of employed", paste0(round(value*100, 2), "%"), paste0(round(value, 2), " thousands"))))
 ilo[ilo$variable == "Share of employed", "value"] <- ilo[ilo$variable == "Share of employed", ]$value * 100
 
 # save the data
 ilo %>% saveRDS(paste0(getwd(), "/report/ilo.rds"))
+ilo %>% write.fst(paste0(getwd(), "/report/ilo.fst"))
+
 
 #####################################
 # Create data on labor productivity #
@@ -178,10 +185,11 @@ labprod$ind.name <- paste0(toupper(substr(labprod$ind.name, 1, 1)),
 labprod <- mutate(labprod, variable = case_when(variable == "ilo_prod" ~ "Only domestic workers", 
                                                 variable == "bfs_prod" ~ "Total jobs in firms",
                                                 T ~ "Domestic and cross-border workers")) %>%
-           mutate(Industry = paste0(ind.name, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", round(value/1000000, 2), " in millions CHF"))
+           mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", round(value/1000000, 2), " in millions CHF"))
 
 # save the data
 labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
+labprod %>% write.fst(paste0(getwd(), "/report/labprod.fst"))
 
 ####################################
 # Create data on gross value added #
@@ -216,6 +224,7 @@ gva[gva$variable == "Share in GDP", "value"] <- gva[gva$variable == "Share in GD
 
 # save the data
 gva %>% saveRDS(paste0(getwd(), "/report/gva_data_ch.rds"))
+gva %>% write.fst(paste0(getwd(), "/report/gva_data_ch.fst"))
 
 #################################
 # Create data on patent counts #
@@ -249,6 +258,7 @@ numpat_data <- as.data.frame(numpat_data)
 numpat_data <- mutate(numpat_data, `Rank based on year 2000` = rank_2000)
 
 numpat_data %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/numpat_data.rds")
+numpat_data %>% write.fst("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/numpat_data.fst")
 
 
 

@@ -3,8 +3,7 @@
 
 
 # Input panels for indicator and industry
-
-  checkboxGroupInput("variable_prod", "Choose a productivity indicator with:",
+  checkboxGroupInput(inputId = "variable_prod", label = "Choose a productivity indicator with:",
                          choices = list("Only domestic workers"="Only domestic workers",
                                         "Total jobs in firms"="Total jobs in firms",
                                         "Domestic and cross-border workers"="Domestic and cross-border workers"),
@@ -33,9 +32,9 @@
                                ind.name %in% input$ind.name_prod)
       })
   
-  Y_MAX <- max(d_output()$value, na.rm = TRUE)
-
+if(nrow(d_output()) != 0){
 # make the plot
+  Y_MAX <- max(d_output()$value, na.rm = TRUE)
   ggplotly(  
            ggplot(d_output(),aes(x = as.numeric(year), y = value, 
                                  group = interaction(ind.name, variable, sep = ": "), 
@@ -57,6 +56,7 @@
                           layout(#yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
     
+} else{}  
   })
 
   # @CR: Somehow it doesn't take the ylim() from ggplot (added by me) i.e. plotly seems to overwrite the yaxis

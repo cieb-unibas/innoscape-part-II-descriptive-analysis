@@ -5,7 +5,7 @@
 
 # Input panels for indicator and industry
  
-  radioButtons("variable_emp", "Choose a variable",
+  radioButtons(inputId = "variable_emp", label = "Choose a variable",
                    choices = list("Share of employed" = "Share of employed",
                                   "Number of employed in thousands" = "Number of employed in thousands"),
                    selected = "Share of employed",
@@ -30,10 +30,12 @@
                          "Number of employed (in thousands)") 
   
   plot_data <- d_emp()
-  Y_MAX <- max(plot_data$value, na.rm = TRUE) 
 
 # make the plot
-  ggplotly(  
+  if(nrow(plot_data) != 0){
+  Y_MAX <- max(plot_data$value, na.rm = TRUE) 
+    
+    ggplotly(  
           ggplot(plot_data, aes(x = as.numeric(year), y = value, 
                                 group = country, colour = country, label = Country)) +
             geom_point(alpha = 0.7) +  
@@ -53,6 +55,7 @@
                           )) %>%
                           layout(#yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
+  } else {}
     
   })
   

@@ -81,31 +81,35 @@ library(data.table)
 library(countrycode)
 library(igraph)
 library(visNetwork)
+library(fst)
+library(profvis)    
+
+
 source_rmd <- function(rmd_file){
   knitr::knit(rmd_file, output = tempfile())
 }
 ```
 
 ```{r context="data", echo=FALSE}
-
 # Load data on patent counts / prepared in section_II/prep_report.R
-numpat_data <- readRDS("numpat_data.rds")
+## Use now fst speed gain for loading data: fst 70 ms readRDS 110 ms
+numpat_data <- read.fst("numpat_data.fst")
 
 # Load data on labor productivity / prepared in section_II/prep_report.R
-labprod <- readRDS("labprod.rds")
+labprod <- read.fst("labprod.fst")
 
 # Load data on employment / prepared in section_II/prep_report.R
-ilo <- readRDS("ilo.rds")
+ilo <- read.fst("ilo.fst")
 
 # Load GVA data 
-gva <- readRDS("gva_data_ch.rds")
+gva <- read.fst("gva_data_ch.fst")
 
 # Load data on exports / prepared in section_II/prep_report.R
-volumes <- readRDS("trad_data.rds")
-map_world <- readRDS("map_data.rds")
+volumes <- read.fst("trad_data.fst")
+map_world <- read.fst("map_data.fst")
 
 # Load citation-flow data  / prepared in section_II/prep_report.R
-citflow_ctry <- readRDS("citflow_ctry_back.rds")
+citflow_ctry <- read.fst("citflow_ctry_back.fst")
 ```	
 
 <!-- <head> -->
