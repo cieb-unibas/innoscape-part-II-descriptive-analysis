@@ -162,9 +162,35 @@ labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
 # Create data on gross value added #
 ####################################
 
-# ---------OPEN ISSUE: codes are missing on how "gva_data_cha.rds" was created -------
-#gva <- readRDS(paste0(getwd(), "/report/gva_data_ch.rds"))
+# load the data
+gva <- readRDS(paste0(getwd(), "/section_II/gva_data.rds"))
 
+# make sure we have the same as in labor productivity plot
+industries <- select(labprod, ind.code, ind.name) %>% 
+  rename(industry_name = ind.name) %>% distinct(ind.code, .keep_all = TRUE)
+gva <- merge(gva, industries, by = "ind.code", all.x = TRUE)
+
+# shorten industry names for the non-matched industries 
+for(i in 1:nrow(gva)){
+  if(is.na(gva$industry_name[i])){
+  gva$industry_name[i] <- gsub("Manufacture of ", "", x = gva$ind.name[i])
+  gva$industry_name[i] <- paste0(toupper(substr(gva$industry_name[i], 1, 1)),
+                             substr(gva$industry_name[i], 2, nchar(gva$industry_name[i])))
+  }
+}
+gva <- gva %>% select(- ind.name) %>% rename(ind.name = industry_name)
+gva <- mutate(gva, variable = case_when(variable == "gva_prchange" ~ "GVA percentage change",
+                                        variable == "gva_abs" ~ "GVA in millions CHF",
+                                        variable == "gva_share" ~ "Share in GDP"
+                                        )) %>%
+  mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", round(value, 2)))
+
+# percentages
+gva[gva$variable == "GVA percentage change", "value"] <- gva[gva$variable == "GVA percentage change", ]$value * 100
+gva[gva$variable == "Share in GDP", "value"] <- gva[gva$variable == "Share in GDP", ]$value * 100
+
+# save the data
+gva %>% saveRDS(paste0(getwd(), "/report/gva_data_ch.rds"))
 
 #################################
 # Create data on patent counts #

@@ -1,13 +1,5 @@
 
 ```{r, echo=FALSE}
-# Prepare the data
-    gva <- mutate(gva, variable = case_when(variable == "gva_prchange" ~ "GVA percentage change", 
-                                            variable == "gva_abs" ~ "GVA in millions CHF",
-                                            variable == "gva_share" ~ "Share in GDP"
-                                            )) %>%
-          mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", round(value, 2)))
-
-
 # Input panels for indicator and industry
 radioButtons("variable_gva", "Choose a variable",
           choices = list("Share in GDP" = "Share in GDP",
@@ -15,16 +7,27 @@ radioButtons("variable_gva", "Choose a variable",
                          "GVA percentage change" = "GVA percentage change"),
           selected = "Share in GDP", 
           inline = T)
-          
-selectizeInput("ind.name_gva", "Choose industries",
-      choices = unique(gva$ind.name), multiple = TRUE, selected = "Manufacture of basic pharmaceutical products and pharmaceutical preparations")
-  
+
+  pickerInput(inputId = "ind.name_gva",
+              label = "Choose industries", 
+              choices= unique(gva$ind.name),
+              selected = "Pharmaceutical products",
+              options = list(`actions-box` = TRUE),
+              multiple = TRUE)
+
 renderPlotly({
-# subset the data according to the input:
+
+  # subset the data according to the input:
   d_gva <- reactive({ gva %>%
                     filter(variable %in% input$variable_gva,
                            ind.name %in% input$ind.name_gva)
-      }) 
+      })
+  
+  # specify y axis title
+  Y_AXIS_TITLE <- if(input$variable_gva == "Share in GDP"){"Share in GDP (in %)"}else{
+    if(input$variable_gva == "GVA in millions CHF"){"GVA (in millions CHF)"}else{
+      "GVA change (in %)"}} 
+
 
 # make the plot
   ggplotly(  
@@ -32,7 +35,7 @@ renderPlotly({
         geom_point(alpha = 0.7) +  
             geom_line()+
             xlab("Year")+
-            ylab(input$variable_gva)+
+            ylab(Y_AXIS_TITLE)+
             guides(color = FALSE)+
             scale_x_continuous(breaks = seq(min(d_gva()$year), max(d_gva()$year), by = 5)) +
                  theme(axis.title = element_text(face="bold",size = 10),
