@@ -14,9 +14,21 @@ library(dplyr)
 # Data on Citations #
 #####################
 # Load data 
-citflow <- readRDS(paste0(getwd(), "/section_III/back_citations_16.rds"))
+
+
+citations_func <- function(type){
+type <- deparse(substitute(type))
+
+if(type == "forw"){
+  citflow <- readRDS(paste0(getwd(), "/section_III/forw_citations_16.rds"))
+  } else if(type == "back"){
+  citflow <- readRDS(paste0(getwd(), "/section_III/back_citations_16.rds"))
+  }else{
+  print("Wrong type used")
+}
+  
 techlab <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/oecd_tech_field.RDS")
-colnames(techlab) <- c("tech_field_cited", "tech_name")
+colnames(techlab) <- c(paste0("tech_field_", type), "tech_name")
 citflow_final <- merge(citflow, techlab)
 
 # (1) Data preparation,labeling and initial filtering
@@ -87,6 +99,7 @@ citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "
 # Keep only flows from Asia, Americas and Europe; others are irrelevant
 citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
 citflow_ctry_data %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry.rds")
+}
 
 #####################
 # Create trade data #
