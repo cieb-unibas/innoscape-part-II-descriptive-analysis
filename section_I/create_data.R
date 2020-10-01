@@ -26,7 +26,7 @@ rm(list = ls())
 # Filtering and cleaning
   ilo_2020 <- filter(ilo_2020, sex == "SEX_T")
   colnames(ilo_2020)
-  ilo_2020 <-subset(ilo_2020, select = c("Ã¯..ref_area", "classif1", "time", "obs_value" ))
+  ilo_2020 <-subset(ilo_2020, select = c("ref_area", "classif1", "time", "obs_value" ))
   ilo_2020 <-dplyr::filter(ilo_2020, grepl('EC2_ISIC4', classif1))
   ilo_2020 <-as.data.frame(sapply(ilo_2020,gsub,pattern="EC2_ISIC4_",replacement=""))
   ilo_2020 %>% mutate_if(is.factor, as.character) -> ilo_2020 # transforming factors into characters
@@ -75,7 +75,7 @@ rm(list = ls())
   ilo_2020 <-melt(setDT(ilo_2020), id.vars = c("country", "ind.code", "year"), measure.vars = c("num.emp", "share.emp"))
   
 #Loading the industry labels
-  labels_ind <- read.xlsx("/scicore/home/weder/GROUP/Innovation/02_section_I_data/label_sector.xlsx", sheetName = "Sheet1")
+  labels_ind <- read_excel("/scicore/home/weder/GROUP/Innovation/02_section_I_data/label_sector.xlsx", sheet = "Sheet1")
   labels_ind %>% mutate_if(is.factor, as.character) -> labels_ind  
 
 #Merging employment data and labels
