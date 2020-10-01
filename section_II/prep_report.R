@@ -14,7 +14,7 @@ library(dplyr)
 # Data on Citations #
 #####################
 # Load data 
-citflow <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/section_III/back_citations_16.rds")
+citflow <- readRDS(paste0(getwd(), "/section_III/back_citations_16.rds"))
 techlab <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/oecd_tech_field.RDS")
 colnames(techlab) <- c("tech_field_cited", "tech_name")
 citflow_final <- merge(citflow, techlab)
@@ -163,7 +163,7 @@ labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
 ####################################
 
 # load the data
-gva <- readRDS(paste0(getwd(), "/section_II/gva_data.rds"))
+gva <- readRDS(paste0(getwd(), "/section_I/gva_data.rds"))
 
 # make sure we have the same as in labor productivity plot
 industries <- select(labprod, ind.code, ind.name) %>% 
