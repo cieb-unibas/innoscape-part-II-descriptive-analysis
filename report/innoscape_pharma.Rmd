@@ -3,60 +3,7 @@ fig_caption: yes
 output:
   html_document:
     css: style.css
-resource_files:
-- citnetwork_output.Rmd
-- conti_func.RMD
-- ctry_func.Rmd
-- emp_output.Rmd
-- export_output.Rmd
-- gva_output.Rmd
-- labprod_output.Rmd
-- regio_func.Rmd
-- back_citations_16.rds
-- citflow_ctry.rds
-- collab_inv_16.rds
-- ilo.rds
-- labprod.rds
-- map_data.rds
-- trad_data.rds
-- numpat_data.rds
-- gva_data_ch.rds
-- citflow_ctry.rds
-- citnetwork_output.Rmd
-- ctry_func.Rmd
-- trad_data.rds
-- regio_func.Rmd
-- map_data.rds
-- labprod_output.Rmd
-- labprod.rds
-- ilo.rds
-- gva_output.Rmd
-- export_output.Rmd
-- emp_output.Rmd
-- citflow_ctry.rds
-- gva_data_ch.rds
-- cieb.png
-- ilo.rds
-- labprod.rds
-- map_data.rds
-- numpat_data.rds
-- trad_data.rds
-- citflow_ctry.rds
-- gva_data_ch.rds
-- ilo.rds
-- labprod.rds
-- map_data.rds
-- numpat_data.rds
-- trad_data.rds
-- cieb.png
-- citflow_ctry.rds
-- gva_data_ch.rds
-- ilo.rds
-- labprod.rds
-- map_data.rds
-- numpat_data.rds
-- trad_data.rds
-- cieb.png
+
 runtime: shiny
 ---
 
@@ -82,7 +29,6 @@ library(countrycode)
 library(igraph)
 library(visNetwork)
 library(fst)
-library(profvis)    
 
 
 source_rmd <- function(rmd_file){
