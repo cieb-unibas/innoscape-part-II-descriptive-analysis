@@ -14,7 +14,7 @@ library(dplyr)
 # Data on Citations #
 #####################
 # Create function to make calculations for backward or forward citations. Set type = "forw" or type = "back". Moreover, cut_off determines the min share 
-citations_func <- function(type = "back", cut_off = 0.01){
+citations_func <- function(type = "back"){
 
 # Load the data
 if(type == "back"){
@@ -27,10 +27,10 @@ if(type == "back"){
   }else{
   print("Wrong type used")
 }
-  
+
 techlab <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/oecd_tech_field.RDS")
-colnames(techlab) <- c(paste0("tech_field_", type), "tech_name")
-citflow_final <- merge(citflow, techlab)
+colnames(techlab) <- c("tech_field_cited", "tech_name")
+citflow_final <- merge(citflow, techlab, by = c("tech_field_cited"))
 
 # (1) Data preparation,labeling and initial filtering
 citflow_ctry <- filter(citflow_final, geo %in% c("ctry"))
@@ -72,20 +72,22 @@ citflow_ctry$group <- countrycode(sourcevar = citflow_ctry[, "ctry_name_cited"],
 citflow_ctry <- mutate(citflow_ctry, group = ifelse(ctry_name_cited == ctry_name_citing, "Domestic", group))
 
 # Agregation summing, without cited pharma patents
-# citflow_ctry <- dplyr::group_by(citflow_ctry, tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>% 
-#   summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
-citflow_ctry <- aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + group + ctry_name_citing, FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16"))
+citflow_ctry <- dplyr::group_by(citflow_ctry, tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>%
+  summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))%>%
+  bind_rows(citflow_ctry, .)
+
+# citflow_ctry <- aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + group + ctry_name_citing, FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16"))
 
 # Creating a All (continents) group
-# citflow_ctry<-citflow_ctry %>% 
-#   group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing, ctry_name_citing) %>% 
-#   summarise(group = "All", share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) %>%
-#   bind_rows(citflow_ctry, .)
+citflow_ctry<-citflow_ctry %>%
+  group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing, ctry_name_citing) %>%
+  summarise(group = "All", share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) %>%
+  bind_rows(citflow_ctry, .)
 
-citflow_ctry_all <- data.frame(group = "All", aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + ctry_name_citing, 
-                                                        FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16")))
+# citflow_ctry_all <- data.frame(group = "All", aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + ctry_name_citing, 
+#                                                         FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16")))
 
-citflow_ctry <- rbind(citflow_ctry, citflow_ctry_all)
+# citflow_ctry <- rbind(citflow_ctry, citflow_ctry_all)
 
 # Create normalized shares per year
   citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited[group == "All"], na.rm = T), .(p_year_citing, ctry_name_citing)] %>%
@@ -98,10 +100,7 @@ citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited 
 citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "United States", "Italy", "France", "China", "India", "Sweden", "Japan"), function(x) citflow_ctry_func(x)))
 
 # Keep only flows from Asia, Americas and Europe; others are irrelevant
-citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
-
-# Keep only observations above a cut-off
-citflow_ctry_data <- filter(citflow_ctry_data, share_inv_cited >= cut_off)
+citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic") & is.na(ctry_name_citing) != T)
 
 # Change variable names again if type == "forw"
 if(type == "forw"){
@@ -112,9 +111,7 @@ citflow_ctry_data %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part-
 }
 
 # Run the previsouly created function
-lapply(list("back", "forw"), function(x) citations_func(x, 0.01))
-
-
+lapply(list("back", "forw"), function(x) citations_func(x))
 
 #####################
 # Create trade data #

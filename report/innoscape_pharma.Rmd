@@ -105,7 +105,7 @@ volumes <- readRDS("trad_data.rds")
 map_world <- readRDS("map_data.rds")
 
 # Load citation-flow data  / prepared in section_II/prep_report.R
-citflow_ctry <- readRDS("citflow_ctry.rds")
+citflow_ctry <- readRDS("citflow_ctry_back.rds")
 ```	
 
 <!-- <head> -->
