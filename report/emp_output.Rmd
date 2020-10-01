@@ -2,32 +2,44 @@
 
 ```{r, echo=FALSE}
 
-# filter out only pharma
-ilo <- readRDS("iloemp_2020_final.rds")
-ilo <- subset(ilo,ind.code=="21")
 
 # Input panels for indicator and industry
-      radioButtons("variable_emp", "Choose a variable",
-                   choices = list("Number of employed"="num.emp", 
-                                  "Share of employed"="share.emp"),
-                   selected = "share.emp")
+ 
+     radioButtons("variable_emp", "Choose a variable",
+                   choices = list("Number of employed in thousands" = "Number of employed in thousands", 
+                                  "Share of employed" = "Share of employed"),
+                   selected = "Share of employed",
+                   inline = T)
 
       selectizeInput("country_emp", "Choose a country",
-                     choices = c(ilo$country),multiple = TRUE, selected = "CHE")
+                     choices = unique(ilo$country) ,multiple = TRUE, selected = "Switzerland")
 
   renderPlotly({
 
 # subset the data accoding to the input:
-  dr <- reactive({ilo %>%
+  d_emp <- reactive({ilo %>%
                   filter(variable %in% input$variable_emp,
                          country %in% input$country_emp)
       }) 
 
 # make the plot
   ggplotly(  
-          ggplot(dr(),aes(x = year, y = value, group = country, colour = country)) +
-          geom_line()
-      )
+          ggplot(d_emp(), aes(x = as.numeric(year), y = value, group = country, colour = country, label = Country)) +
+            geom_point(alpha = 0.7) +  
+            geom_line()+
+            xlab("Year")+
+            ylab(input$variable_emp)+
+            guides(color = FALSE)+
+            scale_x_continuous(breaks = seq(min(d_emp()$year, na.rm = T), max(d_emp()$year, na.rm = T), by = 5)) +
+                 theme(axis.title = element_text(face="bold",size = 10),
+                       panel.background = element_blank(),
+                       axis.line = element_line()
+                       ), dynamicTicks = T,  tooltip = c("label")) %>%
+                          config(displayModeBar = F) %>%
+                          layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
+                          )) %>%
+                          layout(yaxis = list(fixedrange=T),
+                                 legend = list(orientation = "h"))
     
   })
 
