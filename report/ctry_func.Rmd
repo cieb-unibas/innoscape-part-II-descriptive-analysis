@@ -1,5 +1,6 @@
 ```{r, echo = F}
-select_country <- distinct(numpat_data, Country, `Rank based on year 2000`)  %>% na.omit()
+select_country <- distinct(numpat_data, Country, `Rank based on year 2000`)  %>% 
+  na.omit() %>% arrange(`Rank based on year 2000`)
 
 
 output$country <- DT::renderDT(select_country, server = F, extensions = 'Scroller',  
@@ -50,7 +51,7 @@ renderPlotly({
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
                  xlab("Priority Year")+
-                 ylab("Number of patents")+
+                 ylab(input$ind_ctry)+
                  guides(color = FALSE)+
                  scale_x_continuous(breaks = seq(min(plot02_data_country()$p_year), max(plot02_data_country()$p_year), by = 5)) +
                  theme(axis.title = element_text(face="bold",size = 10),
@@ -61,7 +62,7 @@ renderPlotly({
                  config(displayModeBar = F) %>%
                  layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
                                 )) %>%
-                 layout(yaxis = list(fixedrange=T)) 
+                 layout(yaxis = list(fixedrange=T), legend = list(orientation = "h")) 
 
          })
 

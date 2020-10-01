@@ -1,6 +1,7 @@
 ```{r, echo = F}
 
-select_conti <- distinct(numpat_data, Continent, `Rank based on year 2000`)  %>% na.omit()
+select_conti <- distinct(numpat_data, Continent, `Rank based on year 2000`)  %>% 
+  na.omit() %>% arrange(`Rank based on year 2000`)
 
 
 output$conti =  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
@@ -52,7 +53,7 @@ renderPlotly({
         geom_line() +
         # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
         xlab("Priority Year")+
-        ylab("Number of patents")+
+        ylab(input$ind_conti)+
         guides(color = FALSE)+
         scale_x_continuous(breaks = seq(min(plot02_data_conti()$p_year, na.rm = T), max(plot02_data_conti()$p_year, na.rm = T), by = 5)) +
         # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
@@ -64,7 +65,8 @@ renderPlotly({
       config(displayModeBar = F) %>%
       layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T, thickness=0.1)
                           )) %>%
-      layout(yaxis = list(fixedrange=T))
+      layout(yaxis = list(fixedrange=T),
+             legend = list(orientation = "h"))
 
 })
 

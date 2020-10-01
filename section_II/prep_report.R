@@ -119,8 +119,8 @@ map_world %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-
 # Create data on employment #
 ##############################
 # Load data on employment
-ilo <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/section_I/iloemp_2020_final.rds")
-ilo <- subset(ilo,ind.code=="21")
+ilo <- readRDS(paste0(getwd(), "/section_I/iloemp_2020_final.rds"))
+ilo <- subset(ilo, ind.code == "21")
 
 # Rename countries from ISO to complete name
 ilo <- mutate(ilo, country = countrycode(country, "iso3c", "country.name.en"))
@@ -132,21 +132,38 @@ ilo <- filter(ilo, num >= 6) %>% dplyr::select(-num)
 # Prepare the data
 ilo <- mutate(ilo, variable = case_when(variable == "share.emp" ~ "Share of employed", 
                                         variable == "num.emp" ~ "Number of employed in thousands")) %>%
-       mutate(Country = paste0(country, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", ifelse(variable == "Share of employed", round(value, 4), round(value, 2))))
+       mutate(Country = paste0(country, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", 
+                               ifelse(variable == "Share of employed", round(value, 4), round(value, 2))))
+ilo[ilo$variable == "Share of employed", "value"] <- ilo[ilo$variable == "Share of employed", ]$value * 100
 
-ilo %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/ilo.rds")
+# save the data
+ilo %>% saveRDS(paste0(getwd(), "/report/ilo.rds"))
 
+#####################################
+# Create data on labor productivity #
+#####################################
+# load & prepare the data
+labprod <- readRDS(paste0(getwd(), "/section_I/lab_prod_final_ch.rds"))
 
-# Load data on labor prod.
-labprod <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/section_I/lab_prod_final_ch.rds")
+# shorten industry names
+labprod$ind.name <- gsub("Manufacture of ", "", x = labprod$ind.name)
+labprod$ind.name <- paste0(toupper(substr(labprod$ind.name, 1, 1)),
+                                  substr(labprod$ind.name, 2, nchar(labprod$ind.name)))
 
-# Prepare the data
 labprod <- mutate(labprod, variable = case_when(variable == "ilo_prod" ~ "Only domestic workers", 
                                                 variable == "bfs_prod" ~ "Total jobs in firms",
                                                 T ~ "Domestic and cross-border workers")) %>%
            mutate(Industry = paste0(ind.name, "\nYear: ", year, "\nIndicator: ", variable, "\nValue: ", round(value/1000000, 2), " in millions CHF"))
 
-labprod %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/labprod.rds")
+# save the data
+labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
+
+####################################
+# Create data on gross value added #
+####################################
+
+# ---------OPEN ISSUE: codes are missing on how "gva_data_cha.rds" was created -------
+#gva <- readRDS(paste0(getwd(), "/report/gva_data_ch.rds"))
 
 
 #################################
