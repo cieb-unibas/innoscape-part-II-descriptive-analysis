@@ -3,7 +3,16 @@ fig_caption: yes
 output:
   html_document:
     css: style.css
-
+resource_files:
+- citflow_ctry_back.fst
+- gva_data_ch.fst
+- ilo.fst
+- labprod.fst
+- map_data.fst
+- numpat_data.fst
+- trad_data.fst
+- cieb.png
+- style.css
 runtime: shiny
 ---
 
