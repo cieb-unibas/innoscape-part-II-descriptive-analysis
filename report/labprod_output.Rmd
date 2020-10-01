@@ -4,31 +4,47 @@
 
 # Input panels for indicator and industry
 
-  checkboxGroupInput("variable_prod", "Choose a productivity indicator with:", 
-                         choices = list("Only domestic workers"="Only domestic workers", 
-                                        "Total jobs in firms"="Total jobs in firms",
-                                        "Domestic and cross-border workers"="Domestic and cross-border workers"),
-                         selected = "Only domestic workers",
-                         inline = T)
+  # checkboxGroupInput("variable_prod", "Choose a productivity indicator with:", 
+  #                        choices = list("Only domestic workers"="Only domestic workers", 
+  #                                       "Total jobs in firms"="Total jobs in firms",
+  #                                       "Domestic and cross-border workers"="Domestic and cross-border workers"),
+  #                        selected = "Only domestic workers",
+  #                        inline = T)
 
-  selectizeInput("ind.name_prod", "Choose industry",
-                         choices = unique(labprod$ind.name),multiple = TRUE, selected = "Manufacture of pharmaceutical products")
-    
+    radioButtons("variable_prod", "Choose a productivity indicator with:",
+                   choices = list("Only domestic workers"="Only domestic workers",
+                                  "Total jobs in firms"="Total jobs in firms",
+                                  "Domestic and cross-border workers"="Domestic and cross-border workers"),
+                         selected = "Only domestic workers",
+                         inline = TRUE)
+
+  pickerInput(inputId = "ind.name_prod",
+              label = "Choose industry", 
+              choices= unique(labprod$ind.name),
+              selected = c("Pharmaceutical products"),
+              options = list(`actions-box` = TRUE),
+              multiple = TRUE)
+
   renderPlotly({
 
 # subset the data according to the input:
   d_output <- reactive({labprod %>%
                         filter(variable %in% input$variable_prod,
                                ind.name %in% input$ind.name_prod)
-      }) 
+      })
+  
+  Y_MAX <- max(d_output()$value, na.rm = TRUE)
 
 # make the plot
   ggplotly(  
-           ggplot(d_output(),aes(x = as.numeric(year), y = value, group = interaction(ind.name, variable), colour = ind.name,linetype  = variable, label = Industry)) +
+           ggplot(d_output(),aes(x = as.numeric(year), y = value, 
+                                 group = interaction(ind.name, variable, sep = ": "), 
+                                 colour = ind.name, linetype  = variable, label = Industry)) +
            geom_point(alpha = 0.7) +  
             geom_line()+
             xlab("Year")+
             ylab(input$variable_prod)+
+            ylim(0, Y_MAX)+
             guides(color = FALSE)+
             scale_x_continuous(breaks = seq(min(d_output()$year), max(d_output()$year), by = 5)) +
             theme(axis.title = element_text(face="bold",size = 10),
@@ -38,9 +54,13 @@
                           config(displayModeBar = F) %>%
                           layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
                           )) %>%
-                          layout(yaxis = list(fixedrange=T),
+                          layout(#yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
     
   })
 
+  # @CR: Somehow it doesn't take the ylim() from ggplot (added by me) i.e. plotly seems to overwrite the yaxis
+  # even though it is out-commented in the layou() now. Havent found a solution yet
+
+  
 ```
