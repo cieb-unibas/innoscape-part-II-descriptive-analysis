@@ -30,7 +30,7 @@ observeEvent(input$clear_ctry, {
 radioButtons("ind_ctry", "Choose an indicator",
                    choices = list("Absolute numbers"="Absolute numbers",
                                   "% of total patents"= "% of total patents", 
-                                  "RCA pharma patents"="RCA pharma patents"),
+                                  "RCA of pharma patents"="RCA of pharma patents"),
                    selected = "% of total patents", 
                    inline = T)
 
