@@ -10,7 +10,7 @@ radioButtons(inputId = "variable_gva", label = "Choose a variable",
 
   pickerInput(inputId = "ind.name_gva",
               label = "Choose industries", 
-              choices= unique(gva$ind.name),
+              choices= sort(unique(gva$ind.name)),
               selected = "Pharmaceutical products",
               options = list(`actions-box` = TRUE),
               multiple = TRUE)

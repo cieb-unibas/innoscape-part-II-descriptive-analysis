@@ -19,7 +19,7 @@
 
   pickerInput(inputId = "ind.name_prod",
               label = "Choose industry", 
-              choices= unique(labprod$ind.name),
+              choices= sort(unique(labprod$ind.name)),
               selected = c("Pharmaceutical products"),
               options = list(`actions-box` = TRUE),
               multiple = TRUE)

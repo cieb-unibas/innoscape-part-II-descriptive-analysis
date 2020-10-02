@@ -1,8 +1,8 @@
 
 
 ```{r, echo=F}
-fluidPage(fluidRow(column(12, wellPanel(style = "background: lightblue50",
-                                        titlePanel("Figure 1: Employment\n"), 
+# fluidPage(fluidRow(column(12, wellPanel(style = "background: lightblue50",
+#                                         titlePanel("Figure 1: Employment\n"), 
 
 # Input panels for indicator and industry
  
@@ -10,14 +10,14 @@ fluidPage(fluidRow(column(12, wellPanel(style = "background: lightblue50",
                    choices = list("Share of employed" = "Share of employed",
                                   "Number of employed in thousands" = "Number of employed in thousands"),
                    selected = "Share of employed",
-                   inline = TRUE),
+                   inline = TRUE)
 
   pickerInput(inputId = "country_emp",
               label = "Choose a country", 
-              choices= unique(ilo$country),
+              choices= sort(unique(ilo$country)),
               selected = "Switzerland",
               options = list(`actions-box` = TRUE),
-              multiple = TRUE),
+              multiple = TRUE)
 
   renderPlotly({
 
@@ -60,9 +60,7 @@ fluidPage(fluidRow(column(12, wellPanel(style = "background: lightblue50",
     
   })
   
-))
-)
-)
+
   # @CR: Somehow it doesn't take the ylim() from ggplot (added by me) i.e. plotly seems to overwrite the yaxis
   # even though it is out-commented in the layou() now. Havent found a solution yet
 
