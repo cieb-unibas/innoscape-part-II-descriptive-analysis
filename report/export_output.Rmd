@@ -23,13 +23,13 @@
     }) 
 # make the plot
   ggplotly(  world  +
-              geom_curve(data = d_exp(), 
-                         aes(x = long_rep, xend = long_par,
-                             y = lat_rep, yend = lat_par),
-                         curvature = 0.1, 
-                         col="turquoise2", 
-                         size = 0.10,
-                         alpha = 0.5) +
+              # geom_curve(data = d_exp(), 
+              #            aes(x = long_rep, xend = long_par,
+              #                y = lat_rep, yend = lat_par),
+              #            curvature = 0.1, 
+              #            col="turquoise2", 
+              #            size = 0.10,
+              #            alpha = 0.5) +
               geom_point(data = d_exp(),
                          aes(long_par, lat_par, size = value, label = Country), color = "red", alpha = 0.6) +
               theme_bw() +
