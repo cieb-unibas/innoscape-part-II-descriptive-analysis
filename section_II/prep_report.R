@@ -1,4 +1,4 @@
-## Calculate the final data used in the report II in order to reduce real-time calculations within r-markdown / CR 29.9.2020
+## Calculate the final data used in the report II in order to reduce real-time calculations within r-markdown / CR 2.10.2020
 
 library(tidyr)
 library(tidytext)
@@ -128,7 +128,9 @@ tradedata <- readRDS(paste0(getwd(), "/section_I/oecd_trade_ch_final.rds"))
 volumes <-transform(tradedata, year = as.numeric(year)) %>% 
   mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep", "value"), as.numeric)
 
-volumes <- mutate(volumes, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
+volumes <- mutate(volumes, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nIndicator: ", ifelse(variable %in% "share_in_tot", paste0("Swiss pharma exports to total Swiss exports to ", countrycode(par.code, "iso3c", "country.name.en")), 
+           ifelse(variable %in% "share_in_tot2", paste0("Swiss pharma exports to ", countrycode(par.code, "iso3c", "country.name.en"), " of total Swiss pharma exports"), paste0("Swiss pharma exports in million USD"))), 
+           "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
 
 # Keep only countries having Swiss exports for at least 28 years
 volumes <- distinct(volumes, par.code, year, variable, .keep_all = T)
@@ -165,7 +167,7 @@ ilo <- filter(ilo, num >= 6) %>% dplyr::select(-num)
 ilo <- mutate(ilo, variable = case_when(variable == "share.emp" ~ "Share of employed", 
                                         variable == "num.emp" ~ "Number of employed in thousands")) %>%
        mutate(Country = paste0(country, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", 
-                               ifelse(variable == "Share of employed", paste0(round(value*100, 2), "%"), paste0(round(value, 2), " thousands"))))
+                               ifelse(variable == "Share of employed", paste0(round(value*100, 2), "%"), paste0(round(value, 2), " thousand"))))
 ilo[ilo$variable == "Share of employed", "value"] <- ilo[ilo$variable == "Share of employed", ]$value * 100
 
 # save the data
@@ -187,7 +189,7 @@ labprod$ind.name <- paste0(toupper(substr(labprod$ind.name, 1, 1)),
 labprod <- mutate(labprod, variable = case_when(variable == "ilo_prod" ~ "Only domestic workers", 
                                                 variable == "bfs_prod" ~ "Total jobs in firms",
                                                 T ~ "Domestic and cross-border workers")) %>%
-           mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", round(value/1000000, 2), " in millions CHF"))
+           mutate(Industry = paste0(ind.name,  "\nIndicator: Labor productivity of ", tolower(variable), "\nYear: ", year, "\nValue: ", round(value/1000000, 2), " million CHF"))
 
 # save the data
 labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
@@ -218,7 +220,7 @@ gva <- mutate(gva, variable = case_when(variable == "gva_prchange" ~ "GVA percen
                                         variable == "gva_abs" ~ "GVA in millions CHF",
                                         variable == "gva_share" ~ "Share in GDP"
                                         )) %>%
-  mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", round(value, 2)))
+  mutate(Industry = paste0(ind.name, "\nIndicator: ", variable, "\nYear: ", year, "\nValue: ", ifelse(variable == "GVA in millions CHF", paste0(round(value, 2), " million CHF"), paste0(round(value*100, 2), "%"))))
 
 # percentages
 gva[gva$variable == "GVA percentage change", "value"] <- gva[gva$variable == "GVA percentage change", ]$value * 100
@@ -249,7 +251,7 @@ numpat_data <-subset(numpat_data, select = c("p_year", "tech_field", "tech_name"
 unique(numpat_data$indicator)
 numpat_data <- filter(numpat_data, indicator =="abs" | indicator =="share_pharma_total" | indicator =="rca_pharma_total")
 numpat_data <- filter(numpat_data, p_year <=2015)
-numpat_data <- dplyr::mutate(numpat_data, indicator = case_when(indicator == "abs" ~ "Absolute numbers", indicator == "share_pharma_total" ~ "% of total patents", indicator == "rca_pharma_total" ~ "RCA pharma patents"))
+numpat_data <- dplyr::mutate(numpat_data, indicator = case_when(indicator == "abs" ~ "Absolute numbers", indicator == "share_pharma_total" ~ "% of total patents", indicator == "rca_pharma_total" ~ "RCA of pharma patents"))
 
 # Prepare the data
 numpat_data <- mutate(numpat_data, Geo = paste0(geo, "\nIndicator: ", indicator, "\nYear: ", p_year, "\nValue: ", ifelse(indicator == "Absolute numbers", round(share_inv, 0), 

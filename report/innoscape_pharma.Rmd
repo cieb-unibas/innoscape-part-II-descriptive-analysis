@@ -113,7 +113,7 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 
 <br>
 
-##### Figure 1: Employment
+
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")}
 ```
 
