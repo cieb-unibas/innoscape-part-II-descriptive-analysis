@@ -122,27 +122,29 @@ lapply(list("back", "forw"), function(x) citations_func(x))
 
 options(scipen=999)
 # Load trade data
-tradedata <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/section_I/oecd_trade_ch_final.rds")
-# tradedata_temp <- filter(tradedata, year == 2018 & variable == "val_export")
-# tradedata_temp <- distinct(tradedata_temp, par.code, .keep_all = T)
-# tradedata_temp <- setDT(tradedata_temp)[order(-value), .SD[1:60, ]]
-# tradedata <- filter(tradedata, par.code %in% unique(tradedata_temp$par.code))
+tradedata <- readRDS(paste0(getwd(), "/section_I/oecd_trade_ch_final.rds"))
 
-tradedata <- mutate(tradedata, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
+# Transform to numeric values
+volumes <-transform(tradedata, year = as.numeric(year)) %>% 
+  mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep", "value"), as.numeric)
 
-# filter the data to leave only Switzerland:
-volumes <-transform(tradedata, year = as.numeric(year)) %>% # Transform to numeric values
-  mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep"), as.numeric)
-volumes %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/trad_data.rds")
-volumes %>% write.fst("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/trad_data.fst")
+volumes <- mutate(volumes, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
+
+# Keep only countries having Swiss exports for at least 28 years
+volumes <- distinct(volumes, par.code, year, variable, .keep_all = T)
+volumes <- setDT(volumes)[, num := .N, .(par.code, variable)]
+volumes <- filter(volumes, num > 27)
+
+volumes %>% saveRDS(paste0(getwd(), "/report/trad_data.rds"))
+volumes %>% write.fst(paste0(getwd(), "/report/trad_data.fst"))
 
 # Create the world map
 map_world <- map_data(map = "world") %>%
   filter(region != "Antarctica")
 map_world <- map_world[seq(1, nrow(map_world), 18), ]
 
-map_world %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/map_data.rds")
-map_world %>% write.fst("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/map_data.fst")
+map_world %>% saveRDS(paste0(getwd(), "/report/map_data.rds"))
+map_world %>% write.fst(paste0(getwd(), "/report/map_data.fst"))
 
 
 ##############################
