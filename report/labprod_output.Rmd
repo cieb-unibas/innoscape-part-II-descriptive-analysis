@@ -3,7 +3,7 @@
 
 
 # Input panels for indicator and industry
-  checkboxGroupInput(inputId = "variable_prod", label = "Choose a productivity indicator with:",
+  checkboxGroupInput(inputId = "variable_prod", label = "Choose a productivity indicator",
                          choices = list("Only domestic workers"="Only domestic workers",
                                         "Total jobs in firms"="Total jobs in firms",
                                         "Domestic and cross-border workers"="Domestic and cross-border workers"),
