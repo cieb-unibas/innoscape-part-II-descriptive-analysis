@@ -92,7 +92,8 @@ volumes <- read.fst("trad_data.fst")
 map_world <- read.fst("map_data.fst")
 
 # Load citation-flow data  / prepared in section_II/prep_report.R
-citflow_ctry <- read.fst("citflow_ctry_back.fst")
+citflow_ctry_back <- read.fst("citflow_ctry_back.fst")
+citflow_ctry_forw <- read.fst("citflow_ctry_forw.fst")
 ```	
 
 <!-- <head> -->

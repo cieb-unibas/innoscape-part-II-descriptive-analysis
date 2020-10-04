@@ -52,7 +52,6 @@ citflow_ctry <- rbind(citflow_ctry_temp, citflow_ctry)
 
 # Function to calculate a country's share of backward citations 
 citflow_ctry_func <- function(ctry = "Switzerland"){
-# citflow_ctry <- filter(citflow_ctry, ctry_name_cited != ctry & ctry_name_citing==ctry | ctry_name_cited == ctry & tech_name == "Pharmaceuticals")
 
 citflow_ctry <- filter(citflow_ctry, ctry_name_citing==ctry)
 citflow_ctry <- subset(citflow_ctry, select = c("tech_field_cited", 
@@ -73,47 +72,46 @@ citflow_ctry$group <- countrycode(sourcevar = citflow_ctry[, "ctry_name_cited"],
 citflow_ctry <- mutate(citflow_ctry, group = ifelse(ctry_name_cited == ctry_name_citing, "Domestic", group))
 
 # Agregation summing, without cited pharma patents
-citflow_ctry <- dplyr::group_by(citflow_ctry, tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>%
-  summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))%>%
-  bind_rows(citflow_ctry, .)
+citflow_cont <- citflow_ctry %>%
+  group_by(tech_field_citing, tech_field_cited, tech_name, p_year_citing, group) %>%
+  summarise(share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE))
 
-# citflow_ctry <- aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + group + ctry_name_citing, FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16"))
 
 # Creating a All (continents) group
-citflow_ctry<-citflow_ctry %>%
-  group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing, ctry_name_citing) %>%
-  summarise(group = "All", share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) %>%
-  bind_rows(citflow_ctry, .)
+citflow_all <-citflow_ctry %>%
+  group_by(tech_field_cited, tech_field_citing, tech_name, p_year_citing) %>%
+  summarise(group = "All", share_inv_cited = sum(share_inv_cited[tech_field_cited!="16"], na.rm = TRUE)) 
 
-# citflow_ctry_all <- data.frame(group = "All", aggregate(share_inv_cited ~ tech_field_citing + tech_field_cited + tech_name + p_year_citing + ctry_name_citing, 
-#                                                         FUN = function(x)sum(x, na.rm = T), data = filter(citflow_ctry, tech_field_cited!="16")))
+# Put both together (all and continent)
+citflow_ges <- rbind(citflow_cont, citflow_all)
 
-# citflow_ctry <- rbind(citflow_ctry, citflow_ctry_all)
 
 # Create normalized shares per year
-  citflow_ctry <- setDT(citflow_ctry)[, total_num := sum(share_inv_cited[group == "All"], na.rm = T), .(p_year_citing, ctry_name_citing)] %>%
+citflow_ges <- setDT(citflow_ges)[, total_num := sum(share_inv_cited[group == "All"], na.rm = T), .(p_year_citing)] %>%
     mutate(share_inv_cited = share_inv_cited / total_num)
   
 # Create tech_field_cited by group
-citflow_ctry <- mutate(citflow_ctry, tech_field_cited = ifelse(tech_field_cited != 16, paste0(tech_field_cited, substr(group, 1, 2)), tech_field_cited), ctry_cited = ctry, type = type)
+citflow_ges <- mutate(citflow_ges, tech_field_cited = ifelse(tech_field_cited != 16, 
+                                                             ifelse(tech_field_cited == 40, paste0(16, substr(group, 1, 2)), paste0(tech_field_cited, substr(group, 1, 2))), tech_field_cited), 
+                                   ctry_cited = ctry, type = type)
+# Change tech_field 40 back to 16 in order to be placed at the other 16s in the citation plot
+
+
+
+return(citflow_ges)
 }
 
 citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "United States", "Italy", "France", "China", "India", "Sweden", "Japan"), function(x) citflow_ctry_func(x)))
 
 # Keep only flows from Asia, Americas and Europe; others are irrelevant
-citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic") & is.na(ctry_name_citing) != T)
+citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
 
-# Change variable names again if type == "forw"
-if(type == "forw"){
-  citflow_ctry_data <- dplyr::rename(citflow_ctry_data, tech_field_citing = tech_field_cited, tech_field_cited = tech_field_citing, share_inv_citing = share_inv_cited, 
-                           ctry_citing = ctry_cited)}
-
+#! I kept the variable names the same for forward and backward citations in order to easily create the forwarc network in citnetwork_output.RMD (ie just use the same names there)
 citflow_ctry_data %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".rds"))
 citflow_ctry_data %>% write.fst(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".fst"))
-
 }
 
-# Run the previsouly created function
+# Run the previously created function
 lapply(list("back", "forw"), function(x) citations_func(x))
 
 #####################
