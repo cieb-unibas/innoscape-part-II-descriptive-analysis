@@ -1,36 +1,5 @@
 ```{r, echo=FALSE}
 
-# (2) Creating coordinates for each unique technology that is cited in a c
-# credit: https://stackoverflow.com/users/1465387/sebastian-c on
-# https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
-  eq_spacing <- function(r = 1, data){
-    # data: back or forward citations
-  coord <- unique(data$tech_field_cited)
-  coord <- data.frame(coord)
-   
-   # create unique coordinate 
-    polypoints <- seq(0, 2*pi, length.out=nrow(coord)+1)
-    polypoints <- polypoints[-length(polypoints)]
-    circx <- r * sin(polypoints)
-    circy <- r * cos(polypoints)
-    numbers <- data.frame(x=circx, y=circy)
-    
-    coord <- cbind(coord, numbers)
-    colnames(coord) <- c("tech_field_cited", "x", "y")
-  
-    citflow_ctry <- merge(data, coord)
-  return(citflow_ctry)
-}
- 
-
-
-# Create coordinates for backward citations
- citflow_ctry_back <- eq_spacing(r = 1, data = citflow_ctry_back) 
-
-# Create coordinates for forward citations
- citflow_ctry_forw <- eq_spacing(r = 1, data = citflow_ctry_forw) 
-
-     
 fluidPage(
   fluidRow(
     column(6,  
@@ -52,21 +21,48 @@ pickerInput(inputId = "group",
 
 )))
 
-sliderInput(inputId = "p_year_citing", label =  "Year of citation", 
-              min=1990, max=2015, value=1990, sep="")
+sliderInput(inputId = "p_year_citing", label =  "Year of citation", min=1990, max=2015, value=1990, sep="")
+
+
+# (2) Creating coordinates for each unique technology that is cited in a c
+# credit: https://stackoverflow.com/users/1465387/sebastian-c on
+# https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
+eq_spacing <- function(r = 2, data){
+    # data: back or forward citations / use only subset of input picker to better distribute the technologies
+    data <- data %>% filter(group %in% input$group, 
+                                   ctry_cited %in% input$cit_ctry,
+                                   p_year_citing %in% input$p_year_citing)
+      
+    coord <- sort(unique(data$tech_field_cited))
+    coord <- data.frame(coord)
+   
+   # create unique coordinate 
+    polypoints <- seq(0, 2*pi, length.out=nrow(coord)+1)
+    polypoints <- polypoints[-length(polypoints)]
+    circx <- r * sin(polypoints)
+    circy <- r * cos(polypoints)
+    numbers <- data.frame(x=circx, y=circy)
+    
+    coord <- cbind(coord, numbers)
+    colnames(coord) <- c("tech_field_cited", "x", "y")
+  
+    citflow_ctry <- merge(data, coord)
+  return(citflow_ctry)
+}
+
 
 fluidPage(
   fluidRow(
     column(6,
 # (4) make the first plot
+
 renderVisNetwork({
   
-# (a) subset the data according to the input and store it for determining nodes and edges:
+# Create coordinates for backward citations
+nodes <- eq_spacing(r = 1, data = citflow_ctry_back) 
+edges <- nodes
 
-  nodes<- citflow_ctry_back %>% filter(group %in% input$group, 
-                                   ctry_cited %in% input$cit_ctry,
-                                   p_year_citing %in% input$p_year_citing)
-  edges <- nodes
+
     
 # (b) Creating NODES from the reactive (filtered) data
   nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y, share_inv_cited)
@@ -94,7 +90,7 @@ renderVisNetwork({
   edges$title <- paste0(round(edges$value, 2))
    
 # (d) keep only observations above a min threshold
-  edges <- filter(edges, value > 0.02)
+  edges <- filter(edges, value >= 0.01)
   nodes <- filter(nodes, id %in% edges$to | id == 16)
   
 # (e) Define different colors for different regions
@@ -111,7 +107,7 @@ renderVisNetwork({
  label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes, edges, height = "130%",  width = "130%", main = paste("Knowledge flows to pharma")) %>%
+  visNetwork(nodes, edges, height = "100%",  width = "100%", main = paste("Knowledge flows to pharma")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -124,26 +120,22 @@ renderVisNetwork({
     visEdges(
         value="value",
         scaling = list(min = min(unique(edges$value), rm.na = T)*15, max = max(unique(edges$value), rm.na = T)*15),
-        arrows = "to",
+        arrows = "from",
         color="lightgrey",
         selfReferenceSize = F,
         shadow = FALSE,
         smooth = FALSE) %>%
     visInteraction(dragNodes = F, dragView = F, zoomView = T)%>%
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T))%>%
-    visLegend(position = "right", useGroups = F, addNodes = ledges, zoom = F) %>%
-    visLayout(randomSeed = 123)
+    visLegend(position = "right", useGroups = F, addNodes = ledges, zoom = F) 
   })    
 ), column(6,
 # make the 2nd plot
 renderVisNetwork({
   
-# (a) subset the data according to the input and store it for determining nodes and edges:
-
-  nodes_2 <- citflow_ctry_forw %>% filter(group %in% input$group, 
-                                   ctry_cited %in% input$cit_ctry,
-                                   p_year_citing %in% input$p_year_citing)
-  edges_2 <- nodes_2
+# Create coordinates for forward citations used in 2nd plot
+ nodes_2 <- eq_spacing(r = 1, data = citflow_ctry_forw) 
+ edges_2 <- nodes_2
     
 # (b) Creating NODES from the reactive (filtered) data
   nodes_2 <- dplyr::select(nodes_2, tech_field_cited, tech_name, group, x, y, share_inv_cited)
@@ -170,7 +162,7 @@ renderVisNetwork({
   edges_2$title <- paste0(round(edges_2$value, 2))
    
 # (d) keep only observations above a min threshold
-  edges_2 <- filter(edges_2, value > 0.02)
+  edges_2 <- filter(edges_2, value >= 0.01)
   nodes_2 <- filter(nodes_2, id %in% edges_2$to | id == 16)
   
 # (e) Define different colors for different regions
@@ -187,7 +179,7 @@ renderVisNetwork({
  # label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes_2, edges_2, height = "130%",  width = "130%", main = paste("Knowledge flows from pharma to other technologies")) %>%
+  visNetwork(nodes_2, edges_2, height = "100%",  width = "90%", main = paste("Knowledge flows from pharma to other technologies")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -200,7 +192,7 @@ renderVisNetwork({
     visEdges(
         value="value",
         scaling = list(min = min(unique(edges_2$value), rm.na = T)*15, max = max(unique(edges_2$value), rm.na = T)*15),
-        arrows = "from",
+        arrows = "to",
         color="lightgrey",
         selfReferenceSize = F,
         shadow = FALSE,
