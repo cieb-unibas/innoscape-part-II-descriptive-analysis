@@ -57,7 +57,7 @@ renderPlotly({
         xlab("Priority Year")+
         ylab(input$ind_conti)+
         guides(color = FALSE)+
-     scale_color_manual(values = colorRampPalette(brewer.pal(8, "RdBu"))(101)[c(1, 5, 15, 80, 90, 101)]) +
+  scale_color_manual(values = colorRampPalette(brewer.pal(8, "RdBu")[c(1:3, 6:8)])(length(unique(plot02_data_conti()$geo)))) +
   scale_x_continuous(breaks = seq(min(plot02_data_conti()$p_year, na.rm = T), max(plot02_data_conti()$p_year, na.rm = T), by = 5)) +
         # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
         theme(axis.title = element_text(face="bold",size = 10),
