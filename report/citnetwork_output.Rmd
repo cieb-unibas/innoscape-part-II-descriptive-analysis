@@ -24,7 +24,7 @@ pickerInput(inputId = "group",
 sliderInput(inputId = "p_year_citing", label =  "Year of citation", min=1990, max=2015, value=1990, sep="")
 
 
-# (2) Creating coordinates for each unique technology that is cited in a c
+# (2) Create function to calculate coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
 # https://stackoverflow.com/questions/40279052/coordinates-of-equally-distanced-n-points-on-a-circle-in-r
 eq_spacing <- function(r = 2, data){
@@ -44,6 +44,8 @@ eq_spacing <- function(r = 2, data){
     numbers <- data.frame(x=circx, y=circy)
     
     coord <- cbind(coord, numbers)
+    coord <- mutate(coord, coord = as.character(coord))
+    coord <- mutate(coord, x = ifelse(coord == 16, 0, x), y = ifelse(coord == 16, 0, y))
     colnames(coord) <- c("tech_field_cited", "x", "y")
   
     citflow_ctry <- merge(data, coord)
@@ -67,9 +69,13 @@ edges <- nodes
 # (b) Creating NODES from the reactive (filtered) data
   nodes <- dplyr::select(nodes, tech_field_cited, tech_name, group, x, y, share_inv_cited)
   colnames(nodes) <- c("id", "label", "group", "x", "y", "value_nodes")
-  nodes$label<- ifelse(nodes$label == "Pharmaceuticals", paste0(input$cit_ctry), nodes$label)
-      
-  nodes %>% group_by(id, label, x, y, value_nodes) %>%
+
+  nodes <- mutate(nodes, label = case_when(label == "Pharmaceuticals" ~ paste0(input$cit_ctry),
+                                           label == "Cited Pharmaceuticals" ~ "Pharmaceuticals",
+                                           T ~ label))
+    
+
+    nodes %>% group_by(id, label, x, y, value_nodes) %>%
     summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
     ungroup()  -> nodes
       
@@ -107,7 +113,7 @@ edges <- nodes
  label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes, edges, height = "100%",  width = "100%", main = paste("Knowledge flows to pharma")) %>%
+  visNetwork(nodes, edges, height = "100%",  width = "100%", main = paste("Knowledge flows from other technologies to pharma")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -140,8 +146,10 @@ renderVisNetwork({
 # (b) Creating NODES from the reactive (filtered) data
   nodes_2 <- dplyr::select(nodes_2, tech_field_cited, tech_name, group, x, y, share_inv_cited)
   colnames(nodes_2) <- c("id", "label", "group", "x", "y", "value_nodes")
-  nodes_2$label<- ifelse(nodes_2$label == "Pharmaceuticals", paste0(input$cit_ctry), nodes_2$label)
-      
+  nodes_2 <- mutate(nodes_2, label = case_when(label == "Pharmaceuticals" ~ paste0(input$cit_ctry),
+                                           label == "Cited Pharmaceuticals" ~ "Pharmaceuticals",
+                                           T ~ label))
+  
   nodes_2 %>% group_by(id, label, x, y, value_nodes) %>%
     summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
     ungroup()  -> nodes_2
