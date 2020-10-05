@@ -37,9 +37,9 @@ blockquote {
 
 .box_div {
   font-size: 11pt;
+  background-color: #D1E5F0; /*e0ebeb*/
   font-family: "Verdana";
 }
-
 
 hr {
   display: block;
@@ -47,3 +47,14 @@ hr {
   margin-bottom: 0;
   margin-left: 0;
 }
+
+/*infos on links*/
+a {
+  color: #2166AC;
+}
+
+      
+table.dataTable tr.selected{
+  background-color: #2166AC;
+}
+        

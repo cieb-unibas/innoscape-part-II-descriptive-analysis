@@ -13,6 +13,8 @@ output$conti =  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
                              options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
                                             columnDefs = list(list(className = 'dt-center', targets = 1))))
 
+
+
 DT::dataTableOutput('conti')
 
 ## Add clearing of rows
@@ -49,13 +51,14 @@ renderPlotly({
     # make the plot
     ggplotly(
       ggplot(data =   plot02_data_conti(), aes(x = p_year, y= share_inv, color = geo, shape = geo, label = Geo)) +
-        geom_point(alpha = 0.7) +
-        geom_line() +
+        geom_point(alpha = 1) +
+        geom_line(alpha = 1) +
         # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
         xlab("Priority Year")+
         ylab(input$ind_conti)+
         guides(color = FALSE)+
-        scale_x_continuous(breaks = seq(min(plot02_data_conti()$p_year, na.rm = T), max(plot02_data_conti()$p_year, na.rm = T), by = 5)) +
+     scale_color_manual(values = colorRampPalette(brewer.pal(8, "RdBu"))(101)[c(1, 5, 15, 80, 90, 101)]) +
+  scale_x_continuous(breaks = seq(min(plot02_data_conti()$p_year, na.rm = T), max(plot02_data_conti()$p_year, na.rm = T), by = 5)) +
         # scale_color_viridis(option="viridis", begin = 0.7, end = 0.4, discrete = FALSE, name = "None")+
         theme(axis.title = element_text(face="bold",size = 10),
               panel.background = element_blank(),
@@ -69,6 +72,8 @@ renderPlotly({
              legend = list(orientation = "h"))
 
 })
+
+
 
 
 ```

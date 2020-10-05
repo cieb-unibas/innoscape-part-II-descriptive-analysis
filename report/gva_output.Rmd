@@ -36,6 +36,7 @@ if(nrow(d_gva()) != 0){
     ggplot(d_gva(),aes(x = as.numeric(year), y = value, group = ind.name, colour = ind.name, label = Industry)) +
         geom_point(alpha = 0.7) +  
             geom_line()+
+            scale_colour_brewer(palette = "RdBu") +
             xlab("Year")+
             ylab(Y_AXIS_TITLE)+
             guides(color = FALSE)+

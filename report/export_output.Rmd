@@ -12,8 +12,8 @@
               geom_polygon(data = map_world,
                            aes(long, lat, group = group, fill = region), 
                            show.legend = FALSE,
-                           alpha = 0.7,
-                           fill="grey",
+                           alpha = 1,
+                           fill="#D1E5F0",
                            color = "white") 
   renderPlotly({
 # subset the data accoding to the input:
@@ -31,7 +31,7 @@
               #            size = 0.10,
               #            alpha = 0.5) +
               geom_point(data = d_exp(),
-                         aes(long_par, lat_par, size = value, label = Country), color = "red", alpha = 0.6) +
+                         aes(long_par, lat_par, size = value, label = Country), color = "#B2182B", alpha = 1) +
               theme_bw() +
               theme(axis.line = element_blank(),
                     panel.grid.major = element_blank(),

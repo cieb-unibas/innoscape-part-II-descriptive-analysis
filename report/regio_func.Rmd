@@ -50,6 +50,7 @@ renderPlotly({
                  xlab("Priority Year")+
                  ylab(input$ind_regio)+
                  guides(color = FALSE)+
+                 scale_colour_brewer(palette = "RdBu") +
                  scale_x_continuous(breaks = seq(min(plot02_data_regio()$p_year), max(plot02_data_regio()$p_year), by = 5)) +
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),

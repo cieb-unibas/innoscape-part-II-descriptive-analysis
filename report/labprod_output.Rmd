@@ -40,6 +40,7 @@ if(nrow(d_output()) != 0){
                                  group = interaction(ind.name, variable, sep = ": "), 
                                  colour = ind.name, linetype  = variable, label = Industry)) +
            geom_point(alpha = 0.7) +  
+           scale_colour_brewer(palette = "RdBu") +
             geom_line()+
             xlab("Year")+
             ylab(input$variable_prod)+

@@ -41,6 +41,7 @@
                                 group = country, colour = country, label = Country)) +
             geom_point(alpha = 0.7) +  
             geom_line()+
+            scale_colour_brewer(palette = "RdBu") +
             xlab("Year")+
             ylab(Y_AXIS_TITLE)+
             guides(color = FALSE)+
