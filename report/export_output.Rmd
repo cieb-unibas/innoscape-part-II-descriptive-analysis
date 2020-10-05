@@ -10,7 +10,8 @@
 # Create world map
   world <- ggplot() +
               geom_polygon(data = map_world,
-                           aes(long, lat, group = group, fill = region), 
+                           aes(long, lat, group = group, 
+                               fill = region), 
                            show.legend = FALSE,
                            alpha = 1,
                            fill="#D1E5F0",
