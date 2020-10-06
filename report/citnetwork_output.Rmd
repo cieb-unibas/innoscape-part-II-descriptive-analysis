@@ -101,8 +101,7 @@ edges <- nodes
   colnames(edges) <- c("from", "to", "value", "group")
   edges <- filter(edges, value != 0)
     edges$title <- paste0(round(edges$value*100, 1), c(" %"))
-  #edges$title <- paste0(round(edges$value, 2))
-   
+
 # (d) keep only observations above a min threshold
   edges <- filter(edges, value >= 0.01)
   nodes <- filter(nodes, id %in% edges$to | id == 16)

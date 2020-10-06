@@ -23,7 +23,7 @@
                            year %in% input$year_exp)
     }) 
 # make the plot
-  ggplotly(  world  +
+p <-  ggplotly(  world  +
               # geom_curve(data = d_exp(), 
               #            aes(x = long_rep, xend = long_par,
               #                y = lat_rep, yend = lat_par),
@@ -32,7 +32,7 @@
               #            size = 0.10,
               #            alpha = 0.5) +
               geom_point(data = d_exp(),
-                         aes(long_par, lat_par, size = value, label = Country), color = "#B2182B", alpha = 1) +
+                         aes(long_par, lat_par, size = value, label = Country), color = "#B2182B", alpha = 0.7) +
               theme_bw() +
               theme(axis.line = element_blank(),
                     panel.grid.major = element_blank(),
@@ -42,9 +42,14 @@
                     axis.ticks = element_blank(),
                     axis.title = element_blank(),
                     axis.text = element_blank()),
-            dynamicTicks = T, tooltip = c("label")
+            dynamicTicks = T, tooltip = c("Country")
       ) %>% config(displayModeBar = T) %>%
       layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F))
-    
+
+p$x$data[[1]]$text <- c(paste0("Please move over a point to get information"))
+p$y$data[[1]]$text <- c(paste0("Please move over a point to get information"))
+
+p
+
   })
 ```
