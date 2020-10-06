@@ -93,7 +93,8 @@ citflow_ges <- setDT(citflow_ges)[, total_num := sum(share_inv_cited[group == "A
 # Create tech_field_cited by group
 citflow_ges <- mutate(citflow_ges, tech_field_cited = ifelse(tech_field_cited != 16, 
                                                              ifelse(tech_field_cited == 40, paste0(16, substr(group, 1, 2)), paste0(tech_field_cited, substr(group, 1, 2))), tech_field_cited), 
-                                   ctry_cited = ctry, type = type)
+                                   ctry_cited = ctry, type = type,
+                                   label = )
 # Change tech_field 40 back to 16 in order to be placed at the other 16s in the citation plot
 
 
@@ -126,8 +127,7 @@ tradedata <- readRDS(paste0(getwd(), "/section_I/oecd_trade_ch_final.rds"))
 volumes <-transform(tradedata, year = as.numeric(year)) %>% 
   mutate_at(c("lat_par", "long_par", "lat_rep", "long_rep", "value"), as.numeric)
 
-volumes <- mutate(volumes, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), "\nIndicator: ", ifelse(variable %in% "share_in_tot", paste0("Swiss pharma exports to total Swiss exports to ", countrycode(par.code, "iso3c", "country.name.en")), 
-           ifelse(variable %in% "share_in_tot2", paste0("Swiss pharma exports to ", countrycode(par.code, "iso3c", "country.name.en"), " of total Swiss pharma exports"), paste0("Swiss pharma exports in million USD"))), 
+volumes <- mutate(volumes, Country = paste0(countrycode(par.code, "iso3c", "country.name.en"), 
            "\nYear: ", year, "\nValue: ", ifelse(variable %in% "val_export", paste0(round(value/1000, 0), " million USD"), paste0(round(value*100, 0), "%"))))
 
 # Keep only countries having Swiss exports for at least 28 years
