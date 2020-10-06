@@ -62,6 +62,16 @@ resource_files:
 - title.jpg
 - style.css
 - cieb.png
+- citflow_ctry_back.fst
+- citflow_ctry_forw.fst
+- gva_data_ch.fst
+- ilo.fst
+- labprod.fst
+- map_data.fst
+- numpat_data.fst
+- trad_data.fst
+- title.jpg
+- style.css
 runtime: shiny
 ---
 

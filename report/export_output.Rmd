@@ -43,8 +43,8 @@
                     axis.title = element_blank(),
                     axis.text = element_blank()),
             dynamicTicks = T, tooltip = c("label")
-      ) %>% config(displayModeBar = F) %>%
-      layout(xaxis = list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE))
+      ) %>% config(displayModeBar = T) %>%
+      layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F))
     
   })
 ```
