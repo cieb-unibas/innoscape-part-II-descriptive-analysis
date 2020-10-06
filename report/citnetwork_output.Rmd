@@ -100,7 +100,8 @@ edges <- nodes
   edges <- subset(edges, select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited", "group"))
   colnames(edges) <- c("from", "to", "value", "group")
   edges <- filter(edges, value != 0)
-  edges$title <- paste0(round(edges$value, 2))
+    edges$title <- paste0(round(edges$value*100, 1), c(" %"))
+  #edges$title <- paste0(round(edges$value, 2))
    
 # (d) keep only observations above a min threshold
   edges <- filter(edges, value >= 0.01)
@@ -175,8 +176,8 @@ renderVisNetwork({
   edges_2 <- subset(edges_2, select = c("tech_field_citing", "tech_field_cited" ,"share_inv_cited", "group"))
   colnames(edges_2) <- c("from", "to", "value", "group")
   edges_2 <- filter(edges_2, value != 0)
-  edges_2$title <- paste0(round(edges_2$value, 2))
-   
+  edges_2$title <- paste0(round(edges_2$value*100, 1), c(" %"))
+  
 # (d) keep only observations above a min threshold
   edges_2 <- filter(edges_2, value >= 0.01)
   nodes_2 <- filter(nodes_2, id %in% edges_2$to | id == 16)
