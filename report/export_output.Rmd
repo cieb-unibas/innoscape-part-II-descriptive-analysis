@@ -46,8 +46,8 @@ p <-  ggplotly(  world  +
       ) %>% config(displayModeBar = T) %>%
       layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F))
 
-p$x$data[[1]]$text <- c(paste0("Please move over a point to get information"))
-p$y$data[[1]]$text <- c(paste0("Please move over a point to get information"))
+p$x$data[[1]]$text <- c(paste0("Move over a point to get information"))
+p$y$data[[1]]$text <- c(paste0("Move over a point to get information"))
 
 p
 
