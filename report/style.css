@@ -40,18 +40,22 @@ blockquote {
   font-family: "Verdana";
 }
 
-hr {
-  display: block;
-  margin-top: 0;
-  margin-bottom: 0;
-  margin-left: 0;
-}
-
 /*infos on links*/
 a {
   color: #2166AC;
 }
 
+.hr_red {
+  display: block;
+  border: none;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 0;
+  width: 30%;
+  height: 10px;
+  color: #B2182B;
+  background-color:#B2182B;
+}
       
 
         

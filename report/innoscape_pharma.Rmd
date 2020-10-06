@@ -175,9 +175,9 @@ The Swiss pharmaceutical sector has a major impact on Switzerland’s economy an
 <div class="box_div">	
 
 <details>
-  <summary style="font-size:11pt">*Click here for details about the data used*</summary>
+  <summary style="font-size:11pt">*Click here for details about the data we used for this analysis*</summary>
 
-* **Figure I: Steady increase of pharmaceutical job**: Data are taken from <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> database. Employment data comes from the local labor force surveys which cover only the resident population. This means that the employment figures do not cover cross-border commuters. In addition, given that an employed person may hold several jobs the employment refers to his or her primary job only. Finally, this data covers all persons of working age who, during a specified brief period, were either in paid employment or self-employed.
+* **Figure 1: Steady increase of pharmaceutical job**: Data are taken from <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> database. Employment data comes from the local labor force surveys which cover only the resident population. This means that the employment figures do not cover cross-border commuters. In addition, given that an employed person may hold several jobs the employment refers to his or her primary job only. Finally, this data covers all persons of working age who, during a specified brief period, were either in paid employment or self-employed.
 
 * **Figure 2 Pharma's growing importance for the Swiss economy**: Data on gross value added are from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a> - Industries production account database.
 
@@ -195,7 +195,7 @@ The FSO defines a job as follows: "The term “jobs” refers to all positions o
 Today, the pharmaceutical industry directly employs around 33’000 individuals with permanent residency in Switzerland. Furthermore, around 7 thousand cross-border commuters work in the Swiss pharma sector. The interactive graph below illustrates absolute and relative employment figures in the pharmaceutical industry across different countries. Although the absolute numbers may seem to be low, the share of employees in the Swiss pharmaceutical sector in total number of employed individuals is two times larger compared to those of the USA, Germany, France or Italy. Interestingly, the share of employment in the pharmaceutical industry in Switzerland is similar to Belgium, but the Swiss workers are creating a much higher economic impact than their Belgium colleagues suggesting extraordinary high productivity levels.
 
 <br>
-<hr color = "#B2182B" style="width:30%; height:10px">
+<hr class="hr_red">
 ##### **Steady increase of pharmaceutical job**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")}
 ```
@@ -207,7 +207,7 @@ Even with such a "low" number of employed persons, the pharmaceutical industry i
 
 <br>
 
-<hr color = "#B2182B" style="width:30%; height:10px">
+<hr class="hr_red">
 ##### **Pharma's growing importance for the Swiss economy**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")}
 ```
@@ -220,7 +220,7 @@ The fact that less than 1% of the labor force generates more than 5% of value ad
 The labor productivity in the pharmaceutical sector varies heavily depending on the used definition of workers. Taking into account the cross-border commuters, the productivity estimates drop by roughly 30% and when considering the total number of jobs, it drops by nearly 40% compared to calculations that use the Swiss residents only. This highlights the fact that the Swiss pharmaceuticals' performance is substantially dependent on the foreign labor force. This result also coincides with another analysis within the Innoscape Project on the importance of cross-border commuters for inventions 'Made in Switzerland' (cite Matthias output). However, regardless of the indicator used, the labor productivity of the pharmaceutical industry is by far the highest among Swiss manufacturing sectors. 
 
 <br>
-<hr color = "#B2182B" style="width:30%; height:10px">
+<hr class="hr_red">
 ##### **Open and highly productive**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")}
 ```
@@ -235,8 +235,8 @@ The labor productivity in the pharmaceutical sector varies heavily depending on 
 Access to skilled labor from abroad is important but free international trade may be even more significant for the growth of the Swiss pharmaceutical industry. The market for pharmaceutical products is global and the home-market is limited in its size, thus the Swiss pharmaceutical firms are required to nurture their export activities. Although Swiss pharma export figures are rising steadily in the last 30 years, there are some potential caveats concerning these export trends. For example, back in 1990, pharmaceutical products comprised less than 10% of the total Swiss exports to most destinations. Yet, in 2019 the share of pharma exports made up almost 30 % of the total exported goods in most of destination countries, making the overall Swiss export performance increasingly dependable on a single sector. Furthermore, the geographical dispersion of export destinations is also changing. In 1990 around 8 % of total Swiss pharma exports went to the USA, while in 2019 this share was roughly 26%. On the one hand, a larger export orientation towards the USA (and Germany) could produce certain concentration risks. But on the other, it may reveal important geographical innovation patterns and collaborations in facilitating new approaches in future research. In other words, the flow of pharmaceutical products may trail the flow of knowledge (more on this topic in our report on inventors’ nationalities - coming out soon).
 
 <br>
-<hr color = "#B2182B" style="width:30%; height:10px">
 
+<hr class="hr_red">
 ##### **Exporting to every corner in the world**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
 ```
@@ -251,8 +251,8 @@ Access to skilled labor from abroad is important but free international trade ma
 The Swiss pharmaceutical sector is often denoted as “one of the most important centers of pharmaceutical research world-wide, with a reputation that reaches far beyond Europe” (<a href = https://www.interpharma.ch/wp-content/uploads/2020/05/low_interpharma_broschure_A4_rz_en_DS_compressed.pdf target = “_blank”>Interpharma, p.7</a>). However, the number of published patents in the pharmaceutical sector in Switzerland is slowly losing its pace after 2008, a trend also visible in many other countries. In addition, during the same period the share of pharma patents in total patent applications is also declining, from 17% in 2007 to 7% in 2015, which indicates that, relative to other industries, the Swiss pharmaceutical sector lost some of its importance for the overall domestic innovation activity. Note, however, that these figures represent patent counts, which are quantitative measures of innovation. In turn, these measures can’t say much about the quality and importance of new inventions in different sectors. Nonetheless its relative decline, the pharmaceutical sector still remains highly ranked when it comes to the innovation intensity in total patent applications. Switzerland has also a very high revealed comparative advantage in creating pharma patents (among top 10 countries world-wide), meaning that it possesses a particular strength in pharmaceutical innovations compared to the rest of the world. Interestingly, Spain is positioning itself as the world-leader according to the RCA index. Spanish patenting intensity was more resilient to the 2008 crisis than the Swiss, implying that in the future we may expect the rise of pharmaceutical industries in other countries, even among those considered as untraditional pharma hubs. This could make the overall competition in the world healthcare market even harsher.
 
 <br>
-<hr color = "#B2182B" style="width:30%; height:10px">
 
+<hr class="hr_red">
 ##### **Patent Counts: The Output of Pharmaceutical R&D**
 
 <div class="box_div">	
@@ -301,7 +301,8 @@ In the early 90s, new Swiss pharma patent applications drew knowledge from a ver
 
 The knowledge outflows (forward citations) of pharmaceutical innovations closely resemble the structure and trends observed in its knowledge inflows (backward citations). Hence, the scientific output of pharmaceuticals and other related fields such as (among others) biotechnology, organic, medical or food chemistry are highly complementary. For instance, this means that a strong pharmaceutical industry in a given region probably cannot exists without highly developed research centers in biotechnology and chemistry close by (like in the Region of Basel) and that the increase in the pharmaceutical sector’s innovation capacities may have a substantial multiplicative spillover effect on other industries. Through the entire period from 1990 to 2015, roughly 50% of Swiss pharma patents are cited from “outside”, i.e. by the new patent applications from technological fields other than pharmaceuticals. Nonetheless, if the recent knowledge flow geography is observed, it is noticed that over 60 % of both knowledge inflows and outflows regarding the Swiss pharmaceutical patents are linked to the USA, confirming the strong cooperation between the US and Swiss pharmaceutical companies also visible in the trade data.         
 <br>
-<hr color = "#B2182B" style="width:30%; height:10px">
+
+<hr class="hr_red">
 ##### **Citations**
 <div class="box_div">	
 <details>
