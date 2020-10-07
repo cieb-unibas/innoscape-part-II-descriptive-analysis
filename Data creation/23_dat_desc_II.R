@@ -1,4 +1,4 @@
-print("23: Create data for part II.	Innovation in the Swiss Pharma Sector / only triadic patents are used and inventors are adjusted for cross-border commuters to Switzerland / CR 23.9.2020")
+print("Create data for patent counts of the pharma industry / only triadic patents are used and inventors are adjusted for cross-border commuters to Switzerland / CR 23.9.2020")
 
 library(tidyr)
 library(dplyr)
@@ -16,26 +16,25 @@ mainDir1 <- "/scicore/home/weder/GROUP/Innovation/01_patent_data"
 # Version of OECD-data
 # vers <- c("201907_")
 vers <- c("202001_")
+# Determine tech field (16 = pharma patents)
 tech_field_start <- 16
-## Latest year for which world class patents should be calculated / world class = 10% most cited patents per year over the next five years after filing
+# Determine maximal priority year considered
 max_year_past    <- 2015 
 
 #########################################
 ## Load data on geography of inventors ##
 #########################################
-## NEW: adjusted by cross-border commuters
+## Load inventor data adjusted by cross-border commuters / raw data not on Github
 inv_reg <- readRDS(paste0(mainDir1,  "/created data/inv_reg_CHcommute_adj.rds")) 
 inv_reg <- dplyr::rename(inv_reg, Up_reg_label = regio_pat, ctry_code = ctry_pat)
 
-## Focus only on subset of triadic patents
+## Focus only on subset of triadic patents / raw data not on Github
 tpf <- readRDS(paste0(mainDir1, "/created data/triadic_fam.rds"))
 
 inv_reg <- mutate(inv_reg, triadic = ifelse(p_key %in% unique(tpf$p_key) | patent_id %in% unique(tpf$patent_id), 1, 0))
 inv_reg <- setDT(inv_reg)[, ind_triad := sum(triadic, na.rm = T), .(p_key)]
 inv_reg <- filter(inv_reg, ind_triad > 0)
 
-## By following subset only granted patents are considered. It, however, overwrites the existing .RDS files
-## inv_reg <- filter(inv_reg, granted == "yes")
 
 ## Create function to get number of patents for different geographical entities per tech_field and p_year
 num_pats_geo_func <- function(tech_field_start, max_year_past){
@@ -45,21 +44,10 @@ inv_reg <- distinct(inv_reg, p_key, name, .keep_all = T)
 inv_reg <- filter(inv_reg, is.na(tech_field) != T & tech_field == tech_field_start)
 }
 ## For the analysis, use ctry_pat and regio_pat 
-# inv_reg <- dplyr::select(inv_reg, -Ctry_code, -Up_reg_label)
-# inv_reg <- dplyr::rename(inv_reg, ctry_code = Ctry_code , Up_reg_label = regio_pat)
 inv_reg <- mutate(inv_reg, conti = countrycode(ctry_code, origin = "eurostat", destination = "continent"), ctry_name = countrycode(ctry_code, "iso2c", "country.name.en"), Up_reg_label = paste0(ctry_code, " - ", Up_reg_label))
 inv_reg <- setDT(inv_reg)[, share_inv := 1/.N, .(p_key)]
 inv_reg <- mutate(inv_reg, ipc_3 = substr(ipc_main, 1, 3)) %>% dplyr::select(-ipc_main)
 
-## Add list of IPC per patent created in 08b_p_key_ipc.R -> Deprectad, however, it could be used later on to add different technology fields
-# ipc <- readRDS(paste0(mainDir1, "/created data/ipc_list.rds"))
-# ipc <- setDT(ipc)[, .SD[1], .(p_key)]
-# ipc <- dplyr::select(ipc, -ipc_main, -ipc_list, -ipc_3_list, -ict, -ai)
-# inv_reg <- left_join(inv_reg, ipc, by = c("p_key"))
-
-## Load name of IPC
-# ipc_name <- read.csv2(paste0(mainDir1, "/raw data/ipc_3_digit.csv")) %>% dplyr::select(Code.1, Description)
-# inv_reg <- left_join(inv_reg, ipc_name, by = c("ipc_3" = "Code.1"))
 
 ## World-class patents only considered when calculating data for a tech_field 
 if(tech_field_start != "all"){
@@ -76,6 +64,7 @@ cit_quant <- function(pat_office, q, data, year){
   return(quant)
 }
 
+# Load citations data / raw data not on Github
 pat_past <- readRDS(paste0(mainDir1, "/created data/info_cited_pat.rds"))
 
 ## keep only USPTO patents
@@ -95,12 +84,11 @@ inv_reg <- left_join(inv_reg, pat_past, by = c("p_key"))
 } 
 
 
-############################################
-## b.	Swiss Pharma in the Domestic Economy #
-############################################
+#############################
+## Number of pharma patents #
+#############################
 ## Function to calculate number of patents per geographic entity
 num_pat_geo <- function(geo_level, geo_name, tech_field_start, world_class){
-  # inv_reg <- filter(inv_reg, tech_field %in% tech_field_start)
 
   ## find important countries and regions
   imp <- aggregate(as.formula(paste0("share_inv ~", geo_level)), data = filter(inv_reg, p_year > 1989), FUN = sum)
@@ -170,7 +158,7 @@ num_pat_16 <- dplyr::rename(num_pat_16, Continent = conti, Region = Up_reg_label
 num_pat_16 <- filter(num_pat_16, str_detect(geo, "- NA") != T)
 
 num_pat_16 %>% 
-saveRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/num_pat_", tech_field_start, ".rds"))
+saveRDS(paste0(gewtd(), "/Data creation/num_pat_", tech_field_start, ".rds"))
 
 
 ##################################################
@@ -198,7 +186,7 @@ world_class_16 <- dplyr::rename(world_class_16, Continent = conti, Region = Up_r
 world_class_16 <- filter(world_class_16, str_detect(geo, "- NA") != T & cit_cat_y_5 == 2)
 
 world_class_16 %>% 
-  saveRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/world_class_", tech_field_start, ".rds"))
+  saveRDS(paste0(getwd(), "/Data creation/world_class_", tech_field_start, ".rds"))
 }
 }
 
@@ -206,8 +194,8 @@ lapply(c(16, "all"), function(x) num_pats_geo_func(x, 2015))
 
 
 ## Add different calculations together
-all <- readRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/num_pat_", "all", ".rds"))
-pharma <- readRDS(paste0("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/num_pats_geo/num_pat_", 16, ".rds"))
+all <- readRDS(paste0(getwd(), "/Data creation/num_pat_", "all", ".rds"))
+pharma <- readRDS(paste0(getwd(), "/Data creation/num_pat_", 16, ".rds"))
 
 ## Calculate share of geo of all patents of tech_field
 pharma_share <- dplyr::select(pharma, -share_inv) %>% dplyr::rename(share_inv = share_geo) %>% mutate(indicator = case_when(abs_rel == "abs" ~ "share_pharma", abs_rel == "rel_1990" ~ "share_pharma_rel_1990"))
@@ -233,4 +221,4 @@ pharma <- dplyr::rename(pharma, indicator = abs_rel) %>% filter(world_class == "
 pharma <- rbind.fill(pharma, pharma_share, pharma_all_geo, pharma_all_rca )
 pharma <- dplyr::select(pharma, -ges_pat_year, -ges_pat_geo_year, -abs_rel, -share_geo)
 pharma <- filter(pharma, is.na(share_inv) != T)
-pharma %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part II descriptive analysis/report/num_pat_", 16, ".rds"))
+pharma %>% saveRDS(paste0(getwd(), "/report/num_pat_", 16, ".rds"))

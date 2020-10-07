@@ -19,9 +19,9 @@ citations_func <- function(type = "back"){
 
 # Load the data
 if(type == "back"){
-  citflow <- readRDS(paste0(getwd(), "/section_III/back_citations_16.rds"))
+  citflow <- readRDS(paste0(getwd(), "/Data creation/back_citations_16.rds"))
   } else if(type == "forw"){
-    citflow <- readRDS(paste0(getwd(), "/section_III/forw_citations_16.rds"))
+    citflow <- readRDS(paste0(getwd(), "/Data creation/forw_citations_16.rds"))
     citflow <- dplyr::rename(citflow, conti_citing = conti_cited, conti_cited = conti_citing, tech_field_citing = tech_field_cited, tech_field_cited = tech_field_citing, share_inv_cited = share_inv_citing, 
                            ctry_name_citing = ctry_name_cited, up_reg_label_citing = up_reg_label_cited,
                            ctry_name_cited = ctry_name_citing, up_reg_label_cited = up_reg_label_citing)
@@ -29,7 +29,7 @@ if(type == "back"){
   print("Wrong type used")
 }
 
-techlab <- readRDS("/scicore/home/weder/GROUP/Innovation/01_patent_data/created data/oecd_tech_field.RDS")
+techlab <- readRDS(paste0(getwd(), "/Data creation/oecd_tech_field.RDS"))
 colnames(techlab) <- c("tech_field_cited", "tech_name")
 citflow_final <- merge(citflow, techlab, by = c("tech_field_cited"))
 
@@ -93,9 +93,7 @@ citflow_ges <- setDT(citflow_ges)[, total_num := sum(share_inv_cited[group == "A
 # Create tech_field_cited by group
 citflow_ges <- mutate(citflow_ges, tech_field_cited = ifelse(tech_field_cited != 16, 
                                                              ifelse(tech_field_cited == 40, paste0(16, substr(group, 1, 2)), paste0(tech_field_cited, substr(group, 1, 2))), tech_field_cited), 
-                                   ctry_cited = ctry, type = type,
-                                   label = )
-# Change tech_field 40 back to 16 in order to be placed at the other 16s in the citation plot
+                                   ctry_cited = ctry, type = type)
 
 
 
@@ -108,8 +106,8 @@ citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "
 citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
 
 #! I kept the variable names the same for forward and backward citations in order to easily create the forwarc network in citnetwork_output.RMD (ie just use the same names there)
-citflow_ctry_data %>% saveRDS(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".rds"))
-citflow_ctry_data %>% write.fst(paste0("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/citflow_ctry_", type, ".fst"))
+citflow_ctry_data %>% saveRDS(paste0(getwd(), "/report/citflow_ctry_", type, ".rds"))
+citflow_ctry_data %>% write.fst(paste0(getwd(), "/report/citflow_ctry_", type, ".fst"))
 }
 
 # Run the previously created function
@@ -121,7 +119,7 @@ lapply(list("back", "forw"), function(x) citations_func(x))
 
 options(scipen=999)
 # Load trade data
-tradedata <- readRDS(paste0(getwd(), "/section_I/oecd_trade_ch_final.rds"))
+tradedata <- readRDS(paste0(getwd(), "/Data creation/oecd_trade_ch_final.rds"))
 
 # Transform to numeric values
 volumes <-transform(tradedata, year = as.numeric(year)) %>% 
@@ -151,7 +149,7 @@ map_world %>% write.fst(paste0(getwd(), "/report/map_data.fst"))
 # Create data on employment #
 ##############################
 # Load data on employment
-ilo <- readRDS(paste0(getwd(), "/section_I/iloemp_2020_final.rds"))
+ilo <- readRDS(paste0(getwd(), "/Data creation/iloemp_2020_final.rds"))
 ilo <- subset(ilo, ind.code == "21")
 
 # Rename countries from ISO to complete name
@@ -177,7 +175,7 @@ ilo %>% write.fst(paste0(getwd(), "/report/ilo.fst"))
 # Create data on labor productivity #
 #####################################
 # load & prepare the data
-labprod <- readRDS(paste0(getwd(), "/section_I/lab_prod_final_ch.rds"))
+labprod <- readRDS(paste0(getwd(), "/Data creation/lab_prod_final_ch.rds"))
 
 # shorten industry names
 labprod$ind.name <- gsub("Manufacture of ", "", x = labprod$ind.name)
@@ -198,7 +196,7 @@ labprod %>% write.fst(paste0(getwd(), "/report/labprod.fst"))
 ####################################
 
 # load the data
-gva <- readRDS(paste0(getwd(), "/section_I/gva_data.rds"))
+gva <- readRDS(paste0(getwd(), "/Data creation/gva_data.rds"))
 
 # make sure we have the same as in labor productivity plot
 industries <- select(labprod, ind.code, ind.name) %>% 
@@ -233,10 +231,10 @@ gva %>% write.fst(paste0(getwd(), "/report/gva_data_ch.fst"))
 #################################
 
 # Load patent data 
-numpat_data <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/section_II/num_pat_16.rds")
+numpat_data <- readRDS(paste0(getwd(), "/Data creation/num_pat_16.rds"))
 
 # Preparing tech field labels and filtering data
-tech_label <- readRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/section_I/oecd_tech_field.RDS")
+tech_label <- readRDS(paste0(getwd(), "/Data creation/oecd_tech_field.RDS"))
 colnames(tech_label) <- c("tech_field", "tech_name")
 
 numpat_data_temp <- filter(numpat_data, p_year == 2000 & indicator == "abs")
@@ -259,8 +257,8 @@ numpat_data <- mutate(numpat_data, Geo = paste0(geo, "\nIndicator: ", indicator,
 numpat_data <- as.data.frame(numpat_data)  
 numpat_data <- mutate(numpat_data, `Rank based on year 2000` = rank_2000)
 
-numpat_data %>% saveRDS("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/numpat_data.rds")
-numpat_data %>% write.fst("/scicore/home/weder/rutzer/innoscape/part-II-descriptive-analysis/report/numpat_data.fst")
+numpat_data %>% saveRDS(paste0(getwd(), "/report/numpat_data.rds"))
+numpat_data %>% write.fst(paste0(getwd(), "/report/numpat_data.fst"))
 
 
 

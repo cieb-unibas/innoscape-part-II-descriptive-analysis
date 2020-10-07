@@ -1,4 +1,4 @@
-print("Create economic indicators for intro to part II descriptive analysis")
+print("Create economic indicators for descriptive analysis of pharma industry")
 # Last modified 01.10.2020 / DF
 
 require(data.table)
@@ -20,7 +20,7 @@ rm(list = ls())
 #a. Employment figures #
 ################################################################################
 
-# Load data on employment
+# Load data on employment / raw data not on Github
   ilo_2020 <-read.csv2("/scicore/home/weder/GROUP/Innovation/02_section_I_data/EMP_TEMP_SEX_EC2_NB_A.csv",header=T,sep=",",stringsAsFactors = FALSE,dec=".")
 
 # Filtering and cleaning
@@ -74,7 +74,7 @@ rm(list = ls())
 #Transforming into long format  
   ilo_2020 <-melt(setDT(ilo_2020), id.vars = c("country", "ind.code", "year"), measure.vars = c("num.emp", "share.emp"))
   
-#Loading the industry labels
+#Loading the industry labels / raw data not on Github
   labels_ind <- read_excel("/scicore/home/weder/GROUP/Innovation/02_section_I_data/label_sector.xlsx", sheet = "Sheet1")
   labels_ind %>% mutate_if(is.factor, as.character) -> labels_ind  
 
@@ -82,13 +82,13 @@ rm(list = ls())
   iloemp_2020_final<-merge(ilo_2020, labels_ind)
   
 #Saving data
-  saveRDS(object = iloemp_2020_final, file = "/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/iloemp_2020_final.rds")  
+  saveRDS(object = iloemp_2020_final, file = paste0(getwd(), "/Data creation/iloemp_2020_final.rds"))  
 
 ################################################################################
 #b. GVA figures #
 ################################################################################
 
-# Load data on GVA
+# Load data on GVA / raw data not on Github
   gva_abs <-read_excel("/scicore/home/weder/GROUP/Innovation/02_section_I_data/gva_sectoral.xlsx", sheet = "gva_absol")
 
 # Wide to long format
@@ -124,7 +124,7 @@ rm(list = ls())
   gva_data_ch <-melt(setDT(gva_data_ch), id.vars = c("ind.code", "ind.name", "year"), measure.vars = c("gva_prchange","gva_abs", "gva_share"))
 
 # Transforming GVA figures to long format
-  saveRDS(object=gva_data_ch, file = "/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/report/gva_data_ch.rds")
+  saveRDS(object=gva_data_ch, file = paste0(getwd(), "/report/gva_data_ch.rds"))
   
 ################################################################################
 #c. Labor productivity #
@@ -257,13 +257,13 @@ emp_bsf %>% mutate_if(is.factor, as.character) -> emp_bsf
   lab_prod_final_ch <-melt(setDT(lab_prod_final_ch), id.vars = c("ind.code", "year", "ind.name"), measure.vars = c("ilo_prod", "bfs_prod", "ilocross_prod"))
   
 # SAVING THE FINAL DATASET
-  saveRDS(object=lab_prod_final_ch, file = "/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/lab_prod_final_ch.rds")
+  saveRDS(object=lab_prod_final_ch, file = paste0(getwd(), "/Data creation/lab_prod_final_ch.rds"))
   
 ################################################################################
 #d. Export / trade figures #
 ################################################################################
  
-# Loading trade data
+# Loading trade data / raw data not on Github
   oecd.trade.new <- readRDS("/scicore/home/weder/GROUP/Innovation/02_section_I_data/oecd.trade.new.raw")
 
 # Filtering important columns and adjusting their names
@@ -307,7 +307,7 @@ emp_bsf %>% mutate_if(is.factor, as.character) -> emp_bsf
     group_by(rep.code, par.code, ind.code, year) %>% 
     summarise(value = sum(value))
   
-# Preparing gps coordinates for each country
+# Preparing gps coordinates for each country / raw data not on Github
   gps <-rio::import("/scicore/home/weder/GROUP/Innovation/02_section_I_data/gps.csv")
   names(gps)
   gpspar <-subset(gps, select = c("\"Alpha-3 code\"", "\"Latitude (average)\"", "\"Longitude (average)\"\"" )) 
@@ -335,7 +335,7 @@ emp_bsf %>% mutate_if(is.factor, as.character) -> emp_bsf
   
   oecd_trade_final_2020_gps_par_rep_new %>% mutate_if(is.factor, as.character) -> oecd_trade_final_2020_gps_par_rep_new # transforming factors into characters
   
-# Preparing the industry labels
+# Preparing the industry labels / raw data not on Github
   sec_lab <-read_excel("/scicore/home/weder/GROUP/Innovation/02_section_I_data/sec_lab.xlsx", sheet = "Sheet1")
   
 # Merging trade data with industry labels
@@ -362,7 +362,7 @@ emp_bsf %>% mutate_if(is.factor, as.character) -> emp_bsf
   oecd_trade_ch_final <- subset(oecd_trade_final_2020_gps_par_rep_new_final,rep.code=="CHE" & ind.code=="21")
   
 # SAVING DATA
-  saveRDS(object = oecd_trade_ch_final, file = "/scicore/home/weder/fildra00/Innovation/innoscape-part-II-descriptive-analysis/section_I/oecd_trade_ch_final.rds")
+  saveRDS(object = oecd_trade_ch_final, paste0(getwd(), "/Data creation/oecd_trade_ch_final.rds"))
   
 
     
