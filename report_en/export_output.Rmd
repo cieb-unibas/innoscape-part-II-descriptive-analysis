@@ -1,5 +1,5 @@
-```{r, echo=FALSE, optipng = '-o7'}
-
+```{r, echo=FALSE}
+mydebug()
 # Input panels for indicator, industry and year 
   radioButtons(inputId = "variable_exp", label = "Choose a variable",
                choices = list("in million USD"="val_export", 
@@ -9,22 +9,21 @@
   sliderInput(inputId =  "year_exp", label = "Year", min=1990, max=2019, step = 1, value=2000, sep="")
   
 # Create world map
-  world <- ggplot() +
+
+  renderPlotly({
+# subset the data accoding to the input:
+    d_exp <- reactive({volumes %>%
+                    filter(variable %in% input$variable_exp,
+                           year %in% input$year_exp)}) 
+# make the plot
+p <- ggplotly(  ggplot() +
               geom_polygon(data = map_world,
                            aes(long, lat, group = group, 
                                fill = region), 
                            show.legend = FALSE,
                            alpha = 1,
                            fill="#D1E5F0",
-                           color = "white") 
-  renderPlotly({
-# subset the data accoding to the input:
-    d_exp <- reactive({volumes %>%
-                    filter(variable %in% input$variable_exp,
-                           year %in% input$year_exp)
-    }) 
-# make the plot
-p <-  ggplotly(  world  +
+                           color = "white")   +
               # geom_curve(data = d_exp(), 
               #            aes(x = long_rep, xend = long_par,
               #                y = lat_rep, yend = lat_par),
@@ -33,7 +32,7 @@ p <-  ggplotly(  world  +
               #            size = 0.10,
               #            alpha = 0.5) +
               geom_point(data = d_exp(),
-                         aes(long_par, lat_par, size = value, label = Country), color = "#B2182B", alpha = 0.7) +
+                         aes(long_par, lat_par, size = value), color = "#B2182B", alpha = 0.7) +
               theme_bw() +
               theme(axis.line = element_blank(),
                     panel.grid.major = element_blank(),
@@ -45,13 +44,16 @@ p <-  ggplotly(  world  +
                     axis.text = element_blank()),
             dynamicTicks = T, tooltip = c("Country")
       ) %>% config(displayModeBar = T) %>%
-      layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F))
+      layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F)) %>% 
+  partial_bundle(local = FALSE) %>%
+  plotly_mod_dep()
 
 p$x$data[[1]]$text <- c(paste0("Move over a point to get information"))
 p$y$data[[1]]$text <- c(paste0("Move over a point to get information"))
 
+mydebug()
 
-  p
+return(p)
 
   
 })
