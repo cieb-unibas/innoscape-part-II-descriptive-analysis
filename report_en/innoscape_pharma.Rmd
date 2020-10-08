@@ -1,37 +1,11 @@
 ---
 fig_caption: yes
+title: ""
 output:
   html_document:
     css: style.css
 resource_files:
-- citflow_ctry_back.fst
-- gva_data_ch.fst
-- ilo.fst
-- labprod.fst
-- map_data.fst
-- numpat_data.fst
-- trad_data.fst
-- style.css
-- citflow_ctry_back.fst
-- citflow_ctry_forw.fst
-- gva_data_ch.fst
-- ilo.fst
-- labprod.fst
-- map_data.fst
-- numpat_data.fst
-- trad_data.fst
-- style.css
-- title.jpg
-- citflow_ctry_back.fst
-- citflow_ctry_forw.fst
-- gva_data_ch.fst
-- ilo.fst
-- labprod.fst
-- map_data.fst
-- numpat_data.fst
-- style.css
-- trad_data.fst
-- title.jpg
+
 runtime: shiny
 ---
 
