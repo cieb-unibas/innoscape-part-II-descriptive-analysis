@@ -1,4 +1,4 @@
-```{r, echo = F}
+```{r, echo = F, optipng = '-o7'}
 
 select_conti <- distinct(numpat_data, Continent, `Rank based on year 2000`)  %>% 
   na.omit() %>% arrange(`Rank based on year 2000`)
