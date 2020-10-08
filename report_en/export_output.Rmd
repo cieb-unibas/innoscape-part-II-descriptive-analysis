@@ -1,4 +1,4 @@
-```{r, echo=FALSE}
+```{r, echo=FALSE, optipng = '-o7'}
 
 # Input panels for indicator, industry and year 
   radioButtons(inputId = "variable_exp", label = "Choose a variable",

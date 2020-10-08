@@ -60,8 +60,6 @@ if(nrow(d_output()) != 0){
 } else{}  
   })
 
-  # @CR: Somehow it doesn't take the ylim() from ggplot (added by me) i.e. plotly seems to overwrite the yaxis
-  # even though it is out-commented in the layou() now. Havent found a solution yet
 
   
 ```
