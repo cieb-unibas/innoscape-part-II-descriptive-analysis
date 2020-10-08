@@ -1,1 +1,11 @@
-# part-II-descriptive-analysis
+# The Pharmaceutical Industry: A Driver of Innovation and Growth in Switzerland
+
+This repository contains the data and code for an interactive report about the Swiss pharmaceutical industry's development to an engine of innovation and growth. The full article can be accessed here: xxxxxxx
+
+Our findings indicate that the Swiss pharmaceutical industry is one of the most important pillars of the Swiss economy. It's employment shares of the domestic labor force are twice that of the USA, Germany, France or Italy. Although workers in the Swiss pharmaceutical industry account for Less than 1% of the country's labor force, they generate more than 5% of Swiss GDP. This implies very high labor productivity levels. Interestingly, if we additionally take into account the large number of cross-border commuting workers, the pharmaceutical industry's labor productivity estimates drop by 30%. However, compared to the other Swiss industries, this productivity level remains extraorinary high.  This is reflected in steadily increasing exports to the whole world. In 2019, 30 % of Swiss exports are pharmaceutical products and 26% of the total Swiss pharma exports go to the USA. 
+
+![cross_borders](https://raw.githubusercontent.com/cieb-unibas/xxxx)
+
+Innovations are crucial to ensure that this remains so in the future. With this in mind, it is important to note that pharmaceutical firms located in Switzerland continue to be one among the world’s leading innovators. But, at the same time, some new innovation hubs are strongly emerging. Nevertheless, innovation activities in the Swiss pharmaceutical sector are still at a high level, suggesting that the pharmaceutical industry will continue to contribute substantially to the economic prosperity of Switzerland.
+
+This report is part of <a href = http://innoscape.ch/ target = “_blank”>*Innoscape*</a>, an applied research project of the <a href = https://cieb.unibas.ch target = “_blank”>Center for International Economics and Business | CIEB</a> at the University of Basel. With *Innoscape*, we analyze how well prepared the Swiss economy is for the transformations of the 21st century. We provide economic insights on how Switzerland can successfully master these challenges and discuss how the country could remain a global innovation leader in the future.
