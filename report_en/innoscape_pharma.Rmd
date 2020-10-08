@@ -5,7 +5,6 @@ output:
   html_document:
     css: style.css
 resource_files:
-
 runtime: shiny
 ---
 
@@ -51,12 +50,7 @@ plotly_mod_dep = function(p){
   p$dependencies <- deps_urls
   p
 }
-mydebug <- function(msg="[DEBUG]") {
-  DEBUG <- FALSE
-  if (DEBUG) {
-    print(sprintf("%s - %s - %s", msg1, as.character(Sys.time()), as.character(deparse(sys.calls()[[sys.nframe()-1]]))))
-  }
-}
+
 
 
 ```
