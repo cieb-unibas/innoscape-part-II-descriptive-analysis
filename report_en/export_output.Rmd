@@ -1,4 +1,5 @@
 ```{r, echo=FALSE}
+
 # Input panels for indicator, industry and year 
   radioButtons(inputId = "variable_exp", label = "Choose a variable",
                choices = list("in million USD"="val_export", 
@@ -49,7 +50,9 @@ p <-  ggplotly(  world  +
 p$x$data[[1]]$text <- c(paste0("Move over a point to get information"))
 p$y$data[[1]]$text <- c(paste0("Move over a point to get information"))
 
-p
 
-  })
+  p
+
+  
+})
 ```
