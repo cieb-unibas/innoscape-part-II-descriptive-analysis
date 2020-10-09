@@ -108,6 +108,8 @@ citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "A
 #! I kept the variable names the same for forward and backward citations in order to easily create the forwarc network in citnetwork_output.RMD (ie just use the same names there)
 citflow_ctry_data %>% saveRDS(paste0(getwd(), "/report/citflow_ctry_", type, ".rds"))
 citflow_ctry_data %>% write.fst(paste0(getwd(), "/report/citflow_ctry_", type, ".fst"))
+citflow_ctry_data %>% write.csv(paste0(getwd(), "/report/citflow_ctry_", type, ".csv"), row.names = F)
+
 }
 
 # Run the previously created function
@@ -135,6 +137,7 @@ volumes <- filter(volumes, num > 27)
 
 volumes %>% saveRDS(paste0(getwd(), "/report/trad_data.rds"))
 volumes %>% write.fst(paste0(getwd(), "/report/trad_data.fst"))
+volumes %>% write.csv(paste0(getwd(), "/report/trad_data.csv"), row.names = F)
 
 # Create the world map
 map_world <- map_data(map = "world") %>%
@@ -143,6 +146,7 @@ map_world <- map_world[seq(1, nrow(map_world), 18), ]
 
 map_world %>% saveRDS(paste0(getwd(), "/report/map_data.rds"))
 map_world %>% write.fst(paste0(getwd(), "/report/map_data.fst"))
+map_world %>% write.csv(paste0(getwd(), "/report/map_data.csv"), row.names = F)
 
 
 ##############################
@@ -169,6 +173,7 @@ ilo[ilo$variable == "Share of employed", "value"] <- ilo[ilo$variable == "Share 
 # save the data
 ilo %>% saveRDS(paste0(getwd(), "/report/ilo.rds"))
 ilo %>% write.fst(paste0(getwd(), "/report/ilo.fst"))
+ilo %>% write.csv(paste0(getwd(), "/report/ilo.csv"), row.names = F)
 
 
 #####################################
@@ -190,6 +195,7 @@ labprod <- mutate(labprod, variable = case_when(variable == "ilo_prod" ~ "Only d
 # save the data
 labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
 labprod %>% write.fst(paste0(getwd(), "/report/labprod.fst"))
+labprod %>% write.csv(paste0(getwd(), "/report/labprod.csv"))
 
 ####################################
 # Create data on gross value added #
@@ -225,6 +231,7 @@ gva[gva$variable == "Share in GDP", "value"] <- gva[gva$variable == "Share in GD
 # save the data
 gva %>% saveRDS(paste0(getwd(), "/report/gva_data_ch.rds"))
 gva %>% write.fst(paste0(getwd(), "/report/gva_data_ch.fst"))
+gva %>% write.csv(paste0(getwd(), "/report/gva_data_ch.csv"))
 
 #################################
 # Create data on patent counts #
@@ -259,6 +266,7 @@ numpat_data <- mutate(numpat_data, `Rank based on year 2000` = rank_2000)
 
 numpat_data %>% saveRDS(paste0(getwd(), "/report/numpat_data.rds"))
 numpat_data %>% write.fst(paste0(getwd(), "/report/numpat_data.fst"))
+numpat_data %>% write.csv(paste0(getwd(), "/report/numpat_data.csv"))
 
 
 

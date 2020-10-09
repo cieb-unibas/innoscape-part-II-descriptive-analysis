@@ -83,7 +83,10 @@ rm(list = ls())
   
 #Saving data
   saveRDS(object = iloemp_2020_final, file = paste0(getwd(), "/Data creation/iloemp_2020_final.rds"))  
+  write.csv(iloemp_2020_final, paste0(getwd(), "/Data creation/iloemp_2020_final.csv"), row.names = FALSE)  
+  
 
+  
 ################################################################################
 #b. GVA figures #
 ################################################################################
@@ -125,6 +128,8 @@ rm(list = ls())
 
 # Transforming GVA figures to long format
   saveRDS(object=gva_data_ch, file = paste0(getwd(), "/report/gva_data_ch.rds"))
+  write.csv(gva_data_ch, paste0(getwd(), "/report/gva_data_ch.csv"), row.names = FALSE)  
+  
   
 ################################################################################
 #c. Labor productivity #
@@ -258,6 +263,7 @@ emp_bsf %>% mutate_if(is.factor, as.character) -> emp_bsf
   
 # SAVING THE FINAL DATASET
   saveRDS(object=lab_prod_final_ch, file = paste0(getwd(), "/Data creation/lab_prod_final_ch.rds"))
+  write.csv(lab_prod_final_ch, paste0(getwd(), "/Data creation/lab_prod_final_ch.csv"), row.names = FALSE)  
   
 ################################################################################
 #d. Export / trade figures #
@@ -363,7 +369,7 @@ emp_bsf %>% mutate_if(is.factor, as.character) -> emp_bsf
   
 # SAVING DATA
   saveRDS(object = oecd_trade_ch_final, paste0(getwd(), "/Data creation/oecd_trade_ch_final.rds"))
+  write.csv(oecd_trade_ch_final, aste0(getwd(), "/Data creation/oecd_trade_ch_final.csv"), row.names = FALSE)  
   
-
     
 

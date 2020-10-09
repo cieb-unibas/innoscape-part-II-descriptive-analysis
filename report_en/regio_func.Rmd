@@ -59,10 +59,19 @@ renderPlotly({
                        ),
                  dynamicTicks = T, tooltip = "label") %>%
                  config(displayModeBar = F) %>%
-                 layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
+                 layout(xaxis = list(fixedrange=T
                                 )) %>%
-                 layout(yaxis = list(fixedrange=T), legend = list(orientation = "h")) 
+                 layout(yaxis = list(fixedrange=T), legend = list(orientation = "h"))
 
+        # plot_ly(plot02_data_regio(), x = ~as.numeric(p_year), y = ~share_inv,
+        #                 type = "scatter", mode = 'lines+markers',
+        #     color = ~geo,
+        #     colors = colorRampPalette(brewer.pal(8, "RdBu")[c(1:3, 6:8)])(length(unique(plot02_data_regio()$geo))),
+        #     text = ~Geo,
+        #     hoverinfo = 'text') %>%
+        #     config(displayModeBar = F) %>%
+        #     layout(xaxis = list(title = '<b>Year</b>', fixedrange=T), yaxis = list(title = paste0('<b>', input$ind_regio, '<b>'), fixedrange=T), legend = list(x = 0, y = 100, orientation = 'h'))
+  
          })
 
         

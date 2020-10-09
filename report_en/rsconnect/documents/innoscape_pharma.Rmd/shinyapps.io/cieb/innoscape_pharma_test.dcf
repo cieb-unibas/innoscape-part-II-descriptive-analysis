@@ -1,0 +1,12 @@
+name: innoscape_pharma_test
+title: innoscape_pharma_test
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2977618
+bundleId: 3720062
+url: https://cieb.shinyapps.io/innoscape_pharma_test/
+when: 1602231825.65331
+asMultiple: TRUE
+asStatic: FALSE

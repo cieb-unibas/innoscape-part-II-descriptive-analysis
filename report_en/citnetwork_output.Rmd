@@ -62,7 +62,7 @@ eq_spacing <- function(r = 2, data){
 
 fluidPage(
   fluidRow(
-    column(6,
+    column(12,
 # (4) make the first plot
 
 renderVisNetwork({
@@ -83,9 +83,9 @@ edges <- nodes
     
 
     nodes %>% group_by(id, label, x, y, value_nodes) %>%
-    summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
+    summarize(group = paste(sort(unique(group)),collapse=", ")) %>%
     ungroup()  -> nodes
-      
+    
   mutate(nodes, x = case_when(
         label == paste0(input$cit_ctry, " Pharmaceuticals") ~ 0, 
         TRUE   ~ x )) -> nodes
@@ -120,7 +120,7 @@ edges <- nodes
  label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes, edges, height = "90%",  width = "90%", main = paste("Knowledge flows from other technologies to pharma")) %>%
+  visNetwork(nodes, edges, height = "100%",  width = "100%", main = paste("Knowledge flows from other technologies to pharma")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -143,7 +143,8 @@ edges <- nodes
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T))%>%
     visLegend(position = "right", width = 0.4, stepX = 50, stepY = 100, ncol = 1,  useGroups = F, addNodes = ledges, zoom = F) 
   })    
-), column(6,
+)),
+  fluidRow(column(12,
 # make the 2nd plot
 renderVisNetwork({
   
@@ -158,10 +159,10 @@ renderVisNetwork({
                                            label == "Cited Pharmaceuticals" ~ "Pharmaceuticals",
                                            T ~ label))
   
-  nodes_2 %>% group_by(id, label, x, y, value_nodes) %>%
-    summarize(group = paste(sort(unique(group)),collapse=", ")) %>% 
-    ungroup()  -> nodes_2
-      
+ nodes_2 %>% group_by(id, label, x, y, value_nodes) %>%
+   summarize(group = paste(sort(unique(group)),collapse=", ")) %>%
+   ungroup()  -> nodes_2
+
   mutate(nodes_2, x = case_when(
         label == paste0(input$cit_ctry, " Pharmaceuticals") ~ 0, 
         TRUE   ~ x )) -> nodes_2
@@ -190,12 +191,12 @@ renderVisNetwork({
                   group = ifelse(group %in% c("All", "Europe", "Asia", "Americas", "Domestic"), group, NA))
   
 # (f) create data frame for legend 
- # nodes_temp <- filter(nodes, is.na(group) != T)
- # ledges <- data.frame(color = unique(nodes_temp$color), 
- # label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
+ nodes_2_temp <- filter(nodes_2, is.na(group) != T)
+ ledges_2 <- data.frame(color = unique(nodes_2_temp$color),
+ label_2 = unique(nodes_2_temp$group), shape = rep("dot", length(unique(nodes_2_temp$group))))
  
 # (g) Creating Network Plot
-  visNetwork(nodes_2, edges_2, height = "100%",  width = "85%", main = paste("Knowledge flows from pharma to other technologies")) %>%
+  visNetwork(nodes_2, edges_2, height = "100%",  width = "100%", main = paste("Knowledge flows from pharma to other technologies")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -216,7 +217,8 @@ renderVisNetwork({
         smooth = FALSE) %>%
     visInteraction(dragNodes = F, dragView = F, zoomView = T)%>%
     visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
-  }) 
+  
+}) 
 )))
 ```
 

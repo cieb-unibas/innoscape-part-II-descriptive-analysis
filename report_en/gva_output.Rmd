@@ -15,13 +15,15 @@ radioButtons(inputId = "variable_gva", label = "Choose a variable",
               options = list(`actions-box` = TRUE),
               multiple = TRUE)
 
-renderPlotly({
-
-  # subset the data according to the input:
+    # subset the data according to the input:
   d_gva <- reactive({ gva %>%
                     filter(variable %in% input$variable_gva,
                            ind.name %in% input$ind.name_gva)
       })
+  
+renderPlotly({
+
+
   
  
 
@@ -32,9 +34,9 @@ if(nrow(d_gva()) != 0){
       "GVA change (in %)"}}
   
 # make the plot
-  ggplotly(  
+  ggplotly(
     ggplot(d_gva(),aes(x = as.numeric(year), y = value, group = ind.name, colour = ind.name, label = Industry)) +
-        geom_point(alpha = 0.7) +  
+        geom_point(alpha = 0.7) +
             geom_line()+
            scale_color_manual(values = colorRampPalette(brewer.pal(8, "RdBu")[c(1:3, 6:8)])(length(unique(d_gva()$ind.name)))) +
             xlab("Year")+
@@ -47,10 +49,21 @@ if(nrow(d_gva()) != 0){
                        legend.position="bottom"
                        ), dynamicTicks = T,  tooltip = c("label")) %>%
                           config(displayModeBar = F) %>%
-                          layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
+                          layout(xaxis = list(fixedrange=T
                           )) %>%
                           layout(yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
+  
+      # plot_ly(d_gva(), x = ~as.numeric(year), y = ~value,
+      #                   type = "scatter", mode = 'lines+markers',
+      #       color = ~ind.name,
+      #       colors = colorRampPalette(brewer.pal(8, "RdBu")[c(1:3, 6:8)])(length(unique(d_gva()$ind.name))),
+      #       text = ~Industry,
+      #       hoverinfo = 'text') %>%
+      #       config(displayModeBar = F) %>%
+      #       layout(xaxis = list(title = "<b>Year<b>"), yaxis = list(title = paste0("<b>", Y_AXIS_TITLE, "<b>")), legend = list(x = 0, y = 100, orientation = 'h'))
+
+  
     
   } else{}
   })

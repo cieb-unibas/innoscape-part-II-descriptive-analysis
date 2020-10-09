@@ -23,23 +23,25 @@
               selected = c("Pharmaceutical products"),
               options = list(`actions-box` = TRUE),
               multiple = TRUE)
-
-  renderPlotly({
-
+  
 # subset the data according to the input:
   d_output <- reactive({labprod %>%
                         filter(variable %in% input$variable_prod,
                                ind.name %in% input$ind.name_prod)
       })
   
+  renderPlotly({
+
+
+  
 if(nrow(d_output()) != 0){
 # make the plot
   Y_MAX <- max(d_output()$value, na.rm = TRUE)
-  ggplotly(  
-           ggplot(d_output(),aes(x = as.numeric(year), y = value, 
-                                 group = interaction(ind.name, variable, sep = ": "), 
+  ggplotly(
+           ggplot(d_output(),aes(x = as.numeric(year), y = value,
+                                 group = interaction(ind.name, variable, sep = ": "),
                                  colour = ind.name, linetype  = variable, label = Industry)) +
-           geom_point(alpha = 0.7) +  
+           geom_point(alpha = 0.7) +
   scale_color_manual(values = colorRampPalette(brewer.pal(8, "RdBu")[c(1:3, 6:8)])(length(unique(d_output()$ind.name)))) +
             geom_line()+
             xlab("Year")+
@@ -52,10 +54,21 @@ if(nrow(d_output()) != 0){
                        axis.line = element_line()
                        ), dynamicTicks = T, tooltip = c("label")) %>%
                           config(displayModeBar = F) %>%
-                          layout(xaxis = list(fixedrange=T, rangeslider = list(type = "date", visible=T)
+                          layout(xaxis = list(fixedrange=T
                           )) %>%
                           layout(#yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h"))
+  
+      # d_output() %>% group_by(interaction(ind.name, input$variable_prod, sep = ": ")) %>% plot_ly(x = ~as.numeric(year), y = ~value,
+      #                   type = "scatter", mode = 'lines+markers',
+      #       color = ~ind.name,
+      #       dash = ~ind.name,
+      #       colors = colorRampPalette(brewer.pal(8, "RdBu")[c(1:3, 6:8)])(length(unique(d_output()$ind.name))),
+      #       text = ~Industry,
+      #       hoverinfo = 'text') %>%
+      #       config(displayModeBar = F) %>%
+      #       layout(xaxis = list(title = "<b>Year<b>"), yaxis = list(title = paste0("<b>", input$variable_prod, "<b>")), legend = list(x = 0, y = 100, orientation = 'h'))
+
     
 } else{}  
   })
