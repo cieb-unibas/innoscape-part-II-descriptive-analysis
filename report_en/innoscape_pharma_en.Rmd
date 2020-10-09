@@ -25,6 +25,7 @@ library(dplyr)
 library(igraph)
 library(visNetwork)
 library(fst)
+library(memoise)
 
 source_rmd <- function(rmd_file){
   knitr::knit(rmd_file, output = tempfile())

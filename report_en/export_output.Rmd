@@ -36,7 +36,13 @@ p <- ggplotly( world +
                     axis.title = element_blank(),
                     axis.text = element_blank()),
             dynamicTicks = T, tooltip = c("Country")
-      ) %>% config(displayModeBar = T) %>%
+      ) %>% config(displaylogo = F, modeBarButtonsToRemove = c('sendDataToCloud',
+    'toImage',
+    'autoScale2d',
+    'resetScale2d',
+    'hoverClosestCartesian',
+    'hoverCompareCartesian',
+    'pan2d','select2d','lasso2d')) %>%
       layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F))  %>% 
   partial_bundle(local = FALSE) %>%
   plotly_mod_dep()
