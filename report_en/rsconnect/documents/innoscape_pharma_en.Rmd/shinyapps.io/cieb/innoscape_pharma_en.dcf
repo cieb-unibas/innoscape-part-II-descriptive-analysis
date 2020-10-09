@@ -5,10 +5,8 @@ account: cieb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2910403
-bundleId: 3721099
+bundleId: 3721474
 url: https://cieb.shinyapps.io/innoscape_pharma_en/
-when: 1602255171.60595
+when: 1602261370.56437
 asMultiple: TRUE
 asStatic: FALSE
-additionalFiles: citflow_ctry_back.fst|citflow_ctry_forw.fst|gva_data_ch.fst|ilo.fst|labprod.fst|map_data.fst|numpat_data.rds|style.css|title.jpg|trad_data.fst
-ignoredFiles: numpat_data.fst

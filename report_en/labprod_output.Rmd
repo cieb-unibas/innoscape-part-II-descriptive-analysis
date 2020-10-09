@@ -52,12 +52,12 @@ if(nrow(d_output()) != 0){
             theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
                        axis.line = element_line()
-                       ), dynamicTicks = T, tooltip = c("label")) %>%
+            ), dynamicTicks = T,  tooltip = c("label")) %>%
                           config(displayModeBar = F) %>%
-                          layout(xaxis = list(fixedrange=T
-                          )) %>%
-                          layout(#yaxis = list(fixedrange=T),
+                          layout(xaxis = list(fixedrange=T),
+                          yaxis = list(fixedrange=T),
                                  legend = list(orientation = "h", y = -0.25))
+  
   
       # d_output() %>% group_by(interaction(ind.name, input$variable_prod, sep = ": ")) %>% plot_ly(x = ~as.numeric(year), y = ~value,
       #                   type = "scatter", mode = 'lines+markers',

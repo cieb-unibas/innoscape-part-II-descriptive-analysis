@@ -17,7 +17,9 @@ selectedRow_ctry <- eventReactive(input$country_rows_selected,{
    select_country[input$country_rows_selected, "Country"]
   })
 
+fluidPage(fluidRow(column = 12,
 DT::dataTableOutput('country')
+))
 
 ## Add clearing of rows
 proxy_ctry <- dataTableProxy('country')

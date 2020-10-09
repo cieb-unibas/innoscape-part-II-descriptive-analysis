@@ -10,14 +10,16 @@ output$conti <-  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
                              rownames= FALSE,
                              fillContainer = T,
                              selection = list(mode = 'multiple', selected = which(select_conti$Continent %in% c("Europe"))),
-                             options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
+                             options = list(scrollY = 150, scroller = TRUE, dom = 't', scrollX= F,
                                             columnDefs = list(list(className = 'dt-center', targets = 1))))
 
 selectedRow_conti <- eventReactive(input$conti_rows_selected,{
   select_conti[input$conti_rows_selected, "Continent"]
 })
 
+fluidPage(fluidRow(column = 12,
 DT::dataTableOutput('conti')
+))
 
 ## Add clearing of rows
 proxy_conti <- dataTableProxy('conti')
