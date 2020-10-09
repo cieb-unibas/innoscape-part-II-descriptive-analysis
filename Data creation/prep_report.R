@@ -106,9 +106,9 @@ citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "
 citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
 
 #! I kept the variable names the same for forward and backward citations in order to easily create the forwarc network in citnetwork_output.RMD (ie just use the same names there)
-citflow_ctry_data %>% saveRDS(paste0(getwd(), "/report/citflow_ctry_", type, ".rds"))
-citflow_ctry_data %>% write.fst(paste0(getwd(), "/report/citflow_ctry_", type, ".fst"))
-citflow_ctry_data %>% write.csv(paste0(getwd(), "/report/citflow_ctry_", type, ".csv"), row.names = F)
+citflow_ctry_data %>% saveRDS(paste0(getwd(), "/report_en/citflow_ctry_", type, ".rds"))
+citflow_ctry_data %>% write.fst(paste0(getwd(), "/report_en/citflow_ctry_", type, ".fst"))
+citflow_ctry_data %>% write.csv(paste0(getwd(), "/report_en/citflow_ctry_", type, ".csv"), row.names = F)
 
 }
 
@@ -135,18 +135,18 @@ volumes <- distinct(volumes, par.code, year, variable, .keep_all = T)
 volumes <- setDT(volumes)[, num := .N, .(par.code, variable)]
 volumes <- filter(volumes, num > 27)
 
-volumes %>% saveRDS(paste0(getwd(), "/report/trad_data.rds"))
-volumes %>% write.fst(paste0(getwd(), "/report/trad_data.fst"))
-volumes %>% write.csv(paste0(getwd(), "/report/trad_data.csv"), row.names = F)
+volumes %>% saveRDS(paste0(getwd(), "/report_en/trad_data.rds"))
+volumes %>% write.fst(paste0(getwd(), "/report_en/trad_data.fst"))
+volumes %>% write.csv(paste0(getwd(), "/report_en/trad_data.csv"), row.names = F)
 
 # Create the world map
 map_world <- map_data(map = "world") %>%
   filter(region != "Antarctica")
 map_world <- map_world[seq(1, nrow(map_world), 18), ]
 
-map_world %>% saveRDS(paste0(getwd(), "/report/map_data.rds"))
-map_world %>% write.fst(paste0(getwd(), "/report/map_data.fst"))
-map_world %>% write.csv(paste0(getwd(), "/report/map_data.csv"), row.names = F)
+map_world %>% saveRDS(paste0(getwd(), "/report_en/map_data.rds"))
+map_world %>% write.fst(paste0(getwd(), "/report_en/map_data.fst"))
+map_world %>% write.csv(paste0(getwd(), "/report_en/map_data.csv"), row.names = F)
 
 
 ##############################
@@ -171,9 +171,9 @@ ilo <- mutate(ilo, variable = case_when(variable == "share.emp" ~ "Share of empl
 ilo[ilo$variable == "Share of employed", "value"] <- ilo[ilo$variable == "Share of employed", ]$value * 100
 
 # save the data
-ilo %>% saveRDS(paste0(getwd(), "/report/ilo.rds"))
-ilo %>% write.fst(paste0(getwd(), "/report/ilo.fst"))
-ilo %>% write.csv(paste0(getwd(), "/report/ilo.csv"), row.names = F)
+ilo %>% saveRDS(paste0(getwd(), "/report_en/ilo.rds"))
+ilo %>% write.fst(paste0(getwd(), "/report_en/ilo.fst"))
+ilo %>% write.csv(paste0(getwd(), "/report_en/ilo.csv"), row.names = F)
 
 
 #####################################
@@ -193,9 +193,9 @@ labprod <- mutate(labprod, variable = case_when(variable == "ilo_prod" ~ "Only d
            mutate(Industry = paste0(ind.name,  "\nIndicator: Labor productivity of ", tolower(variable), "\nYear: ", year, "\nValue: ", round(value/1000000, 2), " million CHF"))
 
 # save the data
-labprod %>% saveRDS(paste0(getwd(), "/report/labprod.rds"))
-labprod %>% write.fst(paste0(getwd(), "/report/labprod.fst"))
-labprod %>% write.csv(paste0(getwd(), "/report/labprod.csv"))
+labprod %>% saveRDS(paste0(getwd(), "/report_en/labprod.rds"))
+labprod %>% write.fst(paste0(getwd(), "/report_en/labprod.fst"))
+labprod %>% write.csv(paste0(getwd(), "/report_en/labprod.csv"))
 
 ####################################
 # Create data on gross value added #
@@ -229,9 +229,9 @@ gva[gva$variable == "GVA percentage change", "value"] <- gva[gva$variable == "GV
 gva[gva$variable == "Share in GDP", "value"] <- gva[gva$variable == "Share in GDP", ]$value * 100
 
 # save the data
-gva %>% saveRDS(paste0(getwd(), "/report/gva_data_ch.rds"))
-gva %>% write.fst(paste0(getwd(), "/report/gva_data_ch.fst"))
-gva %>% write.csv(paste0(getwd(), "/report/gva_data_ch.csv"))
+gva %>% saveRDS(paste0(getwd(), "/report_en/gva_data_ch.rds"))
+gva %>% write.fst(paste0(getwd(), "/report_en/gva_data_ch.fst"))
+gva %>% write.csv(paste0(getwd(), "/report_en/gva_data_ch.csv"))
 
 #################################
 # Create data on patent counts #
@@ -264,9 +264,9 @@ numpat_data <- mutate(numpat_data, Geo = paste0(geo, "\nIndicator: ", indicator,
 numpat_data <- as.data.frame(numpat_data)  
 numpat_data <- mutate(numpat_data, `Rank based on year 2000` = rank_2000)
 
-numpat_data %>% saveRDS(paste0(getwd(), "/report/numpat_data.rds"))
-numpat_data %>% write.fst(paste0(getwd(), "/report/numpat_data.fst"))
-numpat_data %>% write.csv(paste0(getwd(), "/report/numpat_data.csv"))
+numpat_data %>% saveRDS(paste0(getwd(), "/report_en/numpat_data.rds"))
+numpat_data %>% write.fst(paste0(getwd(), "/report_en/numpat_data.fst"))
+numpat_data %>% write.csv(paste0(getwd(), "/report_en/numpat_data.csv"))
 
 
 
