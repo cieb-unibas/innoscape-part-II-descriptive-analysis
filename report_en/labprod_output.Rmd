@@ -57,7 +57,7 @@ if(nrow(d_output()) != 0){
                           layout(xaxis = list(fixedrange=T
                           )) %>%
                           layout(#yaxis = list(fixedrange=T),
-                                 legend = list(orientation = "h"))
+                                 legend = list(orientation = "h", y = -0.25))
   
       # d_output() %>% group_by(interaction(ind.name, input$variable_prod, sep = ": ")) %>% plot_ly(x = ~as.numeric(year), y = ~value,
       #                   type = "scatter", mode = 'lines+markers',

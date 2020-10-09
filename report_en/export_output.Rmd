@@ -16,12 +16,12 @@
                            alpha = 1,
                            fill="#D1E5F0",
                            color = "white") 
-
-  renderPlotly({
-# subset the data accoding to the input:
+  
+  # subset the data accoding to the input:
     d_exp <- reactive({volumes %>%
                     filter(variable %in% input$variable_exp,
                            year %in% input$year_exp)}) 
+renderPlotly({
 # make the plot
 p <- ggplotly( world + 
               geom_point(data = d_exp(),
@@ -44,8 +44,6 @@ p <- ggplotly( world +
 p$x$data[[1]]$text <- c(paste0("Move over a point to get information"))
 p$y$data[[1]]$text <- c(paste0("Move over a point to get information"))
 
-p
-
-  
+return(p)
 })
 ```

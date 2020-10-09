@@ -55,13 +55,14 @@ renderPlotly({
                  theme(axis.title = element_text(face="bold",size = 10),
                        panel.background = element_blank(),
                        axis.line = element_line(),
-                       legend.title = element_blank()
+                       legend.title = element_blank(),
+                       legend.position = 'bottom'
                        ),
                  dynamicTicks = T, tooltip = "label") %>%
                  config(displayModeBar = F) %>%
                  layout(xaxis = list(fixedrange=T
                                 )) %>%
-                 layout(yaxis = list(fixedrange=T), legend = list(orientation = "h"))
+                 layout(yaxis = list(fixedrange=T), legend = list(orientation = "h", y = -0.25))
 
         # plot_ly(plot02_data_regio(), x = ~as.numeric(p_year), y = ~share_inv,
         #                 type = "scatter", mode = 'lines+markers',

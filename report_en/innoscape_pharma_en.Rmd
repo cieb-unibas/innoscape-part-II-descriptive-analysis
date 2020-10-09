@@ -149,7 +149,7 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 #### **Steady increase of pharmaceutical jobs**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")}
 ```
-<span style="font-size:0.8em">*Source: Authors' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a>*</span>
+<span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a>*. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</span>
 
 <br>
 
@@ -161,7 +161,7 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 #### **Pharma's growing importance for the Swiss economy**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")}
 ```
-<span style="font-size:0.8em">*Source: Authors’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>*</span>
+<span style="font-size:0.8em">*Source: CIEBs’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
 
@@ -174,7 +174,7 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 #### **Swiss pharma is highly productive**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")}
 ```
-<span style="font-size:0.8em">*Source: Authors' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>*</span>
+<span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
 
@@ -192,7 +192,8 @@ Furthermore, the geographical dispersion of export destinations is also changing
 #### **Exporting to every corner of the world**
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
 ```
-<span style="font-size:0.8em">*Source: Authors' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>*</span>
+<span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>.  The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+
 
 <br>
 
@@ -216,7 +217,7 @@ It is also interesting to explore the geographical concentration of innovations 
 <details>
   <summary style="font-size:11pt">*Click here for details about patent counts*</summary>
   
-Patent data for US patents is taken from <a href = https://www.patentsview.org/download/ target = “_blank”>patentsview.org</a> (considering data till August 27, 2020) and for EPO patents from the  <a href = http://www.oecd.org/sti/inno/intellectual-property-statistics-and-analysis.htm target = “_blank”>OECD intellectual property (IP) statistics and analysis database</a> (considering data till January, 2020). Absolute values show pharmaceutical patent counts (applied and granted for EPO patents and only granted for US patents) for each country, whereas the inventor’s residence determines the patent’s geographical affiliation. This is different for Switzerland, where additionally we take into account patents invented by cross-border commuters. For details, see our report on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> importance of cross-border commuters for inventions 'Made in Switzerland' </a>. To assign patents to years, we use a patent’s priority year and limit ourselves to considering only patents up to the priority year 2015 (for a detailed explanation, see the methodology box in <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”>importance of cross-border commuters for inventions 'Made in Switzerland' </a>). 
+Patent data for US patents is taken from <a href = https://www.patentsview.org/download/ target = “_blank”>patentsview.org</a> (considering data till August 27, 2020) and for EPO patents from the  <a href = http://www.oecd.org/sti/inno/intellectual-property-statistics-and-analysis.htm target = “_blank”>OECD intellectual property (IP) statistics and analysis database</a> (considering data till January, 2020). Absolute values show pharmaceutical patent counts (applied and granted for EPO patents and only granted for US patents) for each country, whereas the inventor’s residence determines the patent’s geographical affiliation. This is different for Switzerland, where additionally we take into account patents invented by cross-border commuters. For details, see our report on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> importance of cross-border commuters for inventions 'Made in Switzerland' </a>. To assign patents to years, we use a patent’s priority year and limit ourselves to considering only patents up to the priority year 2015 (for a detailed explanation, see the methodology box in <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”>Importance of cross-border commuters for inventions 'Made in Switzerland' </a>). 
 Furthermore, our patent counts include only the so-called triadic patents. They are registered by all three major patent offices (European Patent Office, Japan Patent Office and the US Patent and Trademark Office) and protect the same invention. By taking such patents into account, home advantage and the influence of geographical locations are significantly reduced. However, note that our patent counts may differ somewhat from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=PATS_IPC# target = “_blank”> OECD </a> database in absolute values on triadic patent counts. This is because the OECD dataset is based on patent families while ours includes all distinct patents (i.e., the number of all non-equivalent patents) belonging to a triadic patent family. In the case of inventors coming from different countries, the geographical division is assigned and then summed as shares. For example, if one inventor comes from the USA and the other from Japan, the same patent will be assigned as 0.5 to the USA and 0.5 to Japan (for more information on how to determine the origins of patents see <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> importance of cross-border commuters for inventions 'Made in Switzerland' </a>). 
 
 Finally, the indicator *% of total patents* represents the share of pharmaceutical patents in total patent applications across each country, *RCA of pharma patents* represents the so-called "revealed comparative advantage" in patenting pharmaceutical products. It is the share of pharmaceutical patents in total patents of a country divided by the share of worldwide pharmaceutical patents in total patents worldwide. Thus, it represents a measure of international innovativeness of an industry relative to the entire economy of a country.
@@ -231,16 +232,21 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 
 ```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func.Rmd")}
 ```
+<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+
 
 ### Regions
 
 ```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"),'regio_func.Rmd')}
 ```
+<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+
 
 ### Continents
 
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "conti_func.RMD")}
 ```
+<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 
 ## {.unlisted .unnumbered}
@@ -264,7 +270,7 @@ As shown in the right panel of the figure below, the knowledge outflows (forward
 <br>
 
 <hr class="hr_red">
-#### **Citations**
+### **Citations**
 <div class="box_div">	
 <details>
   <summary style="font-size:11pt">*Click here for details about patent citations*</summary>
@@ -276,6 +282,10 @@ See the previous box for information on patent data in general. In addition, bac
 
 ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
 ```
+<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+
+<br>
+
 Let us conclude with a few takeaways. As our short outline shows, the Swiss pharmaceutical industry is one of the most important pillars of the Swiss economy. In addition to a growing number of employees and very high labor productivity, this is reflected in steadily increasing exports to the whole world. Innovations are crucial to ensure that this remains so in the future. With this in mind, it is very important to note that pharmaceutical firms located in Switzerland continue to be one among the world's leading innovators. Therefore, it seems quite likely that the pharmaceutical industry will continue to contribute substantially to the economic prosperity of Switzerland.   
 <br>
 

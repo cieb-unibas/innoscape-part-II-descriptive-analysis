@@ -10,10 +10,12 @@ output$conti =  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
                              rownames= FALSE,
                              fillContainer = T,
                              selection = list(mode = 'multiple', selected = which(select_conti$Continent %in% c("Europe"))),
-                             options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
+                             options = list(scrollY = 150, scroller = TRUE, dom = 't', scrollX= T,
                                             columnDefs = list(list(className = 'dt-center', targets = 1))))
 
-
+selectedRow_conti <- eventReactive(input$conti_rows_selected,{
+  select_conti[input$conti_rows_selected, "Continent"]
+})
 
 DT::dataTableOutput('conti')
 
@@ -23,11 +25,6 @@ actionButton('clear_conti', 'Clear Selection')
 observeEvent(input$clear_conti, {
   proxy_conti %>% selectRows(NULL)
 })
-
-selectedRow_conti <- eventReactive(input$conti_rows_selected,{
-  select_conti[input$conti_rows_selected, "Continent"]
-})
-
 
 
 
@@ -69,7 +66,7 @@ renderPlotly({
       layout(xaxis = list(fixedrange=T
                           )) %>%
       layout(yaxis = list(fixedrange=T),
-             legend = list(orientation = "h"))
+             legend = list(orientation = "h", y = -0.25))
   
         # plot_ly(plot02_data_conti(), x = ~as.numeric(p_year), y = ~share_inv,
         #                 type = "scatter", mode = 'lines+markers',
