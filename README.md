@@ -1,7 +1,8 @@
 # The Pharmaceutical Industry: A Driver of Innovation and Growth in Switzerland
 
-This repository contains the data and code for an interactive report about the Swiss pharmaceutical industry's development as an engine of innovation and growth. The full article can be accessed here: xxxxxxx
-
+This repository contains the data and code for an interactive report about the Swiss pharmaceutical industry's development as an engine of innovation and growth. The full article can be accessed <a href = https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland
+ target = “_blank”>*here*</a>.
+ 
 Our findings indicate that the Swiss pharmaceutical industry is one of the most important pillars of the Swiss economy. Its employment shares of the domestic labor force are twice those of the USA, Germany, France or Italy. Although workers in the Swiss pharmaceutical industry account for less than 1% of the country's labor force, they generate more than 5% of Swiss GDP. This implies very high labor productivity levels. Interestingly, if we additionally take into account the large number of cross-border commuting workers, the pharmaceutical industry's labor productivity estimates drop by 30%. However, compared to other Swiss industries, the productivity level remains extraorinary high.  This is also reflected in steadily increasing exports to the whole world. In 2019, 30 % of Swiss exports are pharmaceutical products and 26% of the total Swiss pharma exports go to the USA. 
 
 ![cross_borders](https://raw.githubusercontent.com/cieb-unibas/innoscape-part-II-descriptive-analysis/master/Data%20creation/worldmap_export.png)
