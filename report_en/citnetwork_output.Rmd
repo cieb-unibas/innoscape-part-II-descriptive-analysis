@@ -21,8 +21,6 @@ pickerInput(inputId = "group",
 
 )))
 
-sliderInput(inputId = "p_year_citing", label =  "Year of citation", min=1990, max=2015, value=1990, sep="")
-
 
 # (2) Create function to calculate coordinates for each unique technology that is cited in a c
 # credit: https://stackoverflow.com/users/1465387/sebastian-c on
@@ -120,7 +118,7 @@ edges <- nodes
  label = unique(nodes_temp$group), shape = rep("dot", length(unique(nodes_temp$group)))) 
  
 # (g) Creating Network Plot
-  visNetwork(nodes, edges, height = "100%",  width = "100%", main = paste("Knowledge flows from other technologies to pharma")) %>%
+  visNetwork(nodes, edges, height = "100%",  width = "100%", main = list(text = paste("<b>\nBackward citations of pharma patents<b>"), style = "text-align:left;")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -144,6 +142,10 @@ edges <- nodes
     visLegend(position = "right", width = 0.4, stepX = 50, stepY = 100, ncol = 1,  useGroups = F, addNodes = ledges, zoom = F) 
   })    
 )),
+
+ fluidRow(column(12, sliderInput(inputId = "p_year_citing", label =  "Year of citation", min=1990, max=2015, value=1990, sep=""))),
+
+
   fluidRow(column(12,
 # make the 2nd plot
 renderVisNetwork({
@@ -196,7 +198,7 @@ renderVisNetwork({
  label_2 = unique(nodes_2_temp$group), shape = rep("dot", length(unique(nodes_2_temp$group))))
  
 # (g) Creating Network Plot
-  visNetwork(nodes_2, edges_2, height = "100%",  width = "100%", main = paste("Knowledge flows from pharma to other technologies")) %>%
+  visNetwork(nodes_2, edges_2, height = "100%", width = "100%", main = list(text = paste("<b>\nForward citations of pharma patents<b>"), style = "text-align:left;")) %>%
       visIgraphLayout(layout = "layout_nicely") %>%
       visEvents(type = "once", startStabilizing = "function() {
                this.moveTo({scale:0.5})}") %>%
@@ -215,8 +217,10 @@ renderVisNetwork({
         selfReferenceSize = F,
         shadow = FALSE,
         smooth = FALSE) %>%
-    visInteraction(dragNodes = F, dragView = F, zoomView = T)%>%
-    visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
+        visInteraction(dragNodes = F, dragView = F, zoomView = F) %>%
+    visOptions(highlightNearest = TRUE)
+  # %>%
+    # visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 
   
 }) 
 )))

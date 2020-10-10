@@ -43,7 +43,7 @@ p <- ggplotly( world +
     'hoverClosestCartesian',
     'hoverCompareCartesian',
     'pan2d','select2d','lasso2d')) %>%
-      layout(xaxis = list(fixedrange = F), yaxis = list(fixedrange = F))  %>% 
+      layout(xaxis = list(fixedrange = F, showspikes = F), yaxis = list(fixedrange = F, showspikes = F))  %>% 
   partial_bundle(local = FALSE) %>%
   plotly_mod_dep()
 

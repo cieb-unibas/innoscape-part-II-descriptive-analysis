@@ -4,13 +4,13 @@ select_conti <- distinct(numpat_data, Continent, `Rank based on year 2000`)  %>%
   na.omit() %>% arrange(`Rank based on year 2000`)
 
 
-output$conti <-  DT::renderDT(select_conti, extensions = 'Scroller', server = F,
+output$conti <-  DT::renderDT(select_conti, server = F,
                             class = "display nowrap compact", 
                              filter = "top", # location of column filters
                              rownames= FALSE,
-                             fillContainer = T,
+                             fillContainer = F,
                              selection = list(mode = 'multiple', selected = which(select_conti$Continent %in% c("Europe"))),
-                             options = list(scrollY = 150, scroller = TRUE, dom = 't', scrollX= F,
+                             options = list(scrollY = F, scroller = F, dom = 't', scrollX= F,
                                             columnDefs = list(list(className = 'dt-center', targets = 1))))
 
 selectedRow_conti <- eventReactive(input$conti_rows_selected,{
