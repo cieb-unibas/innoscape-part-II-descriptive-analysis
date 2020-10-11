@@ -1,0 +1,12 @@
+name: pharma_patent_count
+title: pharma_patent_count
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2989125
+bundleId: 3726470
+url: https://cieb.shinyapps.io/pharma_patent_count/
+when: 1602429971.73078
+asMultiple: FALSE
+asStatic: FALSE

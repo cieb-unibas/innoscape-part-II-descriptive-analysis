@@ -1,0 +1,12 @@
+name: pharma_citnetwork_output
+title: pharma_citnetwork_output
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2989140
+bundleId: 3726481
+url: https://cieb.shinyapps.io/pharma_citnetwork_output/
+when: 1602430302.69043
+asMultiple: FALSE
+asStatic: FALSE

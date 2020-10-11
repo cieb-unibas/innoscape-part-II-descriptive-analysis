@@ -1,90 +1,19 @@
 ---
-fig_caption: yes
-title: ""
+title: ''
 output:
   html_document:
+    self_contained: false
+    theme: null
     css: style.css
-rmd_output_metadata:
-
-resource_files:
-  
-runtime: shiny
+    highlight: null
+    mathjax: null
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-library(shiny)
-library(DT)
-library(viridis)
-library(RColorBrewer)
-library(knitr)
-library(png)
-library(plotly)
-library(shinyWidgets)
-library(dplyr)
-library(igraph)
-library(visNetwork)
-library(fst)
 
-source_rmd <- function(rmd_file){
-  knitr::knit(rmd_file, output = tempfile())
-}
-  
-plotly_mod_dep = function(p){
-  deps <- p$dependencies
-  deps_urls <- purrr::map(
-    deps,
-    ~if(.x$name == "plotly-basic") {
-      .x$src = list(file=getwd())
-      .x$script = "plotly-redirect-cdn-1.39.2.js"
-      .x
-    } else {
-      .x
-    }
-  )
-  p$dependencies <- deps_urls
-  p
-}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet">
+<link rel="stylesheet" href="style.css" type="text/css" />
 
-
-
-```
-
-
-<head>
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'UA-71167447-1');
-</script>
-</head>
-
-```{r context="data", cache=TRUE, echo = F}
-
-# Load data on patent counts 
-numpat_data <- xfun::cache_rds({readRDS("numpat_data.rds")})
-
-# Load data on labor productivity 
-labprod <- xfun::cache_rds({read.fst("labprod.fst")})
-
-# Load data on employment / prepared in section_II/prep_report.R
-ilo <- xfun::cache_rds({read.fst("ilo.fst")})
-
-# Load GVA data 
-gva <- xfun::cache_rds({read.fst("gva_data_ch.fst")})
-
-# Load data on exports 
-volumes <- xfun::cache_rds({read.fst("trad_data.fst")})
-map_world <- xfun::cache_rds({read.fst("map_data.fst")})
-
-# Load citation-flow data  
-citflow_ctry_back <- xfun::cache_rds({read.fst("citflow_ctry_back.fst")})
-citflow_ctry_forw <- xfun::cache_rds({read.fst("citflow_ctry_forw.fst")})
-
-```	
+<div class="container-fluid main-container">
 
 
 <br>
@@ -147,8 +76,12 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")}
-```
+<iframe width="100%" height=600 frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/'>
+  <p>Your browser does not support iframes</p>
+</iframe>
+
+<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")} -->
+<!-- # ``` -->
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a>*. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</span>
 
 <br>
@@ -159,8 +92,12 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")}
-```
+<iframe width="100%" height=600 frameBorder="0" src='https://cieb.shinyapps.io/pharma_gva_output/'>
+  <p>Your browser does not support iframes</p>
+</iframe>
+
+<!-- ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")} -->
+<!-- ``` -->
 <span style="font-size:0.8em">*Source: CIEBs’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
@@ -172,8 +109,11 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <br>
 <hr class="hr_red">
 #### **Swiss pharma is highly productive**
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")}
-```
+<iframe width="100%" height=600 frameBorder="0" src='https://cieb.shinyapps.io/pharma_labprod_output/'>
+  <p>Your browser does not support iframes</p>
+</iframe>
+<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")} -->
+<!-- # ``` -->
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
@@ -190,8 +130,11 @@ Furthermore, the geographical dispersion of export destinations is also changing
 
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")}
-```
+<iframe width="100%" height=650 frameBorder="0" src='https://cieb.shinyapps.io/pharma_export_output/'>
+  <p>Your browser does not support iframes</p>
+</iframe>
+<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
+<!-- # ``` -->
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>.  The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 
@@ -223,28 +166,11 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </details>
 </div>
 
-## {.tabset}
 
-### Countries
+<iframe width="100%" height=1200 frameBorder="0" src='https://cieb.shinyapps.io/pharma_patent_count/'>
+  <p>Your browser does not support iframes</p>
+</iframe>
 
-```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"), "ctry_func.Rmd")}
-```
-<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
-
-
-### Regions
-
-```{r, echo = F, child  = file.path(knitr::opts_knit$get("output.dir"),'regio_func.Rmd')}
-```
-<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
-
-### Continents
-
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "conti_func.RMD")}
-```
-<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
-
-## {.unlisted .unnumbered}
 
 <br>
 
@@ -280,8 +206,12 @@ See the previous box for information on patent data in general. In addition, bac
 </div>
 <br>
 
-```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")}
-```
+<iframe width="100%" height=900 frameBorder="0" src='https://cieb.shinyapps.io/pharma_citnetwork_output/'>
+  <p>Your browser does not support iframes</p>
+</iframe>
+
+<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "citnetwork_output.Rmd")} -->
+<!-- # ``` -->
 <span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
@@ -312,31 +242,42 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 
 <br>
 
-**Share this article**
-```{r, echo = F}
-actionButton("twitter_share",
-                   label = "",
-                   icon = icon("twitter"),
-                   onclick = sprintf("window.open('%s')", "https://twitter.com/intent/tweet?d&url=https://https://cieb.shinyapps.io/innoscape_pharma/"))
-actionButton("twitter_share",
-                   label = "",
-                   icon = icon("linkedin"),
-                   onclick = sprintf("window.open('%s')", "https://www.linkedin.com/sharing/share-offsite/?url=https://https://cieb.shinyapps.io/innoscape_pharma/"))
-actionButton("xing_share",
-                   label = "",
-                   icon = icon("xing"),
-                   onclick = sprintf("window.open('%s')", "https://www.xing.com/app/user?op=share;url=https://https://cieb.shinyapps.io/innoscape_pharma/"))
-actionButton("facebook_share",
-                   label = "",
-                   icon = icon("facebook"),
-                   onclick = sprintf("window.open('%s')", "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcieb.shinyapps.io%2Finnoscape_pharma%2F&amp;src=sdkpreparse"))
-```
+<!-- **Share this article** -->
+<!-- ```{r, echo = F} -->
+<!-- actionButton("twitter_share", -->
+<!--                    label = "", -->
+<!--                    icon = icon("twitter"), -->
+<!--                    onclick = sprintf("window.open('%s')", "https://twitter.com/intent/tweet?d&url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
+<!-- actionButton("twitter_share", -->
+<!--                    label = "", -->
+<!--                    icon = icon("linkedin"), -->
+<!--                    onclick = sprintf("window.open('%s')", "https://www.linkedin.com/sharing/share-offsite/?url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
+<!-- actionButton("xing_share", -->
+<!--                    label = "", -->
+<!--                    icon = icon("xing"), -->
+<!--                    onclick = sprintf("window.open('%s')", "https://www.xing.com/app/user?op=share;url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
+<!-- actionButton("facebook_share", -->
+<!--                    label = "", -->
+<!--                    icon = icon("facebook"), -->
+<!--                    onclick = sprintf("window.open('%s')", "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcieb.shinyapps.io%2Finnoscape_pharma%2F&amp;src=sdkpreparse")) -->
+<!-- ``` -->
 
-<br>
+<!-- <br> -->
 
 <span style="font-size:0.8em">*This report was written using <a href = https://rmarkdown.rstudio.com/ target = “_blank”>R Markdown</a> and <a href = https://shiny.rstudio.com/ target = “_blank”>R shiny</a>. For the creation of the patent data set, we used <a href = http://scicore.unibas.ch/ target = “_blank”> sciCORE </a> scientific computing center at the University of Basel. Data and code to reproduce the figures presented in this article are available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 <br>
 <br>
 <br>
 <br>
+
+</div>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'UA-71167447-1');
+</script>
 

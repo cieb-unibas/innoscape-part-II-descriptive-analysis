@@ -1,0 +1,104 @@
+---
+fig_caption: yes
+output:
+  html_document:
+           self_contained: false
+           # theme: null
+           css: style.css
+           highlight: null
+           mathjax: null
+
+resource_files:
+- map_data.fst
+- trad_data.fst
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library("shiny")
+library("ggplot2")
+library("RColorBrewer")
+library("shinyWidgets")
+library("fst")
+library("plotly")
+
+
+
+plotly_mod_dep = function(p){
+  deps <- p$dependencies
+  deps_urls <- purrr::map(
+    deps,
+    ~if(.x$name == "plotly-basic") {
+      .x$src = list(file=getwd())
+      .x$script = "plotly-redirect-cdn-1.39.2.js"
+      .x
+    } else {
+      .x
+    }
+  )
+  p$dependencies <- deps_urls
+  p
+}
+```
+
+```{r context="data", echo=FALSE}
+# Load data on employment 
+map_world <- xfun::cache_rds({read.fst("map_data.fst")})
+volumes <- xfun::cache_rds({read.fst("trad_data.fst")})
+```
+
+```{r, echo=FALSE}
+# Input panels for indicator, industry and year 
+  radioButtons(inputId = "variable_exp", label = "Choose a variable",
+               choices = list("in million USD"="val_export", 
+                              "% of total Swiss exports to the destination"="share_in_tot",
+                              "% of total Swiss pharma exports"="share_in_tot2"),
+                                selected = "val_export", inline = T)
+  sliderInput(inputId =  "year_exp", label = "Year", min=1990, max=2019, step = 1, value=2000, sep="")
+  
+# Create world map
+  world <- ggplot() +
+              geom_polygon(data = map_world,
+                           aes(long, lat, group = group, 
+                               fill = region), 
+                           show.legend = FALSE,
+                           alpha = 1,
+                           fill="#D1E5F0",
+                           color = "white") 
+  
+  # subset the data accoding to the input:
+    d_exp <- reactive({volumes %>%
+                    filter(variable %in% input$variable_exp,
+                           year %in% input$year_exp)}) 
+renderPlotly({
+# make the plot
+p <- ggplotly( world + 
+              geom_point(data = d_exp(),
+                         aes(long_par, lat_par, size = value,  label = Country), color = "#B2182B", alpha = 0.7) +
+              theme_bw() +
+              theme(axis.line = element_blank(),
+                    panel.grid.major = element_blank(),
+                    panel.grid.minor = element_blank(),
+                    panel.background = element_blank(),
+                    panel.border = element_blank(),
+                    axis.ticks = element_blank(),
+                    axis.title = element_blank(),
+                    axis.text = element_blank()),
+            dynamicTicks = T, tooltip = c("Country")
+      ) %>% config(displaylogo = F, modeBarButtonsToRemove = c('sendDataToCloud',
+    'toImage',
+    'autoScale2d',
+    'resetScale2d',
+    'hoverClosestCartesian',
+    'hoverCompareCartesian',
+    'pan2d','select2d','lasso2d')) %>%
+      layout(xaxis = list(fixedrange = F, showspikes = F), yaxis = list(fixedrange = F, showspikes = F))  %>% 
+  partial_bundle(local = FALSE) %>%
+  plotly_mod_dep()
+
+p$x$data[[1]]$text <- c(paste0("Move over a point to get information"))
+p$y$data[[1]]$text <- c(paste0("Move over a point to get information"))
+
+return(p)
+})
+```
