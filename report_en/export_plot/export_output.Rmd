@@ -21,7 +21,7 @@ library("RColorBrewer")
 library("shinyWidgets")
 library("fst")
 library("plotly")
-
+library("dplyr")
 
 
 plotly_mod_dep = function(p){
@@ -43,8 +43,8 @@ plotly_mod_dep = function(p){
 
 ```{r context="data", echo=FALSE}
 # Load data on employment 
-map_world <- xfun::cache_rds({read.fst("map_data.fst")})
-volumes <- xfun::cache_rds({read.fst("trad_data.fst")})
+map_world <- read.fst("map_data.fst")
+volumes <- read.fst("trad_data.fst")
 ```
 
 ```{r, echo=FALSE}
