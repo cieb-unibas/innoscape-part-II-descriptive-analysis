@@ -1,5 +1,4 @@
 ---
-fig_caption: yes
 output:
   html_document:
            self_contained: false
@@ -9,7 +8,7 @@ output:
            mathjax: null
 
 resource_files:
-- gva_data_ch.fst
+- numpat_data.rds
 runtime: shiny
 ---
 
@@ -23,8 +22,8 @@ library(DT)
 ```
 
 ```{r context="data", echo=FALSE}
-# Load data on employment 
-numpat_data <- xfun::cache_rds({readRDS("numpat_data.rds")})
+# Load data on patents
+numpat_data <- readRDS("numpat_data.rds")
 ```
 
 ## {.tabset}
@@ -112,7 +111,6 @@ renderPlotly({
          })
 
 ```
-<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 
 ### Regions
@@ -163,7 +161,7 @@ plot02_data_regio <- reactive({numpat_data %>%
 renderPlotly({
 # make the plot
                  ggplotly(
-                 ggplot(data = plot02_data_regio(), aes(x = p_year, y= share_inv, color = Region, shape = geo)) +
+                 ggplot(data = plot02_data_regio(), aes(x = p_year, y= share_inv, color = Region, shape = geo, label = Geo)) +
                  geom_point(alpha = 0.7) +
                  geom_line() +
                  # geom_text(aes(label = NOGA2digit), size = 4, check_overlap = FALSE, position = position_nudge(y = +0.1))+
@@ -197,7 +195,6 @@ renderPlotly({
 
         
 ```
-<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 ### Continents
 
@@ -286,7 +283,6 @@ renderPlotly({
 
 })
 ```
-<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 ## {.unlisted .unnumbered}
 

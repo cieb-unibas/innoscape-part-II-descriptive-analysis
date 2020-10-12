@@ -16,11 +16,10 @@ output:
 <div class="container-fluid main-container">
 
 
-<br>
-
-<br>
-
 ## **The pharmaceutical industry: a driver of innovation and growth in Switzerland **
+
+<br>
+
 *October 2020* by <a href="https://wwz.unibas.ch/de/personen/dragan-filimonovic/" target = "_blank">Dragan Filimonovic</a>, <a href="https://wwz.unibas.ch/de/personen/matthias-niggli/" target = "_blank">Matthias Niggli</a> and <a href="https://wwz.unibas.ch/de/personen/christian-rutzer/" target = "_blank">Christian Rutzer</a>
 
 <br>
@@ -76,14 +75,13 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
-<iframe width="100%" height=600 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/'>
+<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 
-<div style="border: 3px solid rgb(201, 0, 1); overflow: hidden; margin: 15px auto; max-width: 736px;">
-<iframe scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/' style="border: 0px none; margin-left: -185px; height: 859px; margin-top: -533px; width: 926px;">
-</iframe>
-</div>
+<!-- <iframe scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/' style="border: 0px none;  width="100%" height: 859px; margin-top: -533px;"> -->
+<!-- </iframe> -->
+
 
 <!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")} -->
 <!-- # ``` -->
@@ -97,7 +95,7 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
-<iframe width="100%" height=600 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_gva_output/'>
+<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_gva_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 
@@ -114,7 +112,7 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <br>
 <hr class="hr_red">
 #### **Swiss pharma is highly productive**
-<iframe width="100%" height=600 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_labprod_output/'>
+<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_labprod_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 <!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")} -->
@@ -135,7 +133,7 @@ Furthermore, the geographical dispersion of export destinations is also changing
 
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
-<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_export_output/'>
+<iframe width="100%" height=680 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_export_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 <!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
@@ -172,14 +170,15 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </div>
 
 
-<iframe width="100%" height=960 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_patent_count/'>
+<iframe width="100%" height=920 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_patent_count/'>
   <p>Your browser does not support iframes</p>
 </iframe>
+<span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 
 <br>
 
-Switzerland also enjoys a very high revealed comparative advantage (RCA) in creating pharma patents (among the top 10 countries worldwide). The RCA is a measure of the international innovativeness of a country’s specific industry relative to the entire economy. In other words, the high RCA of the Swiss pharmaceutical industry means that Switzerland possesses a particular strength in pharmaceutical innovations compared to the rest of the world. Interestingly, Spain is positioning itself as the world leader according to the RCA index. According to <a href = https://static.scientificamerican.com/wv/assets/2015_SAWorldView.pdf target = “_blank”>Scientific American Worldview 2015</a>, in 2015 Spain ranked 4th globally according to the biotech innovation intensity indicator, which is specifically developed to identify the "outsized" sectoral activity among smaller countries. In this report it is also noted that Spain`s particularly high ranking is due mainly to its immense increase in the number of filed patent applications. Spanish patenting intensity was more resilient to the 2008 crisis than Swiss patenting, implying that in the future we may expect the rise of pharmaceutical industries in other countries, even among those considered to be untraditional pharma hubs. This could make the overall competition in the world healthcare market even harsher.
+Switzerland also enjoys a very high revealed comparative advantage (RCA) in creating pharma patents (among the top 10 countries worldwide). The RCA is a measure of the international innovativeness of a country’s specific industry relative to the entire economy. In other words, the high RCA of the Swiss pharmaceutical industry means that Switzerland possesses a particular strength in pharmaceutical innovations compared to the rest of the world. Interestingly, Spain is positioning itself as the world leader according to the RCA index. According to <a href = https://static.scientificamerican.com/wv/assets/2015_SAWorldView.pdf target = “_blank”>Scientific American Worldview</a>, in 2015 Spain ranked 4th globally according to the biotech innovation intensity indicator, which is specifically developed to identify the "outsized" sectoral activity among smaller countries. In this report it is also noted that Spain`s particularly high ranking is due mainly to its immense increase in the number of filed patent applications. Spanish patenting intensity was more resilient to the 2008 crisis than Swiss patenting, implying that in the future we may expect the rise of pharmaceutical industries in other countries, even among those considered to be untraditional pharma hubs. This could make the overall competition in the world healthcare market even harsher.
 
 It is also interesting to explore the geographical concentration of innovations in the pharmaceutical industry within a country. For this purpose, you can click on the tab *regions* in the figure below and investigate the patent applications of the 76 most important pharma clusters worldwide. Not surprisingly, most Swiss innovations in the pharma industry are concentrated in the region of Northwestern Switzerland, with Basel as its center. Indeed, the region of Northwestern Switzerland ranks very high among the world’s most important pharma innovation regions. Being the home to Swiss (and the world’s) pharmaceutical giants - Novartis and Roche, it is a place to be if you are interested in healthcare innovations. Among the most important regions for pharmaceutical research worldwide, Northwestern Switzerland takes the 16th place (according to the patent rankings in 2000), leaving numerous US, Japanese, German and other regions behind. Some other regions in Europe, however, are ahead in terms of absolute numbers of patent applications, but taking into account relative terms and, thus, differences in size across the regions, Northwestern Switzerland ranks number one in Europe as shown by our RCA-index.    
 

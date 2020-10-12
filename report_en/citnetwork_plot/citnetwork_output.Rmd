@@ -24,8 +24,8 @@ library(visNetwork)
 
 ```{r context="data", echo=FALSE}
 # Load data on citations
-citflow_ctry_back <- xfun::cache_rds({read.fst("citflow_ctry_back.fst")})
-citflow_ctry_forw <- xfun::cache_rds({read.fst("citflow_ctry_forw.fst")})
+citflow_ctry_back <- read.fst("citflow_ctry_back.fst")
+citflow_ctry_forw <- read.fst("citflow_ctry_forw.fst")
 ```
 
 
@@ -256,7 +256,7 @@ renderVisNetwork({
         selfReferenceSize = F,
         shadow = FALSE,
         smooth = FALSE) %>%
-        visInteraction(dragNodes = F, dragView = F, zoomView = F) %>%
+    visInteraction(dragNodes = F, dragView = F, zoomView = T)%>%
     visOptions(highlightNearest = TRUE)
   # %>%
     # visOptions(highlightNearest = list(enabled = F, degree = 1, hover = T)) 

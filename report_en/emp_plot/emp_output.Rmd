@@ -1,5 +1,4 @@
 ---
-fig_caption: yes
 output:
   html_document:
            self_contained: false
@@ -24,7 +23,7 @@ library("plotly")
 
 ```{r context="data", echo=FALSE}
 # Load data on employment 
-ilo <- xfun::cache_rds({read.fst("ilo.fst")})
+ilo <- read.fst("ilo.fst")
 ```
 
 

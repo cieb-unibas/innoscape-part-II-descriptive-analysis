@@ -26,7 +26,7 @@ library("plotly")
 
 ```{r context="data", echo=FALSE}
 # Load data on employment 
-labprod <- xfun::cache_rds({read.fst("labprod.fst")})
+labprod <- read.fst("labprod.fst")
 ```
 
 ```{r, echo=FALSE}
@@ -86,8 +86,7 @@ if(nrow(d_output()) != 0){
                           config(displayModeBar = F) %>%
                           layout(xaxis = list(fixedrange=T),
                           yaxis = list(fixedrange=T),
-                                 legend = list(orientation = "h", y = -0.25)) %>% 
-               partial_bundle()
+                                 legend = list(orientation = "h", y = -0.25)) 
   
   
       # d_output() %>% group_by(interaction(ind.name, input$variable_prod, sep = ": ")) %>% plot_ly(x = ~as.numeric(year), y = ~value,

@@ -1,5 +1,4 @@
 ---
-fig_caption: yes
 output:
   html_document:
            self_contained: false
@@ -20,11 +19,12 @@ library("RColorBrewer")
 library("shinyWidgets")
 library("fst")
 library("plotly")
+library("dplyr")
 ```
 
-```{r context="data", echo=FALSE}
+```{r, echo=FALSE}
 # Load data on employment 
-gva <- xfun::cache_rds({read.fst("gva_data_ch.fst")})
+gva <- read.fst("gva_data_ch.fst")
 ```
 
 
@@ -46,23 +46,22 @@ radioButtons(inputId = "variable_gva", label = "Choose a variable",
               options = list(`actions-box` = TRUE),
               multiple = TRUE)
 
-    # subset the data according to the input:
+
+# subset the data according to the input:
   d_gva <- reactive({ gva %>%
                     filter(variable %in% input$variable_gva,
                            ind.name %in% input$ind.name_gva)
       })
   
+  
 renderPlotly({
 
-
-  
- 
+# specify y axis title
+  Y_AXIS_TITLE <- ifelse(input$variable_gva == "Share in GDP", "Share in GDP (in %)",
+       ifelse(input$variable_gva == "GVA in millions CHF", "GVA (in millions CHF)", "GVA change (in %)"))
 
 if(nrow(d_gva()) != 0){
-    # specify y axis title
-  Y_AXIS_TITLE <- if(input$variable_gva == "Share in GDP"){"Share in GDP (in %)"}else{
-    if(input$variable_gva == "GVA in millions CHF"){"GVA (in millions CHF)"}else{
-      "GVA change (in %)"}}
+
   
 # make the plot
   ggplotly(
@@ -82,8 +81,7 @@ if(nrow(d_gva()) != 0){
                           config(displayModeBar = F) %>%
                           layout(xaxis = list(fixedrange=T),
                           yaxis = list(fixedrange=T),
-                                 legend = list(orientation = "h", y = -0.25)) %>% 
-               partial_bundle()
+                                 legend = list(orientation = "h", y = -0.25)) 
   
       # plot_ly(d_gva(), x = ~as.numeric(year), y = ~value,
       #                   type = "scatter", mode = 'lines+markers',

@@ -5,8 +5,8 @@ account: cieb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2989140
-bundleId: 3729256
+bundleId: 3729314
 url: https://cieb.shinyapps.io/pharma_citnetwork_output/
-when: 1602493729.3183
+when: 1602494572.70512
 asMultiple: FALSE
 asStatic: FALSE
