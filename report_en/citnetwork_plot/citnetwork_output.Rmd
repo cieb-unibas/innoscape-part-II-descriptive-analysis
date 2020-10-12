@@ -3,7 +3,7 @@ output:
   html_document:
            self_contained: false
            # theme: null
-           css: style.css
+           css: "https://innoscape.de/pharma_intro/style.css"
            highlight: null
            mathjax: null
 
@@ -23,7 +23,7 @@ library(visNetwork)
 ```
 
 ```{r context="data", echo=FALSE}
-# Load data on employment 
+# Load data on citations
 citflow_ctry_back <- xfun::cache_rds({read.fst("citflow_ctry_back.fst")})
 citflow_ctry_forw <- xfun::cache_rds({read.fst("citflow_ctry_forw.fst")})
 ```
@@ -62,13 +62,18 @@ eq_spacing <- function(r = 2, data){
     data <- data %>% filter(group %in% input$group, 
                                    ctry_cited %in% input$cit_ctry,
                                    p_year_citing %in% input$p_year_citing)
-    if(nrow(data) == 0){
-       data <- data %>% filter(group %in% "Domestic", 
-                                   ctry_cited %in% input$cit_ctry,
-                                   p_year_citing %in% 2000, 
-                               tech_field_cited == 16,
-                               tech_field_citing == 16)
-    } else {
+    # if(nrow(data) == 0){
+    #    data <- data.frame(group = "Domestic", 
+    #                       ctry_cited = input$cit_ctry,
+    #                       p_year_citing = 2000, 
+    #                       tech_field_cited = "Pharmaceuticals",
+    #                       tech_field_citing = "Pharmaceuticals",
+    #                       tech_name = "Pharmaceuticals",
+    #                       share_inv_cited = 0,
+    #                       x = as.character(c(0)),
+    #                       y = as.character(c(0)))
+    #    return(NULL)
+    # } else {
     coord <- sort(unique(data$tech_field_cited))
     coord <- data.frame(coord)
    
@@ -87,8 +92,10 @@ eq_spacing <- function(r = 2, data){
     citflow_ctry <- merge(data, coord)
   return(citflow_ctry)
     }
-}
+# }
 
+check_back <- reactive({eq_spacing(r = 0.7, data = citflow_ctry_back) })
+check_forw <- reactive({eq_spacing(r = 0.7, data = citflow_ctry_forw) })
 
 fluidPage(
   fluidRow(

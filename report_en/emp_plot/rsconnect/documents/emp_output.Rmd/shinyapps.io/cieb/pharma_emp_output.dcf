@@ -5,8 +5,8 @@ account: cieb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 2989032
-bundleId: 3726402
+bundleId: 3728613
 url: https://cieb.shinyapps.io/pharma_emp_output/
-when: 1602428238.95352
+when: 1602486368.30156
 asMultiple: FALSE
 asStatic: FALSE

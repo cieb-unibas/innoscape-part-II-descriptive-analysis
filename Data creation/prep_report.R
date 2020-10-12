@@ -100,20 +100,39 @@ citflow_ges <- mutate(citflow_ges, tech_field_cited = ifelse(tech_field_cited !=
 return(citflow_ges)
 }
 
-citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "United States", "Italy", "France", "China", "India", "Sweden", "Japan"), function(x) citflow_ctry_func(x)))
+citflow_ctry_data <- do.call(rbind.fill, lapply(list("Switzerland", "Germany", "United States", "Italy", "France", "Sweden", "Japan"), function(x) citflow_ctry_func(x)))
 
 # Keep only flows from Asia, Americas and Europe; others are irrelevant
 citflow_ctry_data <- filter(citflow_ctry_data, group %in% c("Asia", "Europe", "Americas", "All", "Domestic"))
+
+# Add zero to missings for network_plot
+# add_missing <- function(year_check, ctry_check, group_check, type = "back", data){
+#   data <- filter(data, p_year_citing == year_check, ctry_cited == ctry_check, group == group_check)  
+#   
+#   if(nrow(data) == 0){
+#     new <- data.frame(tech_field_citing = 16, tech_field_cited = 16, tech_name  = "Pharmaceuticals", p_year_citing = year_check, group = group_check, share_inv_cited = 0, total_num  = 0, ctry_cited = ctry_check, type = type)
+#   } else{
+#     new <- NULL
+#   }
+#   
+#   return(new)
+# }
+# 
+# china_miss <- do.call(rbind, lapply(seq(1990, 2015, 1), function(x, y)add_missing(x, "China", y, type = type, data = citflow_ctry_data), c("Europe", "All", "Americas", "Domestic", "Asia")))
+# india_miss <- do.call(rbind, lapply(seq(1990, 2015, 1), function(x, y)add_missing(x, "India", y, type = type, data = citflow_ctry_data), c("Europe", "All", "Americas", "Domestic", "Asia")))
+
+# Add all data together
+# citflow_ctry_data <- rbind(citflow_ctry_data, china_miss, india_miss)
 
 #! I kept the variable names the same for forward and backward citations in order to easily create the forwarc network in citnetwork_output.RMD (ie just use the same names there)
 citflow_ctry_data %>% saveRDS(paste0(getwd(), "/report_en/citflow_ctry_", type, ".rds"))
 citflow_ctry_data %>% write.fst(paste0(getwd(), "/report_en/citflow_ctry_", type, ".fst"))
 citflow_ctry_data %>% write.csv(paste0(getwd(), "/report_en/citflow_ctry_", type, ".csv"), row.names = F)
-
 }
 
 # Run the previously created function
 lapply(list("back", "forw"), function(x) citations_func(x))
+
 
 #####################
 # Create trade data #

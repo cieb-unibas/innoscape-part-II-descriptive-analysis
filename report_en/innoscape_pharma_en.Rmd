@@ -4,7 +4,7 @@ output:
   html_document:
     self_contained: false
     theme: null
-    css: style.css
+    css: "https://innoscape.de/pharma_intro/style.css"
     highlight: null
     mathjax: null
 ---
@@ -63,7 +63,7 @@ The Swiss pharmaceutical sector has a major impact on Switzerland’s economy an
 The <a href = https://www.media-stat.admin.ch/web/apps/glossary/index.php?n=glo-165-en target = “_blank”>FSO</a> defines a job as follows: "The term “jobs” refers to all positions of employment that are filled. While largely covering the same concept, "jobs" and "employed persons" do not always coincide, given that an employed person may hold several jobs. In such cases, the employed person holds one primary job and one or more secondary jobs". In addition, ILO data on employment covers only the residents, given that this data is collected via local labor force surveys. We utilize these differences to create three distinct labor productivity indicators, primarily by assuming that ILO employment data represents a good approximation for jobs held by Swiss residents.
 
 * **Exporting to every corner of the world**: Data on exported goods is taken from the 
-<a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. Exports are measured using freight on board valuation methodology and are adjusted for re-export values (whenever possible). *Values in million USD* show the Swiss pharmaceutical exports in current US dollars to a given partner country. The indicator *% of total Swiss exports to the destination* represents the share of Swiss pharmaceutical exports in total Swiss exports to a given partner country and *% of total Swiss pharma exports* represents the share of Swiss pharmaceutical exports to each partner country in total Swiss pharmaceutical exports.
+<a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. Exports are measured using freight on board valuation methodology and are adjusted for re-export values (whenever possible). *Values in million USD* show the Swiss pharmaceutical exports in current US dollars to a given partner country. The indicator *% of total Swiss exports to the destination* represents the share of Swiss pharmaceutical exports in total Swiss goods exports to a given partner country and *% of total Swiss pharma exports* represents the share of Swiss pharmaceutical exports to each partner country in total Swiss pharmaceutical exports.
 
 </details>
 </div>
@@ -76,9 +76,14 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
-<iframe width="100%" height=600 frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/'>
+<iframe width="100%" height=600 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
+
+<div style="border: 3px solid rgb(201, 0, 1); overflow: hidden; margin: 15px auto; max-width: 736px;">
+<iframe scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/' style="border: 0px none; margin-left: -185px; height: 859px; margin-top: -533px; width: 926px;">
+</iframe>
+</div>
 
 <!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "emp_output.Rmd")} -->
 <!-- # ``` -->
@@ -92,7 +97,7 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
-<iframe width="100%" height=600 frameBorder="0" src='https://cieb.shinyapps.io/pharma_gva_output/'>
+<iframe width="100%" height=600 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_gva_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 
@@ -109,7 +114,7 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <br>
 <hr class="hr_red">
 #### **Swiss pharma is highly productive**
-<iframe width="100%" height=600 frameBorder="0" src='https://cieb.shinyapps.io/pharma_labprod_output/'>
+<iframe width="100%" height=600 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_labprod_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 <!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")} -->
@@ -130,12 +135,12 @@ Furthermore, the geographical dispersion of export destinations is also changing
 
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
-<iframe width="100%" height=650 frameBorder="0" src='https://cieb.shinyapps.io/pharma_export_output/'>
+<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_export_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 <!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
 <!-- # ``` -->
-<span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>.  The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+<span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 
 <br>
@@ -167,7 +172,7 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </div>
 
 
-<iframe width="100%" height=960 frameBorder="0" src='https://cieb.shinyapps.io/pharma_patent_count/'>
+<iframe width="100%" height=960 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_patent_count/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 
@@ -206,7 +211,7 @@ See the previous box for information on patent data in general. In addition, bac
 </div>
 <br>
 
-<iframe width="100%" height=1100 frameBorder="0" src='https://cieb.shinyapps.io/pharma_citnetwork_output/'>
+<iframe width="100%" height=1100 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_citnetwork_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 

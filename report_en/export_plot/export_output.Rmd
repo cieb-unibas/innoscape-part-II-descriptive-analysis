@@ -4,7 +4,7 @@ output:
   html_document:
            self_contained: false
            # theme: null
-           css: style.css
+           css: "https://innoscape.de/pharma_intro/style.css"
            highlight: null
            mathjax: null
 
@@ -24,21 +24,21 @@ library("plotly")
 library("dplyr")
 
 
-plotly_mod_dep = function(p){
-  deps <- p$dependencies
-  deps_urls <- purrr::map(
-    deps,
-    ~if(.x$name == "plotly-basic") {
-      .x$src = list(file=getwd())
-      .x$script = "plotly-redirect-cdn-1.39.2.js"
-      .x
-    } else {
-      .x
-    }
-  )
-  p$dependencies <- deps_urls
-  p
-}
+# plotly_mod_dep = function(p){
+#   deps <- p$dependencies
+#   deps_urls <- purrr::map(
+#     deps,
+#     ~if(.x$name == "plotly-basic") {
+#       .x$src = list(file=getwd())
+#       .x$script = "plotly-redirect-cdn-1.39.2.js"
+#       .x
+#     } else {
+#       .x
+#     }
+#   )
+#   p$dependencies <- deps_urls
+#   p
+# }
 ```
 
 ```{r context="data", echo=FALSE}
@@ -65,12 +65,12 @@ volumes <- read.fst("trad_data.fst")
                            alpha = 1,
                            fill="#D1E5F0",
                            color = "white") 
-  
-  # subset the data accoding to the input:
-    d_exp <- reactive({volumes %>%
-                    filter(variable %in% input$variable_exp,
-                           year %in% input$year_exp)}) 
+
 renderPlotly({
+# subset the data accoding to the input:
+d_exp <- reactive({volumes %>%
+                    subset(variable %in% input$variable_exp &
+                           year %in% input$year_exp)}) 
 # make the plot
 p <- ggplotly( world + 
               geom_point(data = d_exp(),
@@ -92,13 +92,13 @@ p <- ggplotly( world +
     'hoverClosestCartesian',
     'hoverCompareCartesian',
     'pan2d','select2d','lasso2d')) %>%
-      layout(xaxis = list(fixedrange = F, showspikes = F), yaxis = list(fixedrange = F, showspikes = F))  %>% 
-  partial_bundle(local = FALSE) %>%
-  plotly_mod_dep()
+      layout(xaxis = list(fixedrange = F, showspikes = F), yaxis = list(fixedrange = F, showspikes = F))  
+# %>% 
+  # partial_bundle() 
 
 p$x$data[[1]]$text <- c(paste0("Move over a point to get information"))
 p$y$data[[1]]$text <- c(paste0("Move over a point to get information"))
 
-return(p)
+p
 })
 ```

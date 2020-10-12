@@ -4,7 +4,7 @@ output:
   html_document:
            self_contained: false
            # theme: null
-           css: style.css
+           css: "https://innoscape.de/pharma_intro/style.css"
            highlight: null
            mathjax: null
 
@@ -86,7 +86,8 @@ if(nrow(d_output()) != 0){
                           config(displayModeBar = F) %>%
                           layout(xaxis = list(fixedrange=T),
                           yaxis = list(fixedrange=T),
-                                 legend = list(orientation = "h", y = -0.25))
+                                 legend = list(orientation = "h", y = -0.25)) %>% 
+               partial_bundle()
   
   
       # d_output() %>% group_by(interaction(ind.name, input$variable_prod, sep = ": ")) %>% plot_ly(x = ~as.numeric(year), y = ~value,
