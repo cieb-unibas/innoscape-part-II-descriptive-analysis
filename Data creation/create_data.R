@@ -127,8 +127,8 @@ rm(list = ls())
   gva_data_ch <-melt(setDT(gva_data_ch), id.vars = c("ind.code", "ind.name", "year"), measure.vars = c("gva_prchange","gva_abs", "gva_share"))
 
 # Transforming GVA figures to long format
-  saveRDS(object=gva_data_ch, file = paste0(getwd(), "/report/gva_data_ch.rds"))
-  write.csv(gva_data_ch, paste0(getwd(), "/report/gva_data_ch.csv"), row.names = FALSE)  
+  saveRDS(object=gva_data_ch, file = paste0(getwd(), "/Data creation/gva_data_ch.rds"))
+  write.csv(gva_data_ch, paste0(getwd(), "/Data creation/gva_data_ch.csv"), row.names = FALSE)  
   
   
 ################################################################################

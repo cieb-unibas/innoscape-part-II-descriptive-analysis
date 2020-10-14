@@ -221,7 +221,7 @@ labprod %>% write.csv(paste0(getwd(), "/report_en/labprod.csv"))
 ####################################
 
 # load the data
-gva <- readRDS(paste0(getwd(), "/Data creation/gva_data.rds"))
+gva <- readRDS(paste0(getwd(), "/Data creation/gva_data_ch.rds"))
 
 # make sure we have the same as in labor productivity plot
 industries <- select(labprod, ind.code, ind.name) %>% 
@@ -248,9 +248,9 @@ gva[gva$variable == "GVA percentage change", "value"] <- gva[gva$variable == "GV
 gva[gva$variable == "Share in GDP", "value"] <- gva[gva$variable == "Share in GDP", ]$value * 100
 
 # save the data
-gva %>% saveRDS(paste0(getwd(), "/report_en/gva_data_ch.rds"))
-gva %>% write.fst(paste0(getwd(), "/report_en/gva_data_ch.fst"))
-gva %>% write.csv(paste0(getwd(), "/report_en/gva_data_ch.csv"))
+gva %>% saveRDS(paste0(getwd(), "/report_en/gva_plot/gva_data_ch.rds"))
+gva %>% write.fst(paste0(getwd(), "/report_en/gva_plot/gva_data_ch.fst"))
+gva %>% write.csv(paste0(getwd(), "/report_en/gva_plot/gva_data_ch.csv"))
 
 #################################
 # Create data on patent counts #
