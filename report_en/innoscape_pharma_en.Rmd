@@ -246,29 +246,6 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 
 <br>
 
-<!-- **Share this article** -->
-<!-- ```{r, echo = F} -->
-<!-- actionButton("twitter_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("twitter"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://twitter.com/intent/tweet?d&url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
-<!-- actionButton("twitter_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("linkedin"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://www.linkedin.com/sharing/share-offsite/?url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
-<!-- actionButton("xing_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("xing"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://www.xing.com/app/user?op=share;url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
-<!-- actionButton("facebook_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("facebook"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcieb.shinyapps.io%2Finnoscape_pharma%2F&amp;src=sdkpreparse")) -->
-<!-- ``` -->
-
-<!-- <br> -->
-
-
 **Share this article**
 <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
 <a class="a2a_dd" href="https://www.addtoany.com/share"></a>
