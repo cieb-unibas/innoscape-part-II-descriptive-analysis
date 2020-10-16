@@ -1,0 +1,12 @@
+name: emp_output_app
+title: emp_output_app
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3031280
+bundleId: 3748277
+url: https://cieb.shinyapps.io/emp_output_app/
+when: 1602842754.59881
+asMultiple: FALSE
+asStatic: FALSE

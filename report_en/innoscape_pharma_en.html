@@ -14,16 +14,6 @@
 
 <title>innoscape_pharma_en.utf8</title>
 
-<script src="innoscape_pharma_en_files/header-attrs-2.4/header-attrs.js"></script>
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-      </style>
 
 
 
@@ -84,7 +74,7 @@
 <hr class="hr_red">
 <div id="steady-increase-of-pharmaceutical-jobs" class="section level4">
 <h4><strong>Steady increase of pharmaceutical jobs</strong></h4>
-<iframe width="100%" height="650" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/pharma_emp_output/">
+<iframe width="100%" height="650" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/emp_output_app/">
 <p>
 Your browser does not support iframes
 </p>
@@ -101,13 +91,11 @@ Your browser does not support iframes
 </div>
 <div id="pharmas-growing-importance-for-the-swiss-economy" class="section level4">
 <h4><strong>Pharma’s growing importance for the Swiss economy</strong></h4>
-<iframe width="100%" height="650" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/pharma_gva_output/">
+<iframe width="100%" height="650" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/gva_output/">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
-<!-- ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")} -->
-<!-- ``` -->
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 <p>The fact that less than 1% of the labor force generates more than 5% of Switzerland’s total value added is remarkable and deserves more attention. Obviously, the following question arises: How dependent on foreign workers is the Swiss pharmaceutical sector’s high productivity, especially on cross-border commuters? In order to illustrate this, we present three productivity estimates that use different definitions of the number of employees: (a) workers with residence in Switzerland, (b) total number of jobs and (c) workers with residence in Switzerland + cross-border commuters. We define the labor productivity for each sector as the GVA in CHF per worker.</p>
@@ -122,8 +110,6 @@ Your browser does not support iframes
 Your browser does not support iframes
 </p>
 </iframe>
-<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")} -->
-<!-- # ``` -->
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 </div>
@@ -142,8 +128,6 @@ Your browser does not support iframes
 Your browser does not support iframes
 </p>
 </iframe>
-<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
-<!-- # ``` -->
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 </div>
@@ -165,7 +149,7 @@ Your browser does not support iframes
 <p>Finally, the indicator <em>% of total patents</em> represents the share of pharmaceutical patents in total patent applications across each country, <em>RCA of pharma patents</em> represents the so-called “revealed comparative advantage” in patenting pharmaceutical products. It is the share of pharmaceutical patents in total patents of a country divided by the share of worldwide pharmaceutical patents in total patents worldwide. Thus, it represents a measure of international innovativeness of an industry relative to the entire economy of a country.</p>
 </details>
 </div>
-<iframe width="100%" height="980" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/pharma_patent_count/">
+<iframe width="100%" height="980" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/patent_count_plot_app/">
 <p>
 Your browser does not support iframes
 </p>
@@ -196,7 +180,7 @@ See the previous box for information on patent data in general. In addition, bac
 </details>
 </div>
 <p><br></p>
-<iframe width="100%" height="1100" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/pharma_citnetwork_output/">
+<iframe width="100%" height="1100" scrolling="no" frameBorder="0" src="https://cieb.shinyapps.io/citnetwork_plot/">
 <p>
 Your browser does not support iframes
 </p>
@@ -223,26 +207,6 @@ Your browser does not support iframes
 <p><br></p>
 <p><strong>Interested in more details</strong> about the role of cross-border commuters for Swiss (pharma) innovations? Then check out our analysis on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> Importance of cross-border commuters for inventions ‘Made in Switzerland’</a>.</p>
 <p><br></p>
-<!-- **Share this article** -->
-<!-- ```{r, echo = F} -->
-<!-- actionButton("twitter_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("twitter"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://twitter.com/intent/tweet?d&url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
-<!-- actionButton("twitter_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("linkedin"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://www.linkedin.com/sharing/share-offsite/?url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
-<!-- actionButton("xing_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("xing"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://www.xing.com/app/user?op=share;url=https://https://cieb.shinyapps.io/innoscape_pharma/")) -->
-<!-- actionButton("facebook_share", -->
-<!--                    label = "", -->
-<!--                    icon = icon("facebook"), -->
-<!--                    onclick = sprintf("window.open('%s')", "https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fcieb.shinyapps.io%2Finnoscape_pharma%2F&amp;src=sdkpreparse")) -->
-<!-- ``` -->
-<!-- <br> -->
 <strong>Share this article</strong>
 <div class="a2a_kit a2a_kit_size_32 a2a_default_style">
 <p><a class="a2a_dd" href="https://www.addtoany.com/share"></a> <a class="a2a_button_linkedin"></a> <a class="a2a_button_twitter"></a> <a class="a2a_button_email"></a></p>

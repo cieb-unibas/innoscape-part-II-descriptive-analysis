@@ -1,0 +1,12 @@
+name: patent_count_plot_app
+title: patent_count_plot_app
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3032144
+bundleId: 3748654
+url: https://cieb.shinyapps.io/patent_count_plot_app/
+when: 1602851823.04928
+asMultiple: FALSE
+asStatic: FALSE

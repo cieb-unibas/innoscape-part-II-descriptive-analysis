@@ -75,7 +75,7 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
-<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_emp_output/'>
+<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/emp_output_app/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 
@@ -95,12 +95,9 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
-<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_gva_output/'>
+<iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/gva_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
-
-<!-- ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "gva_output.Rmd")} -->
-<!-- ``` -->
 <span style="font-size:0.8em">*Source: CIEBs’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
@@ -115,8 +112,6 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <iframe width="100%" height=650 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_labprod_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
-<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "labprod_output.Rmd")} -->
-<!-- # ``` -->
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
@@ -131,15 +126,13 @@ Furthermore, the geographical dispersion of export destinations is also changing
 
 <br>
 
+
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
 <iframe width="100%" height=680 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_export_output/'>
   <p>Your browser does not support iframes</p>
 </iframe>
-<!-- # ```{r, echo = F, child = file.path(knitr::opts_knit$get("output.dir"), "export_output.Rmd")} -->
-<!-- # ``` -->
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
-
 
 <br>
 
@@ -169,8 +162,7 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </details>
 </div>
 
-
-<iframe width="100%" height=980 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_patent_count/'>
+<iframe width="100%" height=980 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/patent_count_plot_app/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 <span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
@@ -210,7 +202,8 @@ See the previous box for information on patent data in general. In addition, bac
 </div>
 <br>
 
-<iframe width="100%" height=1100 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/pharma_citnetwork_output/'>
+
+<iframe width="100%" height=1100 scrolling="no" frameBorder="0" src='https://cieb.shinyapps.io/citnetwork_plot/'>
   <p>Your browser does not support iframes</p>
 </iframe>
 

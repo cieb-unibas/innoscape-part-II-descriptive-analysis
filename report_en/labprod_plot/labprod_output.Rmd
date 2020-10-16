@@ -1,5 +1,5 @@
 ---
-fig_caption: yes
+title: ""
 output:
   html_document:
            self_contained: false
@@ -21,7 +21,9 @@ library("shinyWidgets")
 library("fst")
 library("plotly")
 
-
+htmltools::htmlDependency("jquery", "3.5.1",
+  src = c(href = "https://code.jquery.com/"),
+  script = "jquery-3.5.1.min.js")
 ```
 
 ```{r context="data", echo=FALSE}
