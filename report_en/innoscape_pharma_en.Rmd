@@ -240,10 +240,12 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 <br>
 
 **Share this article**
-<div class="a2a_kit a2a_kit_size_32 a2a_default_style">
-<a class="a2a_dd" href="https://www.addtoany.com/share"></a>
-<a class="a2a_button_linkedin"></a>
+**Share this article**
+<div class="a2a_kit a2a_kit_size_32 a2a_default_style" data-a2a-url="https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland" data-a2a-title="Analysis within Innoscape: The pharmaceutical industry-a driver of innovation and growth in Switzerland">
 <a class="a2a_button_twitter"></a>
+<a class="a2a_button_linkedin"></a>
+<a class="a2a_button_xing"></a>
+<a class="a2a_button_facebook"></a>
 <a class="a2a_button_email"></a>
 </div>
 <script async src="https://static.addtoany.com/menu/page.js"></script>
