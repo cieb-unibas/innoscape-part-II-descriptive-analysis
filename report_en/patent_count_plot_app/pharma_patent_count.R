@@ -4,16 +4,16 @@ library("RColorBrewer")
 library("shinyWidgets")
 library("fst")
 library("plotly")
-library(DT)
+library("DT")
 
 # Load data on patents
 numpat_data <- readRDS("numpat_data.rds")
 
 # Define UI for application that draws the plot
 ui <- fluidPage(
-    htmltools::htmlDependency("jquery", "3.5.1",
-                              src = c(href = "https://code.jquery.com/"),
-                              script = "jquery-3.5.1.min.js"),
+  htmltools::htmlDependency("jquery", "3.5.1",
+                            src = c(href = "https://code.jquery.com/"),
+                            script = "jquery-3.5.1.min.js"),
     
     # Input panels 
     mainPanel(
@@ -64,18 +64,6 @@ ui <- fluidPage(
         )
     )
 )
-
-
-
-# })
-# 
-# fluidPage(fluidRow(column = 12,
-#                    DT::dataTableOutput('regio')
-# ))
-
-
-
-
 
 
 # Define server logic required to draw a histogram
