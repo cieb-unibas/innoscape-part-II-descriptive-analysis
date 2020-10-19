@@ -88,26 +88,7 @@ ui <- fluidPage(
     br(),
     br(),
     br(),
-    br(),
-    
-    # Export
-    fluidRow(column = 12,
-             id = "exp_id",
-    radioButtons(inputId = "variable_exp", label = "Choose a variable",
-                 choices = list("in million USD"="val_export", 
-                                "% of total Swiss exports to the destination"="share_in_tot",
-                                "% of total Swiss pharma exports"="share_in_tot2"),
-                 selected = "val_export", inline = T),
-    sliderInput(inputId =  "year_exp", label = "Year", min=1990, max=2019, step = 1, value=2000, sep=""),
-    mainPanel(plotlyOutput("export_plot"))
-),
-
-
-br(),
-br(),
-br(),
-br(),
-br()
+    br()
 )
 
 # Define server 
