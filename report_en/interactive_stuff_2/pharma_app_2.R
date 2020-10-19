@@ -44,7 +44,10 @@ br(),
 br(),
 
 # Patent count
-fluidPage(column = 12,
+fluidPage(htmltools::htmlDependency("jquery", "3.5.1",
+                                    src = c(href = "https://code.jquery.com/"),
+                                    script = "jquery-3.5.1.min.js"),
+         column = 12,
          id = "pat_id", 
          mainPanel(
              tabsetPanel(

@@ -33,7 +33,7 @@ ui <- fluidPage(
                  inline = TRUE),
     
     pickerInput(inputId = "country_emp",
-                label = "Choose a country 1", 
+                label = "Choose a country", 
                 choices= sort(unique(ilo$country)),
                 selected = "Switzerland",
                 options = list(`actions-box` = TRUE),
