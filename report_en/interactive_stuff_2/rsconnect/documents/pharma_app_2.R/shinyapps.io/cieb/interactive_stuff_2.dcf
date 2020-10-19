@@ -1,0 +1,13 @@
+name: interactive_stuff_2
+title: interactive_stuff_2
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3048744
+bundleId: 3758506
+url: https://cieb.shinyapps.io/interactive_stuff_2/
+when: 1603116610.38694
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: gva_data_ch.fst|ilo.fst|labprod.fst
