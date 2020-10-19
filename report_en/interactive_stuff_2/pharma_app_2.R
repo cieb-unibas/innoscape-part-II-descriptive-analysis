@@ -16,8 +16,6 @@ numpat_data <- readRDS("numpat_data.rds")
 citflow_ctry_back <- read.fst("citflow_ctry_back.fst")
 citflow_ctry_forw <- read.fst("citflow_ctry_forw.fst")
 
-
-
 # Define UI 
 ui <- fluidPage(
     htmltools::htmlDependency("jquery", "3.5.1",
