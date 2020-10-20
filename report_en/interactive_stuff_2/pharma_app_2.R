@@ -103,6 +103,8 @@ br(),
 br(),
 br(),
 br(),
+br(),
+br(),
 
 # Patent network
 fluidPage(id = "pat_net_id",
