@@ -198,7 +198,7 @@ server <- function(input, output) {
                                    rownames= FALSE,
                                    class = "display nowrap compact", 
                                    selection = list(mode = 'multiple', selected = which(select_country$Country %in% c("Germany", "Switzerland", "United States"))),
-                                   options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
+                                   options = list(scrollY = 140, scroller = TRUE, dom = 't', scrollX= T,
                                                   columnDefs = list(list(className = 'dt-center', targets = 1))))
     
     selectedRow_ctry <- eventReactive(input$country_rows_selected,{
@@ -259,7 +259,7 @@ server <- function(input, output) {
                                   rownames= FALSE,
                                   class = "display nowrap compact",
                                   selection = list(mode = 'multiple', selected = which(select_reg$Region %in% c("CH - Northwestern Switzerland "))),
-                                  options = list(scrollY = 180, scroller = TRUE, dom = 't', scrollX= T,
+                                  options = list(scrollY = 140, scroller = TRUE, dom = 't', scrollX= T,
                                                  columnDefs = list(list(className = 'dt-center', targets = 1))))
     
     selectedRow_reg <- eventReactive(input$reg_rows_selected,{
