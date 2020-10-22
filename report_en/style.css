@@ -185,5 +185,7 @@ summary {
   background-color: transparent;
 }
 
-
+iframe{
+  overflow: hidden;
+}
 
