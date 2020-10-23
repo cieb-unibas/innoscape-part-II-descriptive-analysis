@@ -283,9 +283,10 @@ numpat_data <- mutate(numpat_data, Geo = paste0(geo, "\nIndicator: ", indicator,
 numpat_data <- as.data.frame(numpat_data)  
 numpat_data <- mutate(numpat_data, `Rank based on year 2000` = rank_2000)
 
+numpat_data %>% saveRDS(paste0(getwd(), "/report_en/numpat_data.rds"), compress = FALSE)
 numpat_data %>% write.fst(paste0(getwd(), "/report_en/numpat_data.fst"))
 numpat_data %>% write.csv(paste0(getwd(), "/report_en/numpat_data.csv"))
-numpat_data %>% saveRDS(paste0(getwd(), "/report_en/numpat_data.rds"), compress = FALSE)
+
 
 
 
