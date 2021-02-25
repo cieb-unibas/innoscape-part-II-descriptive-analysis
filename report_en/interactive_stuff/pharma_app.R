@@ -4,10 +4,6 @@ library(RColorBrewer)
 library(shinyWidgets)
 library(fst)
 library(plotly)
-library(DT)
-library(igraph)
-library(visNetwork)
-library(dplyr)
 
 # Load data 
 ilo <- read.fst("ilo.fst") 
@@ -95,8 +91,8 @@ ui <- fluidPage(
 server <- function(input, output) {
     
     # Employment plot
-    d_emp <- reactive({ilo %>%
-            filter(variable %in% input$variable_emp,
+    d_emp <- reactive({
+            subset(ilo, variable %in% input$variable_emp &
                    country %in% input$country_emp)})
     
     
@@ -142,8 +138,8 @@ server <- function(input, output) {
     
     
     # GVA plot
-    d_gva <- reactive({ gva %>%
-            filter(variable %in% input$variable_gva,
+    d_gva <- reactive({ 
+             subset(gva, variable %in% input$variable_gva &
                    ind.name %in% input$ind.name_gva)
     })
     
@@ -193,8 +189,8 @@ server <- function(input, output) {
     })
     
     # Prod plot
-    d_output <- reactive({labprod %>%
-            filter(variable %in% input$variable_prod,
+    d_output <- reactive({
+                subset(labprod, variable %in% input$variable_prod &
                    ind.name %in% input$ind.name_prod)
     })
     
