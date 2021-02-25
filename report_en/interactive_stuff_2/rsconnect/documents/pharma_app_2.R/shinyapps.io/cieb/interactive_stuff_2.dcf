@@ -5,8 +5,8 @@ account: cieb
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 3048744
-bundleId: 3765480
+bundleId: 4270617
 url: https://cieb.shinyapps.io/interactive_stuff_2/
-when: 1603263474.51701
+when: 1614253428.86964
 asMultiple: FALSE
 asStatic: FALSE
