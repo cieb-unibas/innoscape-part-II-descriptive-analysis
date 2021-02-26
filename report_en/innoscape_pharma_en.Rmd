@@ -83,15 +83,10 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
 <div>
-<iframe width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden"  src="https://cieb.shinyapps.io/interactive_stuff/#emp_id" id="emp_plot">
+<iframe width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden"  src="https://cieb.shinyapps.io/interactive_stuff/#emp_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
-
-<script>
-var _emp_plot = document.getElementById("emp_plot");
-_emp_plot.contentWindow.location.href = _emp_plot.src;
-</script>
 
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a>*. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</span>
 
@@ -104,15 +99,10 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
 <div>
-<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id" id="gva_plot">
+<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
-
-<script>
-var _gva_plot = document.getElementById("gva_plot");
-_gva_plot.contentWindow.location.href = _gva_plot.src;
-</script>
 
 <span style="font-size:0.8em">*Source: CIEBs’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
@@ -126,15 +116,10 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <hr class="hr_red">
 #### **Swiss pharma is highly productive**
 <div>
-<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id" id="prod_plot">
+<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
-
-<script>
-var _prod_plot = document.getElementById("prod_plot");
-_prod_plot.contentWindow.location.href = _prod_plot.src;
-</script>
 
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
@@ -154,15 +139,11 @@ Furthermore, the geographical dispersion of export destinations is also changing
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
 <div>
-<iframe width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id" id="exp_plot">
+<iframe width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
 
-<script>
-    var frameElement = document.getElementById("exp_plot");
-    frameElement.contentWindow.location.href = frameElement.src;
-</script>
 
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
@@ -195,15 +176,10 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </div>
 <br>
 <div>
-<iframe width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id" id="pat_count">
+<iframe width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
-
-<script>
-    var frameElement = document.getElementById("pat_count");
-    frameElement.contentWindow.location.href = frameElement.src;
-</script>
 
 <span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
@@ -243,15 +219,11 @@ See the previous box for information on patent data in general. In addition, bac
 <br>
 
 <div>
-<iframe width="100%" height="1060" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_net_id" id="pat_net">
+<iframe width="100%" height="1060" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_net_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
 
-<script>
-var _pat_net = document.getElementById("pat_net");
-_pat_net.contentWindow.location.href = _pat_net.src;
-</script>
 
 <span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
