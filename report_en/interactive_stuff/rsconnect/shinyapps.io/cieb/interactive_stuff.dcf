@@ -1,0 +1,13 @@
+name: interactive_stuff
+title:
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 3047482
+bundleId: 4270501
+url: https://cieb.shinyapps.io/interactive_stuff/
+when: 1614251113.51903
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: pharma_app.R
