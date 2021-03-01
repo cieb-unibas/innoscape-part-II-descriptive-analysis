@@ -44,15 +44,35 @@
 
 
 
+<head>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet"> <link rel="stylesheet" href="style.css" type="text/css" />
 <div class="container-fluid main-container">
+
 <script>
-  <!-- function resizeIframe(obj) { -->
-  <!--   obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px'; -->
-  <!-- }; -->
-      var frameElement = document.getElementById("frame-id");
-    frameElement.contentWindow.location.href = frameElement.src;
+    var frameElement1 = document.getElementById("emp");
+    frameElement1.contentWindow.location.href = frameElement1.src;
 </script>
+<script>
+    var frameElement2 = document.getElementById("gva");
+    frameElement2.contentWindow.location.href = frameElement2.src;
+</script>
+<script>
+    var frameElement3 = document.getElementById("prod");
+    frameElement3.contentWindow.location.href = frameElement3.src;
+</script>
+<script>
+    var frameElement4 = document.getElementById("pat");
+    frameElement4.contentWindow.location.href = frameElement4.src;
+</script>
+<script>
+    var frameElement5 = document.getElementById("exp");
+    frameElement5.contentWindow.location.href = frameElement5.src;
+</script>
+<script>
+    var frameElement6 = document.getElementById("pat_net");
+    frameElement6.contentWindow.location.href = frameElement6.src;
+</script>
+</head>
 <div id="the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland" class="section level2">
 <h2><strong>The pharmaceutical industry: a driver of innovation and growth in Switzerland </strong></h2>
 <p><br></p>
@@ -90,16 +110,12 @@
 <div id="steady-increase-of-pharmaceutical-jobs" class="section level4">
 <h4><strong>Steady increase of pharmaceutical jobs</strong></h4>
 <div>
-<iframe width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#emp_id" id="emp_plot">
+<iframe id="emp" width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#emp_id">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
 </div>
-<script>
-var _emp_plot = document.getElementById("emp_plot");
-_emp_plot.contentWindow.location.href = _emp_plot.src;
-</script>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a></em>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</span></p>
 <p><br></p>
 <p>Even with rather “low” numbers of employed persons, the pharmaceutical industry in Switzerland is generating an immense added value for the Swiss economy. This implies a very high level of labor productivity relative to other manufacturing industries (even taking into account the large number of cross-border commuters employed in the sector). Hence, in recent years, the pharmaceutical industry has contributed substantially to the wellbeing of the Swiss, accounting for more than 5% of the total gross value added (GVA) in the economy (see <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>Federal Statistical Office of Switzerland, FSO</a>). However, the true rise of the Swiss pharmaceutical industry began only after the year 2000, when it overtook two other big Swiss industries – the manufacture of computer, electronic and optical products, which also includes the world-famous Swiss watches, and the manufacture of machinery and equipment.</p>
@@ -109,16 +125,12 @@ _emp_plot.contentWindow.location.href = _emp_plot.src;
 <div id="pharmas-growing-importance-for-the-swiss-economy" class="section level4">
 <h4><strong>Pharma’s growing importance for the Swiss economy</strong></h4>
 <div>
-<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id" id="gva_plot">
+<iframe id="gva" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
 </div>
-<script>
-var _gva_plot = document.getElementById("gva_plot");
-_gva_plot.contentWindow.location.href = _gva_plot.src;
-</script>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own calculations based on data from the <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 <p>The fact that less than 1% of the labor force generates more than 5% of Switzerland’s total value added is remarkable and deserves more attention. Obviously, the following question arises: How dependent on foreign workers is the Swiss pharmaceutical sector’s high productivity, especially on cross-border commuters? In order to illustrate this, we present three productivity estimates that use different definitions of the number of employees: (a) workers with residence in Switzerland, (b) total number of jobs and (c) workers with residence in Switzerland + cross-border commuters. We define the labor productivity for each sector as the GVA in CHF per worker.</p>
@@ -129,16 +141,12 @@ _gva_plot.contentWindow.location.href = _gva_plot.src;
 <div id="swiss-pharma-is-highly-productive" class="section level4">
 <h4><strong>Swiss pharma is highly productive</strong></h4>
 <div>
-<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id" id="prod_plot">
+<iframe id="prod" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
 </div>
-<script>
-var _prod_plot = document.getElementById("prod_plot");
-_prod_plot.contentWindow.location.href = _prod_plot.src;
-</script>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> and the <a href = https://www.pxweb.bfs.admin.ch/pxweb/de target = “_blank”>FSO</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 </div>
@@ -153,16 +161,12 @@ _prod_plot.contentWindow.location.href = _prod_plot.src;
 <div id="exporting-to-every-corner-of-the-world" class="section level4">
 <h4><strong>Exporting to every corner of the world</strong></h4>
 <div>
-<iframe width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id" id="exp_plot">
+<iframe id="exp" width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
 </div>
-<script>
-    var frameElement = document.getElementById("exp_plot");
-    frameElement.contentWindow.location.href = frameElement.src;
-</script>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 </div>
@@ -186,16 +190,12 @@ Your browser does not support iframes
 </div>
 <br>
 <div>
-<iframe width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id" id="pat_count">
+<iframe id="pat" width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
 </div>
-<script>
-    var frameElement = document.getElementById("pat_count");
-    frameElement.contentWindow.location.href = frameElement.src;
-</script>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 <p>Switzerland also enjoys a very high revealed comparative advantage (RCA) in creating pharma patents (among the top 10 countries worldwide). The RCA is a measure of the international innovativeness of a country’s specific industry relative to the entire economy. In other words, the high RCA of the Swiss pharmaceutical industry means that Switzerland possesses a particular strength in pharmaceutical innovations compared to the rest of the world. Interestingly, Spain is positioning itself as the world leader according to the RCA index. According to <a href = https://static.scientificamerican.com/wv/assets/2015_SAWorldView.pdf target = “_blank”>Scientific American Worldview</a>, in 2015 Spain ranked 4th globally according to the biotech innovation intensity indicator, which is specifically developed to identify the “outsized” sectoral activity among smaller countries. In this report it is also noted that Spain`s particularly high ranking is due mainly to its immense increase in the number of filed patent applications. Spanish patenting intensity was more resilient to the 2008 crisis than Swiss patenting, implying that in the future we may expect the rise of pharmaceutical industries in other countries, even among those considered to be untraditional pharma hubs. This could make the overall competition in the world healthcare market harsher.</p>
@@ -223,16 +223,12 @@ See the previous box for information on patent data in general. In addition, bac
 </div>
 <p><br></p>
 <div>
-<iframe width="100%" height="1060" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_net_id" id="pat_net">
+<iframe id="pat_net" width="100%" height="1060" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_net_id">
 <p>
 Your browser does not support iframes
 </p>
 </iframe>
 </div>
-<script>
-var _pat_net = document.getElementById("pat_net");
-_pat_net.contentWindow.location.href = _pat_net.src;
-</script>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 <p>Let us conclude with a few takeaways. As our short outline shows, the Swiss pharmaceutical industry is one of the most important pillars of the Swiss economy. In addition to a growing number of employees and very high labor productivity, this is reflected in steadily increasing exports to the whole world. Innovations are crucial to ensure that this remains so in the future. With this in mind, it is very important to note that pharmaceutical firms located in Switzerland continue to be one among the world’s leading innovators. Therefore, it seems quite likely that the pharmaceutical industry will continue to contribute substantially to the economic prosperity of Switzerland.<br />
