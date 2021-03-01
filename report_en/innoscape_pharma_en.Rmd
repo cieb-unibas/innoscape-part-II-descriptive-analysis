@@ -8,19 +8,41 @@ output:
     mathjax: null
 ---
 
-
+<head>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 <link rel="stylesheet" href="style.css" type="text/css" />
 <div class="container-fluid main-container">
+
 <script>
-  <!-- function resizeIframe(obj) { -->
-  <!--   obj.style.height = obj.contentWindow.document.body.scrollHeight + 'px'; -->
-  <!-- }; -->
-      var frameElement = document.getElementById("frame-id");
-    frameElement.contentWindow.location.href = frameElement.src;
+    var frameElement1 = document.getElementById("emp");
+    frameElement1.contentWindow.location.href = frameElement1.src;
 </script>
 
+<script>
+    var frameElement2 = document.getElementById("gva");
+    frameElement2.contentWindow.location.href = frameElement2.src;
+</script>
 
+<script>
+    var frameElement3 = document.getElementById("prod");
+    frameElement3.contentWindow.location.href = frameElement3.src;
+</script>
+
+<script>
+    var frameElement4 = document.getElementById("pat");
+    frameElement4.contentWindow.location.href = frameElement4.src;
+</script>
+
+<script>
+    var frameElement5 = document.getElementById("exp");
+    frameElement5.contentWindow.location.href = frameElement5.src;
+</script>
+
+<script>
+    var frameElement6 = document.getElementById("pat_net");
+    frameElement6.contentWindow.location.href = frameElement6.src;
+</script>
+</head>
 
 
 ## **The pharmaceutical industry: a driver of innovation and growth in Switzerland **
@@ -83,7 +105,7 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
 <div>
-<iframe width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden"  src="https://cieb.shinyapps.io/interactive_stuff/#emp_id">
+<iframe id="emp" width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden"  src="https://cieb.shinyapps.io/interactive_stuff/#emp_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -99,7 +121,7 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
 <div>
-<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id">
+<iframe id="gva" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -116,7 +138,7 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <hr class="hr_red">
 #### **Swiss pharma is highly productive**
 <div>
-<iframe width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id">
+<iframe id="prod" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -139,7 +161,7 @@ Furthermore, the geographical dispersion of export destinations is also changing
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
 <div>
-<iframe width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id">
+<iframe id="exp" width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -176,7 +198,7 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </div>
 <br>
 <div>
-<iframe width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id">
+<iframe id="pat" width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -219,7 +241,7 @@ See the previous box for information on patent data in general. In addition, bac
 <br>
 
 <div>
-<iframe width="100%" height="1060" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_net_id">
+<iframe id="pat_net" width="100%" height="1060" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_net_id">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
