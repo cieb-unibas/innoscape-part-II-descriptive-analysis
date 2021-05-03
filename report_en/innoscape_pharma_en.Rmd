@@ -296,11 +296,14 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 
 </div>
 
-<!-- Global site tag (gtag.js) - Google Analytics -->
+
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'UA-71167447-1');
+  gtag('config', 'UA-71167447-1', { 'anonymize_ip': true });
 </script>
+
+
