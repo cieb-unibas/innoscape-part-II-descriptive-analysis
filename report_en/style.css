@@ -189,3 +189,36 @@ iframe{
   overflow: hidden;
 }
 
+.tooltip-inner {
+    text-align: left;
+     width: 250px; 
+     min-width: 240px;
+}
+
+
+.tooltip {
+  top: 100%;
+  left:50%;
+  margin-top: 0px;
+  min-width: 240px;
+    opacity: 1.0;
+filter: alpha(opacity=100);
+}
+
+
+.tooltip img{
+  top: 100%;
+  left:50%;
+  margin-top: 0px;
+  background: rgba(255,255,255,0.85);
+  border-top-width: 0;
+  min-width: 225px;
+  min-height: 280px;
+  height:300px; /* change as your wish */
+    opacity: 1.0;
+filter: alpha(opacity=100);
+}
+
+.tooltip.in{opacity:1!important;}
+
+
