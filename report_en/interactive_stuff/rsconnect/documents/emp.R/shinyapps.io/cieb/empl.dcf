@@ -1,0 +1,13 @@
+name: empl
+title: empl
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4303697
+bundleId: 4743008
+url: https://cieb.shinyapps.io/empl/
+when: 1624363010.12071
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: gva_data_ch.fst|labprod.fst|pharma_app.R

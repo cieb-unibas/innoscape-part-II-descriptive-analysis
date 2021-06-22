@@ -1,0 +1,13 @@
+name: world_map
+title: world_map
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4303735
+bundleId: 4743085
+url: https://cieb.shinyapps.io/world_map/
+when: 1624364386.32651
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: citflow_ctry_back.fst|citflow_ctry_forw.fst|numpat_data.rds|pharma_app_2.R

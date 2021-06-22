@@ -1,0 +1,13 @@
+name: value_added
+title: value_added
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4303706
+bundleId: 4743019
+url: https://cieb.shinyapps.io/value_added/
+when: 1624363222.98883
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: emp.R|ilo.fst|labprod.fst|pharma_app.R

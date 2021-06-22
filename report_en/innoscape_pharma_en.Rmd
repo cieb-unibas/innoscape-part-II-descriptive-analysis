@@ -125,7 +125,7 @@ Today, the pharmaceutical industry directly employs around 33’000 individuals 
 <hr class="hr_red">
 #### **Steady increase of pharmaceutical jobs**
 <div>
-<iframe id="emp" width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden"  src="https://cieb.shinyapps.io/interactive_stuff/#emp_id">
+<iframe id="emp" width="100%" height="554" scrolling="no" frameBorder="0" style="overflow: hidden"  src="https://cieb.shinyapps.io/empl/">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -141,7 +141,7 @@ Even with rather "low" numbers of employed persons, the pharmaceutical industry 
 <hr class="hr_red">
 #### **Pharma's growing importance for the Swiss economy**
 <div>
-<iframe id="gva" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#gva_id">
+<iframe id="gva" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/value_added/">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -158,7 +158,7 @@ The labor productivity in the pharmaceutical sector varies heavily, depending on
 <hr class="hr_red">
 #### **Swiss pharma is highly productive**
 <div>
-<iframe id="prod" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff/#prod_id">
+<iframe id="prod" width="100%" height="548" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/labor_prod/">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -181,7 +181,7 @@ Furthermore, the geographical dispersion of export destinations is also changing
 <hr class="hr_red">
 #### **Exporting to every corner of the world**
 <div>
-<iframe id="exp" width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#exp_id">
+<iframe id="exp" width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/world_map/">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -218,7 +218,7 @@ Finally, the indicator *% of total patents* represents the share of pharmaceutic
 </div>
 <br>
 <div>
-<iframe id="pat" width="100%" height="866" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/interactive_stuff_2/#pat_id">
+<iframe id="pat" width="100%" height="800" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/num_pat/">
 <p>Your browser does not support iframes</p>
 </iframe>
 </div>
@@ -232,9 +232,10 @@ Switzerland also enjoys a very high revealed comparative advantage (RCA) in crea
 
 It is also interesting to explore the geographical concentration of innovations in the pharmaceutical industry within a country. For this purpose, you can click on the tab *regions* in the figure below and investigate the patent applications of the 76 most important pharma clusters worldwide. Not surprisingly, most Swiss innovations in the pharma industry are concentrated in the region of Northwestern Switzerland, with Basel as its center. Indeed, the region of Northwestern Switzerland ranks very high among the world’s most important pharma innovation regions. Being the home to Swiss (and the world’s) pharmaceutical giants - Novartis and Roche, it is a place to be if you are interested in healthcare innovations. Among the most important regions for pharmaceutical research worldwide, Northwestern Switzerland takes the 16th place (according to the patent rankings in 2000), leaving numerous US, Japanese, German and other regions behind. Some other regions in Europe, however, are ahead in terms of absolute numbers of patent applications, but taking into account relative terms and, thus, differences in size across the regions, Northwestern Switzerland ranks number one in Europe as shown by our RCA-index.    
 
-Apart from investigating patent activities of countries and regions, the bigger view of continents is also interesting. America (predominantly North America) is still the world leading continent when it comes to the number of filed patent applications in the pharmaceutical sector. In addition, Asia surpassed Europe in 2014 and took its long-held place as the second most important pharma patenting hub, slowly approaching America’s numbers. Looking at the relative indicators, however, another rising-star continent appears on the horizon – Australia and Oceania, which has an extremely large share of pharma patents in its total patents, indicating a high degree of specialization in the pharmaceutical research that started in the late 90s. In fact, it is the continent with the highest and steadily increasing RCA index, which points out that Australia’s time as a pharma innovation power is most probably yet to come, and in the near future. Melbourne is Australia’s main life-sciences research hub and is primarily responsible for a robust growth of its pharmaceutical and other related industries. Australia is continuously ranked among the top five countries worldwide in biotechnology innovations, whose success stems from its “…educated population, strong academic institutions, favorable regulatory and R&D environment and a supportive government” <a href = https://static.scientificamerican.com/wv/assets/2016_SciAmWorldView.pdf target = “_blank”>(Scientific American Worldview 2016, p.18)</a>.
+Apart from investigating patent activities of countries and regions, the bigger view of continents is also interesting. America (predominantly North America) is still the world leading continent when it comes to the number of filed patent applications in the pharmaceutical sector. In addition, Asia surpassed Europe in 2014 and took its long-held place as the second most important pharma patenting hub, slowly approaching America’s numbers. Looking at the relative indicators, however, another rising-star continent appears on the horizon – Australia and Oceania, which has an extremely large share of pharma patents in its total patents, indicating a high degree of specialization in the pharmaceutical research that started in the late 90s. In fact, it is the continent with the highest and steadily increasing RCA index, which points out that Australia’s time as a pharma innovation power is most probably yet to come, and in the near future. Melbourne is Australia’s main life-sciences research hub and is primarily responsible for a robust growth of its pharmaceutical and other related industries. Australia is continuously ranked among the top five countries worldwide in biotechnology innovations, whose success stems from its “…educated population, strong academic institutions, favorable regulatory and R&D environment and a supportive government” <a href = https://static.scientificamerican.com/wv/assets/2016_SciAmWorldView.pdf target = “_blank”>(Scientific American Worldview 2016, p.18)</a>. All in all, this analysis shows that the Swiss pharmaceutical sector, and, in particular the companies in the region of Basel, are still among the world leaders in innovation. 
 
-All in all, this analysis shows that the Swiss pharmaceutical sector, and, in particular the companies in the region of Basel, are still among the world leaders in innovation. In order to maintain this extraordinarily high level, international connectivity and access to global knowledge might be one crucial factor for the pharmaceutical industry in Switzerland. These aspects are what we examine next. 
+
+<!--  In order to maintain this extraordinarily high level, international connectivity and access to global knowledge might be one crucial factor for the pharmaceutical industry in Switzerland. These aspects are what we examine next. 
 
 <br>
 
@@ -268,10 +269,12 @@ See the previous box for information on patent data in general. In addition, bac
 
 
 <span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+-->
 
 <br>
 
 Let us conclude with a few takeaways. As our short outline shows, the Swiss pharmaceutical industry is one of the most important pillars of the Swiss economy. In addition to a growing number of employees and very high labor productivity, this is reflected in steadily increasing exports to the whole world. Innovations are crucial to ensure that this remains so in the future. With this in mind, it is very important to note that pharmaceutical firms located in Switzerland continue to be one among the world's leading innovators. Therefore, it seems quite likely that the pharmaceutical industry will continue to contribute substantially to the economic prosperity of Switzerland.   
+
 <br>
 
 ## **Main takeaways**
@@ -288,8 +291,7 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 
 * Innovation activities in the Swiss pharmaceutical sector are still at a high level, but some new innovation hubs are strongly emerging
 
-* Roughly 50% of new Swiss pharma patents use knowledge from other fields
-
+<!-- * Roughly 50% of new Swiss pharma patents use knowledge from other fields-->
 
 <br>
 

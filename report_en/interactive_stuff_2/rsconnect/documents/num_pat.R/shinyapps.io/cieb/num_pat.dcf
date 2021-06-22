@@ -1,0 +1,13 @@
+name: num_pat
+title: num_pat
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4303787
+bundleId: 4743097
+url: https://cieb.shinyapps.io/num_pat/
+when: 1624364624.12133
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: citflow_ctry_back.fst|citflow_ctry_forw.fst|map_data.fst|pharma_app_2.R|trad_data.fst|world_map.R

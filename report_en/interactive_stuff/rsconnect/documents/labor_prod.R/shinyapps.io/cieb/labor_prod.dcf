@@ -1,0 +1,13 @@
+name: labor_prod
+title: labor_prod
+username:
+account: cieb
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4303716
+bundleId: 4743034
+url: https://cieb.shinyapps.io/labor_prod/
+when: 1624363422.31887
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: emp.R|gva_data_ch.fst|ilo.fst|pharma_app.R|value.R
