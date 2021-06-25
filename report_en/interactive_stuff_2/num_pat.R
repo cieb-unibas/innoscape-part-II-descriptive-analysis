@@ -9,6 +9,7 @@ library(dplyr)
 
 # Load data 
 numpat_data <- readRDS("numpat_data.rds")
+numpat_data[numpat_data$indicator == "% of total patents", "indicator"] <- "share of pharma patents"
 
 # Define UI 
 ui <- fluidPage(
@@ -34,9 +35,9 @@ fluidPage(column = 12,
                           # Input panels for indicator 
                           radioButtons("ind_ctry", "Choose an indicator",
                                        choices = list("Absolute numbers"="Absolute numbers",
-                                                      "% of total patents"= "% of total patents", 
+                                                      "% of total patents"= "share of pharma patents", 
                                                       "RCA of pharma patents"="RCA of pharma patents"),
-                                       selected = "% of total patents", 
+                                       selected = "share of pharma patents", 
                                        inline = T),
                           fluidPage(fluidRow(column = 12, plotlyOutput("plot_ctry")))),
                  tabPanel("Regions", 
@@ -48,9 +49,9 @@ fluidPage(column = 12,
                           # Input panels for indicator 
                           radioButtons("ind_reg", "Choose an indicator",
                                        choices = list("Absolute numbers"="Absolute numbers",
-                                                      "% of total patents"= "% of total patents", 
+                                                      "% of total patents"= "share of pharma patents", 
                                                       "RCA of pharma patents"="RCA of pharma patents"),
-                                       selected = "% of total patents", 
+                                       selected = "share of pharma patents", 
                                        inline = T),
                           fluidPage(fluidRow(column = 12, plotlyOutput("plot_reg")))),
                  tabPanel("Continents", 
@@ -62,9 +63,9 @@ fluidPage(column = 12,
                           # Input panels for indicator 
                           radioButtons("ind_conti", "Choose an indicator",
                                        choices = list("Absolute numbers"="Absolute numbers",
-                                                      "% of total patents"= "% of total patents", 
+                                                      "% of total patents"= "share of pharma patents", 
                                                       "RCA of pharma patents"="RCA of pharma patents"),
-                                       selected = "% of total patents", 
+                                       selected = "share of pharma patents", 
                                        inline = T),
                           fluidPage(fluidRow(column = 12, plotlyOutput("plot_conti"))))
                  
