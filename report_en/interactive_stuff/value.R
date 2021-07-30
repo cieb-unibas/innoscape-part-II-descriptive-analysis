@@ -11,14 +11,13 @@ gva <- read.fst("gva_data_ch.fst")
 
 # Define UI 
 ui <- fluidPage(
+    tags$head(tags$link(type="text/css",
+                            href = "https://innoscape.de/pharma_intro/style.css")), 
     htmltools::htmlDependency("jquery", "3.5.1",
                               src = c(href = "https://code.jquery.com/"),
                               script = "jquery-3.5.1.min.js"),
-    tags$style(type="text/css",
-               ".shiny-output-error { visibility: hidden; }",
-               ".shiny-output-error:before { visibility: hidden; }"),
+
   
-    
     # GVA
     fluidRow(column = 12,
              id = "gva_id",

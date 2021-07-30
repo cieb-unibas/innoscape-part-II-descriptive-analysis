@@ -11,6 +11,10 @@ output:
 ---
 
 <head>
+
+<link rel="canonical" href="https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland">
+
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet">
 <link rel="stylesheet" href="style.css" type="text/css" />
 <div class="container-fluid main-container">
@@ -64,7 +68,7 @@ output:
 </head>
 
 
-## **The pharmaceutical industry: a driver of innovation and growth in Switzerland **
+## **The pharmaceutical industry: a driver of innovation and growth in Switzerland**
 
 <br>
 
@@ -111,8 +115,12 @@ The Swiss pharmaceutical sector has a major impact on Switzerland’s economy an
 * **Swiss pharma is highly productive**: Data on gross value added is similar as before. In addition, we used labor force survey data on the number of employees from <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> database; firms survey data on the number of jobs from <a href = https://www.pxweb.bfs.admin.ch/pxweb/en/px-x-0602000000_101/px-x-0602000000_101/px-x-0602000000_101.px target = “_blank”>FSO</a>; and data on cross-border workers from <a href = https://www.pxweb.bfs.admin.ch/pxweb/de/px-x-0302010000_106/px-x-0302010000_106/px-x-0302010000_106.px target = “_blank”>FSO</a> database.
 The <a href = https://www.media-stat.admin.ch/web/apps/glossary/index.php?n=glo-165-en target = “_blank”>FSO</a> defines a job as follows: "The term “jobs” refers to all positions of employment that are filled. While largely covering the same concept, "jobs" and "employed persons" do not always coincide, given that an employed person may hold several jobs. In such cases, the employed person holds one primary job and one or more secondary jobs". In addition, ILO data on employment covers only the residents, given that this data is collected via local labor force surveys. We utilize these differences to create three distinct labor productivity indicators, primarily by assuming that ILO employment data represents a good approximation for jobs held by Swiss residents.
 
-* **Exporting to every corner of the world**: Data on exported goods is taken from the 
-<a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. Exports are measured using freight on board valuation methodology and are adjusted for re-export values (whenever possible). *Values in million USD* show the Swiss pharmaceutical exports in current US dollars to a given partner country. The indicator *% of total Swiss exports to the destination* represents the share of Swiss pharmaceutical exports in total Swiss goods exports to a given partner country and *% of total Swiss pharma exports* represents the share of Swiss pharmaceutical exports to each partner country in total Swiss pharmaceutical exports.
+* **Swiss pharmaceutical exports to each partner country over time**: Data on exported goods is taken from the 
+<a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. Exports are measured using freight on board valuation methodology and are adjusted for re-export values (whenever possible). The values show Swiss pharmaceutical exports to each partner country in total Swiss pharmaceutical exports.
+
+<!--
+*Values in million USD* show the Swiss pharmaceutical exports in current US dollars to a given partner country. The indicator *% of total Swiss exports to the destination* represents the share of Swiss pharmaceutical exports in total Swiss goods exports to a given partner country and *% of total Swiss pharma exports* represents the share of Swiss pharmaceutical exports to each partner country in total Swiss pharmaceutical exports.
+-->
 
 </details>
 </div>
@@ -180,14 +188,10 @@ Furthermore, the geographical dispersion of export destinations is also changing
 
 
 <hr class="hr_red">
-#### **Exporting to every corner of the world**
-<div>
-<iframe id="exp" width="100%" height="570" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/world_map/">
-<p>Your browser does not support iframes</p>
-</iframe>
-</div>
-
-
+#### **Swiss pharmaceutical exports to each partner country over time**
+```{r, echo=FALSE}
+htmltools::includeHTML("world_map.html")
+```
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <br>
@@ -220,11 +224,9 @@ The indicator *absolute numbers* show pharmaceutical patent counts for each coun
 
 <br>
 
-<div class="container">
-<iframe id="pat" class="responsive-iframe-a" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://cieb.shinyapps.io/num_pat/">
+<iframe id="pat" width="100%" height="900" frameBorder="0" style="overflow: hidden" scrolling="no" src="https://cieb.shinyapps.io/num_pat/">
 <p>Your browser does not support iframes</p>
 </iframe>
-</div>
 
 <span style="font-size:0.8em">*Source: CIEBs' own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
@@ -301,15 +303,17 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 **Interested in more details** about the role of cross-border commuters for Swiss (pharma) innovations? Then check out our analysis on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> Importance of cross-border commuters for inventions 'Made in Switzerland'</a>.
 
 <br>
-**Share this article**
-<div class="a2a_kit a2a_kit_size_32 a2a_default_style" data-a2a-url="https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland" data-a2a-title="Analysis within Innoscape: The pharmaceutical industry-a driver of innovation and growth in Switzerland">
-<a class="a2a_button_twitter"></a>
-<a class="a2a_button_linkedin"></a>
-<a class="a2a_button_xing"></a>
-<a class="a2a_button_facebook"></a>
-<a class="a2a_button_email"></a>
-</div>
-<script async src="https://static.addtoany.com/menu/page.js"></script>
+
+<!--**Share the article**
+<p>
+<script src="https://platform.linkedin.com/in.js" type="text/javascript">lang: en_US</script>
+<script type="IN/Share" data-url="https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland"></script>
+</p>
+
+<p>
+<a class="twitter-share-button" href="https://twitter.com/intent/tweet?text=Innoscape @cieb_unibas | The pharmaceutical industry: a driver of innovation and growth in Switzerland&image=https://flic.kr/p/cyHSc5" data-show-count="false">Tweet</a> <script async="" src="https://platform.twitter.com/widgets.js"></script>
+</p>
+-->
 
 <br>
 
@@ -320,5 +324,8 @@ $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();   
 });
 </script>
+
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
 
