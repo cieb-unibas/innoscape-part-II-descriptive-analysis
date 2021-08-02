@@ -154,6 +154,11 @@ volumes <- distinct(volumes, par.code, year, variable, .keep_all = T)
 volumes <- setDT(volumes)[, num := .N, .(par.code, variable)]
 volumes <- filter(volumes, num > 27)
 
+# Sort data
+volumes <- volumes %>%
+           dplyr::group_by(par.code, variable) %>%
+           arrange(par.code, year)
+
 volumes %>% saveRDS(paste0(getwd(), "/report_en/trad_data.rds"))
 volumes %>% write.fst(paste0(getwd(), "/report_en/trad_data.fst"))
 volumes %>% write.csv(paste0(getwd(), "/report_en/trad_data.csv"), row.names = F)
