@@ -1,181 +1,91 @@
 "rep.code","par.code","ind.code","ind.name","year","lat_par","long_par","lat_rep","long_rep","variable","value","Country","num"
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1990,51,9,47,8,"share_in_tot2",0.130636347181735,"Germany
-Year: 1990
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1990,38,-97,47,8,"share_in_tot2",0.0808885866273285,"United States
 Year: 1990
 Value: 8%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1991,51,9,47,8,"share_in_tot2",0.132296964712697,"Germany
-Year: 1991
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1991,38,-97,47,8,"share_in_tot2",0.0944147546029344,"United States
 Year: 1991
 Value: 9%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1992,51,9,47,8,"share_in_tot2",0.126904464974999,"Germany
-Year: 1992
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1992,38,-97,47,8,"share_in_tot2",0.0841457997439746,"United States
 Year: 1992
 Value: 8%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1993,51,9,47,8,"share_in_tot2",0.115597343820456,"Germany
-Year: 1993
-Value: 12%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1993,38,-97,47,8,"share_in_tot2",0.0830832557507888,"United States
 Year: 1993
 Value: 8%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1994,51,9,47,8,"share_in_tot2",0.148836220457983,"Germany
-Year: 1994
-Value: 15%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1994,38,-97,47,8,"share_in_tot2",0.0709228270924347,"United States
 Year: 1994
 Value: 7%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1995,51,9,47,8,"share_in_tot2",0.148092461551264,"Germany
-Year: 1995
-Value: 15%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1995,38,-97,47,8,"share_in_tot2",0.0597768178892201,"United States
 Year: 1995
 Value: 6%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1996,51,9,47,8,"share_in_tot2",0.13540154285519,"Germany
-Year: 1996
-Value: 14%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1996,38,-97,47,8,"share_in_tot2",0.072917399619997,"United States
 Year: 1996
 Value: 7%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1997,51,9,47,8,"share_in_tot2",0.121079444227437,"Germany
-Year: 1997
-Value: 12%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1997,38,-97,47,8,"share_in_tot2",0.0987100929809017,"United States
 Year: 1997
 Value: 10%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1998,51,9,47,8,"share_in_tot2",0.15800910702299,"Germany
-Year: 1998
-Value: 16%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1998,38,-97,47,8,"share_in_tot2",0.0919139573777679,"United States
 Year: 1998
 Value: 9%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1999,51,9,47,8,"share_in_tot2",0.169364330594588,"Germany
-Year: 1999
-Value: 17%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",1999,38,-97,47,8,"share_in_tot2",0.101861993007463,"United States
 Year: 1999
 Value: 10%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2000,51,9,47,8,"share_in_tot2",0.15144821419819,"Germany
-Year: 2000
-Value: 15%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2000,38,-97,47,8,"share_in_tot2",0.106345539394286,"United States
 Year: 2000
 Value: 11%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2001,51,9,47,8,"share_in_tot2",0.16185675298398,"Germany
-Year: 2001
-Value: 16%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2001,38,-97,47,8,"share_in_tot2",0.115523216856172,"United States
 Year: 2001
 Value: 12%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2002,51,9,47,8,"share_in_tot2",0.149233651073097,"Germany
-Year: 2002
-Value: 15%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2002,38,-97,47,8,"share_in_tot2",0.122862682148262,"United States
 Year: 2002
 Value: 12%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2003,51,9,47,8,"share_in_tot2",0.148573007177814,"Germany
-Year: 2003
-Value: 15%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2003,38,-97,47,8,"share_in_tot2",0.118036370800455,"United States
 Year: 2003
 Value: 12%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2004,51,9,47,8,"share_in_tot2",0.133944623989385,"Germany
-Year: 2004
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2004,38,-97,47,8,"share_in_tot2",0.0945527656543808,"United States
 Year: 2004
 Value: 9%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2005,51,9,47,8,"share_in_tot2",0.129122828404733,"Germany
-Year: 2005
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2005,38,-97,47,8,"share_in_tot2",0.102327172334768,"United States
 Year: 2005
 Value: 10%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2006,51,9,47,8,"share_in_tot2",0.125068999717178,"Germany
-Year: 2006
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2006,38,-97,47,8,"share_in_tot2",0.105413407994509,"United States
 Year: 2006
 Value: 11%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2007,51,9,47,8,"share_in_tot2",0.128555471230396,"Germany
-Year: 2007
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2007,38,-97,47,8,"share_in_tot2",0.0945391665866738,"United States
 Year: 2007
 Value: 9%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2008,51,9,47,8,"share_in_tot2",0.122204292034581,"Germany
-Year: 2008
-Value: 12%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2008,38,-97,47,8,"share_in_tot2",0.0950417494972561,"United States
 Year: 2008
 Value: 10%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2009,51,9,47,8,"share_in_tot2",0.121424206492864,"Germany
-Year: 2009
-Value: 12%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2009,38,-97,47,8,"share_in_tot2",0.116967731080137,"United States
 Year: 2009
 Value: 12%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2010,51,9,47,8,"share_in_tot2",0.110995021908036,"Germany
-Year: 2010
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2010,38,-97,47,8,"share_in_tot2",0.121385516425978,"United States
 Year: 2010
-Value: 12%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2011,51,9,47,8,"share_in_tot2",0.116751784945165,"Germany
-Year: 2011
 Value: 12%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2011,38,-97,47,8,"share_in_tot2",0.129620442898348,"United States
 Year: 2011
 Value: 13%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2012,51,9,47,8,"share_in_tot2",0.107754285853083,"Germany
-Year: 2012
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2012,38,-97,47,8,"share_in_tot2",0.143767904998255,"United States
 Year: 2012
 Value: 14%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2013,51,9,47,8,"share_in_tot2",0.113691646370174,"Germany
-Year: 2013
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2013,38,-97,47,8,"share_in_tot2",0.152268125505339,"United States
 Year: 2013
 Value: 15%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2014,51,9,47,8,"share_in_tot2",0.113768833213509,"Germany
-Year: 2014
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2014,38,-97,47,8,"share_in_tot2",0.168670435964444,"United States
 Year: 2014
 Value: 17%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2015,51,9,47,8,"share_in_tot2",0.108339088144744,"Germany
-Year: 2015
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2015,38,-97,47,8,"share_in_tot2",0.18630962131118,"United States
 Year: 2015
 Value: 19%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2016,51,9,47,8,"share_in_tot2",0.11562030606947,"Germany
-Year: 2016
-Value: 12%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2016,38,-97,47,8,"share_in_tot2",0.208123867676306,"United States
 Year: 2016
 Value: 21%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2017,51,9,47,8,"share_in_tot2",0.110301731905777,"Germany
-Year: 2017
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2017,38,-97,47,8,"share_in_tot2",0.225271026213958,"United States
 Year: 2017
 Value: 23%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2018,51,9,47,8,"share_in_tot2",0.113777351142599,"Germany
-Year: 2018
-Value: 11%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2018,38,-97,47,8,"share_in_tot2",0.256370086770297,"United States
 Year: 2018
 Value: 26%",30
-"CHE","DEU","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2019,51,9,47,8,"share_in_tot2",0.125945298604071,"Germany
-Year: 2019
-Value: 13%",30
 "CHE","USA","21","Manufacture of basic pharmaceutical products and pharmaceutical preparations",2019,38,-97,47,8,"share_in_tot2",0.259205332839373,"United States
 Year: 2019
 Value: 26%",30
