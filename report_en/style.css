@@ -222,6 +222,11 @@ filter: alpha(opacity=100);
 .tooltip.in{opacity:1!important;}
 
 
+ .container {
+   overflow: hidden;
+   width: 100%;
+ }
+
 .responsive-iframe-a {
   /* position: absolute; 
   top: 0;
@@ -256,3 +261,8 @@ filter: alpha(opacity=100);
  }
  }
 
+
+.graph-container {
+ height: 44vh
+
+}

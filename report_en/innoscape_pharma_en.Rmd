@@ -16,38 +16,7 @@ output:
 
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-<link rel="stylesheet" href="style.css" type="text/css" />
-<div class="container-fluid main-container">
 
-<script>
-    var frameElement1 = document.getElementById("emp");
-    frameElement1.contentWindow.location.href = frameElement1.src;
-</script>
-
-<script>
-    var frameElement2 = document.getElementById("gva");
-    frameElement2.contentWindow.location.href = frameElement2.src;
-</script>
-
-<script>
-    var frameElement3 = document.getElementById("prod");
-    frameElement3.contentWindow.location.href = frameElement3.src;
-</script>
-
-<script>
-    var frameElement4 = document.getElementById("pat");
-    frameElement4.contentWindow.location.href = frameElement4.src;
-</script>
-
-<script>
-    var frameElement5 = document.getElementById("exp");
-    frameElement5.contentWindow.location.href = frameElement5.src;
-</script>
-
-<script>
-    var frameElement6 = document.getElementById("pat_net");
-    frameElement6.contentWindow.location.href = frameElement6.src;
-</script>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
 <script>
@@ -65,9 +34,13 @@ output:
 <link rel="stylesheet" href="style.css" type="text/css" />
 <div class="container-fluid main-container">
 
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+
 </head>
 
-
+<body>
 ## **The pharmaceutical industry: a driver of innovation and growth in Switzerland**
 
 <br>
@@ -326,6 +299,4 @@ $(document).ready(function(){
 </script>
 
 
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
-
+</body>

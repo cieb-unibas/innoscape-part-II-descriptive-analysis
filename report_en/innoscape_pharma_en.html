@@ -46,33 +46,7 @@
 
 <head>
 <p><link rel="canonical" href="https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland"></p>
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet"> <link rel="stylesheet" href="style.css" type="text/css" />
-<div class="container-fluid main-container">
-
-<script>
-    var frameElement1 = document.getElementById("emp");
-    frameElement1.contentWindow.location.href = frameElement1.src;
-</script>
-<script>
-    var frameElement2 = document.getElementById("gva");
-    frameElement2.contentWindow.location.href = frameElement2.src;
-</script>
-<script>
-    var frameElement3 = document.getElementById("prod");
-    frameElement3.contentWindow.location.href = frameElement3.src;
-</script>
-<script>
-    var frameElement4 = document.getElementById("pat");
-    frameElement4.contentWindow.location.href = frameElement4.src;
-</script>
-<script>
-    var frameElement5 = document.getElementById("exp");
-    frameElement5.contentWindow.location.href = frameElement5.src;
-</script>
-<script>
-    var frameElement6 = document.getElementById("pat_net");
-    frameElement6.contentWindow.location.href = frameElement6.src;
-</script>
+<p><link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet"></p>
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -86,7 +60,10 @@
 <link rel="stylesheet" href="style.css" type="text/css" />
 <div class="container-fluid main-container">
 
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
+<body>
 <div id="the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland" class="section level2">
 <h2><strong>The pharmaceutical industry: a driver of innovation and growth in Switzerland</strong></h2>
 <p><br></p>
@@ -189,253 +166,22 @@ Your browser does not support iframes
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
-  <link rel="stylesheet" href="style.css" type="text/css" />
 
 
-<head>
 
-<div id="bubble">
-  <div id="bubbleplots">
-      <div id="plotdiv"></div>
-       <p class="bottom-three"> Select a continent </p>
-        <select class="selectpicker" id="select_1">
+
+<p class="bottom-three"> Select a continent </p>
+   <select class='selectpicker' id='select_1'>
         <option selected >world</option>  
-        <option>africa</option>  
-        <option>asia</option>   
-        <option>europe</option>   
-        <option>north america</option>  
-        <option>south america</option>  
-    </select>
-  </div>
-</div>
-
-<div id='myDiv'  style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
-
-</head>
+         <option >europe</option>  
+         <option >asia</option>  
+         <option >north america</option>  
+</select>
 
 
+<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
 
-<body>
-  
-
-  
-<script>
-d3.csv("https://raw.githubusercontent.com/cieb-unibas/innoscape-part-II-descriptive-analysis/master/Data/trad_data.csv", function(err, rows){
-
-function filter_and_unpack(rows, key, year) {
-  return rows.filter(row => row['year'] == year && row['variable'] == 'share_in_tot2').map(row => row[key])
-  }
-
-function unpack(rows, key) {
-        return rows.map(function(row) { return row[key]; });
-    }
-
-// Default Country Data
-setCtryPlot('world');
-
-function setCtryPlot(chosenCountry) {
-  var frames = [];
-  var slider_steps = [];
-  var n = 9;
-  var num = 1992;
-  
-  for (var i = 0; i <= n; i+=1) {
-    var value = filter_and_unpack(rows, 'value', num).map(x => x * 1)
-    var locations = filter_and_unpack(rows, 'par.code', num)
-    var text = filter_and_unpack(rows, 'Country', num)
-    
-    frames[i] = {data: [{z: value, locations: locations, text: text, size: value}], name: num}
-    slider_steps.push ({
-        label: num.toString(),
-        method: "animate",
-        args: [[num], {
-            mode: "immediate",
-            transition: {duration: 500},
-            frame: {duration: 800}
-          }
-        ]
-      })
-    num = num + 3
-  }
-
-
-
-
-// Different paramters mobile / desktop
-if( /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-var  data = [{
-     // type: 'scattergeo',
-    //  mode: 'markers',
-      hovertemplate:  '<b>%{text}</b>' + 
-                      //'<br><b>Share of Swiss Pharma-Exports: %{z}</b>' + 
-                      '<extra></extra>',
-      type: 'choropleth', 
-      locationmode: 'europe',
-      locations: frames[0].data[0].locations,
-      text: frames[0].data[0].text,
-      z: frames[0].data[0].z,
-      zauto: false,
-      zmin: 0,
-      zmax: 0.26,
-      colorscale: [[0,'rgb(178, 24, 34)'],[1,'rgb(220, 220, 220)']],     autocolorscale: false,
-     reversescale: true,
-colorbar: {len: len_bar},
-  showscale: false
-
-  
-}];
-} else{
-  
-  var  data = [{
-     // type: 'scattergeo',
-    //  mode: 'markers',
-      hovertemplate:  '<b>%{text}</b>' + 
-                      //'<br><b>Share of Swiss Pharma-Exports: %{z}</b>' + 
-                      '<extra></extra>',
-      type: 'choropleth', 
-      locationmode: 'europe',
-      locations: frames[0].data[0].locations,
-      text: frames[0].data[0].text,
-      z: frames[0].data[0].z,
-      zauto: false,
-      zmin: 0,
-      zmax: 0.26,
-      colorscale: [[0,'rgb(178, 24, 34)'],[1,'rgb(220, 220, 220)']],     autocolorscale: false,
-     reversescale: true,
-colorbar: {len: 1},
-  showscale: true
-
-  
-}];
-  
-}
-
-
-
-
-
-if(chosenCountry == 'world'){
-var geo_var = {
-       scope: chosenCountry,
-       countrycolor: 'rgb(255, 255, 255)',
-       showland: true,
-       landcolor: 'rgb(217, 217, 217)',
-       showlakes: false,
-       lakecolor: 'rgb(255, 255, 255)',
-       subunitcolor: 'rgb(255, 255, 255)',
-       lonaxis: { range: [-200, 220] },
-       lataxis: { range: [-55, 80] },
-    showframe: false,
-    showcoastlines: false
-    };
-} else {
-var geo_var = {
-       scope: chosenCountry,
-       countrycolor: 'rgb(255, 255, 255)',
-       showland: true,
-       landcolor: 'rgb(217, 217, 217)',
-       showlakes: false,
-       lakecolor: 'rgb(255, 255, 255)',
-       subunitcolor: 'rgb(255, 255, 255)',
-    showframe: false,
-    showcoastlines: false
-    };  
-}   
-    
-
-var layout = {
-    title: '',
-    margin: {r:0, t:1, l:0, b:0, pad: 4},
-    geo: geo_var,
-    updatemenus: [{
-      x: 0.1,
-      y: 0,
-      yanchor: "top",
-      xanchor: "right",
-      showactive: false,
-      direction: "left",
-      type: "buttons",
-      pad: {"t": 87, "r": 10},
-      buttons: [{
-        method: "animate",
-        args: [null, {
-          fromcurrent: true,
-          transition: {
-            duration: 300,
-          },
-          frame: {
-            duration: 1000
-          }
-        }],
-        label: "Play"
-      }, {
-        method: "animate",
-        args: [
-          [null],
-          {
-            mode: "immediate",
-            transition: {
-              duration: 0
-            },
-            frame: {
-              duration: 0
-            }
-          }
-        ],
-        label: "Pause"
-      }]
-    }],
-    sliders: [{
-      active: 0,
-      steps: slider_steps,
-      x: 0.1,
-      len: 0.9,
-      xanchor: "left",
-      y: 0,
-      yanchor: "top",
-      pad: {t: 50, b: 10},
-      currentvalue: {
-        visible: true,
-        prefix: "Year:",
-        xanchor: "right",
-        font: {
-          size: 20,
-          color: "#666"
-        }
-      },
-      transition: {
-        duration: 200,
-        easing: "linear"
-      }
-    }]
-};
-
-const config = {
-  displayModeBar: false, // this is the line that hides the bar.
-};
-
-
-Plotly.newPlot('myDiv', data, layout, config).then(function() {
-    Plotly.addFrames('myDiv', frames);
-  });
-};
-
-var chosenctry = document.getElementById("select_1");
-
-function updateCountry(){
-        setCtryPlot(chosenctry.value);
-    }
-    
-chosenctry.addEventListener('change', updateCountry, true);
-  
-  
-    
-})
-   </script>
-
-</body>
-
- <span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
+<script src="world_map.js"></script> <span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
 </div>
 </div>
@@ -538,7 +284,7 @@ $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();   
 });
 </script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</body>
 </div>
 
 &nbsp;
