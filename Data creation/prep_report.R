@@ -159,7 +159,7 @@ volumes <- volumes %>%
            dplyr::group_by(par.code, variable) %>%
            arrange(year, par.code, )
 volumes <- volumes %>%
-           filter(variable %in% c("share_in_tot2") & par.code %in% c("USA"))
+           filter(variable %in% c("share_in_tot2") & par.code %in% c("USA", "DEU"))
 
 volumes %>% saveRDS(paste0(getwd(), "/report_en/trad_data.rds"))
 volumes %>% write.fst(paste0(getwd(), "/report_en/trad_data.fst"))
