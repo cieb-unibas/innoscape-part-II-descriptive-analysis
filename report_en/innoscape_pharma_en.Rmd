@@ -162,6 +162,7 @@ Furthermore, the geographical dispersion of export destinations is also changing
 htmltools::includeHTML("world_map.html")
 ```
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+
 <link rel="stylesheet" href="https://innoscape.de/pharma_intro/style.css" type="text/css" />
 
 <br>
@@ -178,7 +179,6 @@ The Swiss pharmaceutical sector is often denoted as “one of the most important
 
 <hr class="hr_red">
 ##### **Patent Counts: the Output of Pharmaceutical R&D**
-
 <div class="box_div">	
 <details>
   <summary style="font-size:11pt">*Click here for details about patent counts*</summary>
@@ -270,7 +270,13 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 
 <br>
 
-**Interested in more details** about the role of cross-border commuters for Swiss (pharma) innovations? Then check out our analysis on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> Importance of cross-border commuters for inventions 'Made in Switzerland'</a>.
+<div>
+<iframe id="slider" width=100%" height="400" scrolling="no" frameBorder="0" style="overflow: hidden" src="https://innoscape.de/general_stuff/teaser/pharma_intro_teaser.html">
+</iframe>
+</div>
+
+<!-- **Interested in more details** about the role of cross-border commuters for Swiss (pharma) innovations? Then check out our analysis on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> Importance of cross-border commuters for inventions 'Made in Switzerland'</a>.
+-->
 
 <br>
 
@@ -287,7 +293,7 @@ Let us conclude with a few takeaways. As our short outline shows, the Swiss phar
 
 <br>
 
-<span style="font-size:0.8em">*This report was written using <a href = https://rmarkdown.rstudio.com/ target = “_blank”>R Markdown</a> and <a href = https://shiny.rstudio.com/ target = “_blank”>R shiny</a>. For the creation of the patent data set, we used <a href = http://scicore.unibas.ch/ target = “_blank”> sciCORE </a> scientific computing center at the University of Basel. Data and code to reproduce the figures presented in this article are available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+<span style="font-size:0.8em">*This report was written using <a href = https://rmarkdown.rstudio.com/ target = “_blank”>R Markdown</a>, <a href = https://en.wikipedia.org/wiki/JavaScript target = “_blank”>JavaScript</a> and <a href = https://shiny.rstudio.com/ target = “_blank”>R shiny</a>. For the creation of the patent data set, we used <a href = http://scicore.unibas.ch/ target = “_blank”> sciCORE </a> scientific computing center at the University of Basel. Data and code to reproduce the figures presented in this article are available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
 
 <script>
 $(document).ready(function(){
