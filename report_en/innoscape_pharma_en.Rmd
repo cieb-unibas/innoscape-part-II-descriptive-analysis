@@ -10,13 +10,13 @@ output:
     mathjax: null
 ---
 
+
+
+
+
 <head>
 
 <link rel="canonical" href="https://innoscape.ch/en/publications/the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland">
-
-
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" type="text/css" rel="stylesheet">
-
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-71167447-1"></script>
 <script>
@@ -31,12 +31,8 @@ output:
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 
-<link rel="stylesheet" href="style.css" type="text/css" />
-<div class="container-fluid main-container">
-
-
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-
+<div class="container-fluid main-container">
 
 </head>
 
@@ -166,6 +162,7 @@ Furthermore, the geographical dispersion of export destinations is also changing
 htmltools::includeHTML("world_map.html")
 ```
 <span style="font-size:0.8em">*Source: CIEBs' own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.*</span>
+<link rel="stylesheet" href="https://innoscape.de/pharma_intro/style.css" type="text/css" />
 
 <br>
 

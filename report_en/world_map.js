@@ -97,7 +97,7 @@ var geo_var = {
     showframe: false,
     showcoastlines: false
     };  
-}   
+} 
    
    
 
@@ -121,7 +121,7 @@ var layout = {
       showactive: false,
       direction: "left",
       type: "buttons",
-      pad: {"t": -412, "r": 0, "l": 0},
+      pad: {"t": -412, "r": 50, "l": 0},
       buttons: [{
         method: "animate",
         args: [null, {
