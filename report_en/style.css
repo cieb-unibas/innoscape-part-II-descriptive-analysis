@@ -62,7 +62,7 @@ hr {
   width: 30%;
   height: 10px;
   color: #B2182B;
-  background-color: #B2182B;
+  background-color:#B2182B;
 }
 
 html, body {
@@ -185,6 +185,53 @@ summary {
   background-color: transparent;
 }
 
-iframe{
-  overflow: hidden;
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
 }
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+
+.social .share {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Web Share API is supported */
+.webshareapi .webshare {
+  display: block;
+}
+
+.tooltip-inner {
+    text-align: left;
+     width: 250px; 
+     min-width: 240px;
+}
+
+
+.tooltip {
+  top: 100%;
+  left:50%;
+  margin-top: 0px;
+  min-width: 240px;
+    opacity: 1.0;
+filter: alpha(opacity=100);
+}
+
+
+.tooltip img{
+  top: 100%;
+  left:50%;
+  margin-top: 0px;
+  background: rgba(255,255,255,0.85);
+  border-top-width: 0;
+  min-width: 225px;
+  min-height: 280px;
+  height:300px; /* change as your wish */
+    opacity: 1.0;
+filter: alpha(opacity=100);
+}
+
+.tooltip.in{opacity:1!important;}
