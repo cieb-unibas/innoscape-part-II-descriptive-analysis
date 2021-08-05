@@ -57,8 +57,16 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+<p><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" /></p>
 <div class="container-fluid main-container">
 
+
+<style>
+ul {
+  padding-left: 10px;
+}
+
+</style>
 </head>
 <body>
 <div id="the-pharmaceutical-industry-a-driver-of-innovation-and-growth-in-switzerland" class="section level2">
@@ -153,21 +161,47 @@ Your browser does not support iframes
 <hr class="hr_red">
 <div id="swiss-pharmaceutical-exports-to-each-partner-country-over-time" class="section level4">
 <h4><strong>Swiss pharmaceutical exports to each partner country over time</strong></h4>
-<p>	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
-	  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	
+
+	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
+	 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 	  
 	  
-	   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+  <style>
+
+* {
+	box-sizing: border-box;
+	padding: 0;
+	margin: 0;
+}    
+
+.w_map {
+	height: 100%;
+	width: 100%;
+	padding: 0rem 0rem 0rem 0rem;
+    top: -30;
+    right: 100;
+}
+
+
+@media screen and (max-width: 700px) {
+	.w_map {
+		width:  100%;
+		height: 100%;
+	}
+}
+
+</style>
 
 
 
-
-<p class="bottom-three"> Select a continent </p>
+ <p> Select a continent </p>
    <select class='selectpicker' id='select_1'>
         <option selected >world</option>  
          <option >europe</option>  
@@ -176,9 +210,10 @@ Your browser does not support iframes
 </select>
 
 
-<div id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+<div class="w_map_t" id='myDiv'></div>
 
-<script src="world_map.js"></script> <span style="font-size:0.8em"><em>Source: CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
+<script src="world_map.js"></script>
+<p><span style="font-size:0.8em"><em>Notes and source: Currently not optimized for mobile views. CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><link rel="stylesheet" href="https://innoscape.de/pharma_intro/style.css" type="text/css" /></p>
 <p><br></p>
 </div>
@@ -255,11 +290,23 @@ See the previous box for information on patent data in general. In addition, bac
 <h2><strong>Main takeaways</strong></h2>
 <p><br></p>
 <ul>
-<li><p>Employment shares of the domestic labor force in the Swiss pharma sector is twice that of the USA, Germany, France or Italy</p></li>
-<li><p>Less than 1% of the labor force generates more than 5% of Swiss GDP</p></li>
-<li><p>Taking into account the cross-border commuters, productivity estimates drop by 30%</p></li>
-<li><p>In 2019, 30% of Swiss exports are pharmaceutical products and 26% of the total Swiss pharma exports go to the USA</p></li>
-<li><p>Innovation activities in the Swiss pharmaceutical sector are still at a high level, but some new innovation hubs are strongly emerging</p></li>
+<ul>
+<li>
+Employment shares of the domestic labor force in the Swiss pharma sector is twice that of the USA, Germany, France or Italy
+</li>
+<li>
+Less than 1% of the labor force generates more than 5% of Swiss GDP
+</li>
+<li>
+Taking into account the cross-border commuters, productivity estimates drop by 30%
+</li>
+<li>
+In 2019, 30% of Swiss exports are pharmaceutical products and 26% of the total Swiss pharma exports go to the USA
+</li>
+<li>
+Innovation activities in the Swiss pharmaceutical sector are still at a high level, but some new innovation hubs are strongly emerging
+</li>
+</ul>
 </ul>
 <!-- * Roughly 50% of new Swiss pharma patents use knowledge from other fields-->
 <p><br></p>
@@ -292,6 +339,25 @@ $(document).ready(function(){
 
 <head>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://innoscape.de/pharma_intro/style.css" type="text/css" />
+
+
+<style>
+ html, body {
+  font-size: 20px;
+  background: white;
+  font-family: "Helvetica Neue", "Neue Helvetica W05", Arial, sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+a:focus, a:hover {
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.7);
+} 
+</style>
 
 </head>
 
@@ -309,8 +375,7 @@ $(document).ready(function(){
 </p>
 
 <br>
-<br>
-<br>
+
 
 
 

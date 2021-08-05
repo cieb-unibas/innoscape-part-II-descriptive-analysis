@@ -41,7 +41,7 @@ function setCtryPlot(chosenCountry) {
 
 // Different paramters mobile / desktop
 if( /Android|webOS|iPhone|iPad|Mac|Macintosh|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-var width_plot = 500;
+var width_plot = 400;
 var heigth_plot = 250;
 
 } else{
@@ -106,12 +106,12 @@ var layout = {
   xaxis: {fixedrange: true},
   yaxis: {fixedrange: true},
  autosize: true,
- width: width_plot,
- height: heigth_plot, 
+width: width_plot,
+height: heigth_plot,
     title: '',
     yanchor: 'left',
     xanchor: 'left',
-    margin: {r:20, t:0, l:0, b:20, pad: 0},
+    margin: {r: 0, t:0, l:0, b:20, pad: 0},
     geo: geo_var,
     updatemenus: [{
       x: 0.1,
@@ -121,7 +121,7 @@ var layout = {
       showactive: false,
       direction: "left",
       type: "buttons",
-      pad: {"t": -412, "r": 50, "l": 0},
+      pad: {t: -10, r: -150, l: 100, b: 20},
       buttons: [{
         method: "animate",
         args: [null, {
@@ -159,7 +159,7 @@ var layout = {
       xanchor: "top",
       y: 0,
       yanchor: "top",
-      pad: {t: -50, b: 10, r: 50, l:0},
+      pad: {t: 0, b: 35, r: 150, l:0},
       currentvalue: {
         visible: true,
         prefix: "Year:",
@@ -176,14 +176,22 @@ var layout = {
     }]
 };
 
-const config = {
-  displayModeBar: false, // this is the line that hides the bar.
+var config = {
+  displayModeBar: false,
+  responsive: true
 };
 
 
 Plotly.newPlot('myDiv', data, layout, config).then(function() {
     Plotly.addFrames('myDiv', frames);
   });
+  
+//window.onresize = function() {
+//  Plotly.relayout(myDiv, {
+//    width: 0.9 * window.innerWidth,
+//    height: 0.9 * window.innerHeight
+//  })
+//};
 };
 
 var chosenctry = document.getElementById("select_1");
