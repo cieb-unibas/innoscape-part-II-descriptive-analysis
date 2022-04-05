@@ -23,15 +23,16 @@ ui <- fluidPage(
              id = "gva_id",
              radioButtons(inputId = "variable_gva", label = "Choose a variable",
                           choices = list("Share in GDP" = "Share in GDP",
-                                         "GVA in millions CHF" = "GVA in millions CHF", 
-                                         "GVA percentage change" = "GVA percentage change"),
+                                         "GVA in millions CHF" = "GVA in millions CHF" 
+                                         # "GVA percentage change" = "GVA percentage change"
+                                         ),
                           selected = "Share in GDP", 
                           inline = T),
              
              pickerInput(inputId = "ind.name_gva",
                          label = "Choose industries", 
                          choices= sort(unique(gva$ind.name)),
-                         selected = "Pharmaceutical products",
+                         selected = c("Pharmaceutical products", "Machinery and equipment n.e.c.", "Computer, electronic and optical products; watches and clocks"),
                          options = list(`actions-box` = TRUE),
                          multiple = TRUE),
              mainPanel(plotlyOutput("gva_plot")))

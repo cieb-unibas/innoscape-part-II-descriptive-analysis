@@ -12,9 +12,9 @@
 
 
 
-<title>innoscape_pharma_en.utf8</title>
+<title>innoscape_pharma_en.knit</title>
 
-<script src="innoscape_pharma_en_files/header-attrs-2.4/header-attrs.js"></script>
+<script src="innoscape_pharma_en_files/header-attrs-2.12/header-attrs.js"></script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -23,7 +23,10 @@
   div.column{display: inline-block; vertical-align: top; width: 50%;}
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
-      </style>
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+
+
 
 
 
@@ -85,18 +88,22 @@ ul {
 </blockquote>
 </div>
 <p><br></p>
-<p>The Swiss pharmaceutical sector has a major impact on Switzerland’s economy and the well-being of its citizens in general. It is a true example of a world-class innovation hub and is one of the industry’s global leaders when it comes to R&amp;D activities. Nonetheless, one of the concerns - often pointed out in public - is whether the pharmaceutical industry in Switzerland will be able to overcome the rising challenges of the vibrant environment in which it operates and will be able to retain its top position in the future. With this in mind, we revisit how it has evolved and discuss its current importance for the whole economy, laying ground for our upcoming set of analyses on the innovation capacities of Swiss pharmaceutical firms in the future.</p>
+<p>The Swiss pharmaceutical sector has a major impact on Switzerland’s economy and the well-being of its citizens in general. It is a true example of a world-class innovation hub and is one of the industry’s global leaders when it comes to R&amp;D activities. Nonetheless, one of the concerns - often pointed out in public - is whether the pharmaceutical industry in Switzerland will be able to overcome the rising challenges of the vibrant environment in which it operates and will be able to retain its top position in the future. With this in mind, we revisit how it has evolved and discuss its current importance for the whole economy.</p>
+<!--, laying ground for our upcoming set of analyses on the innovation capacities of Swiss pharmaceutical firms in the future.
+-->
 </div>
 <div id="economic-impact-of-the-swiss-pharmaceutical-industry" class="section level2">
 <h2><strong>Economic impact of the Swiss pharmaceutical industry</strong></h2>
 <p><br></p>
 <div class="box_div">
 <details>
-<p><summary style="font-size:11pt"><em>Click here for details about the data we used for this analysis</em></summary></p>
+<summary style="font-size:11pt">
+<em>Click here for details about the data we used for this analysis</em>
+</summary>
 <ul>
 <li><p><strong>Steady increase of pharmaceutical jobs</strong>: Data is taken from <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> database. Employment data comes from local labor force surveys which cover only the resident population. This means that the employment figures do not cover cross-border commuters. In addition, given that an employed person may hold several jobs, employment refers to his or her primary job only. Finally, this data covers all persons of working age who, during a specified, brief period, were either in paid employment or self-employed.</p></li>
 <li><p><strong>Pharma’s growing importance for the Swiss economy</strong>: Data on gross value added is from <a href = https://www.bfs.admin.ch/bfs/en/home/statistics/catalogues-databases/tables.assetdetail.14347536.html target = “_blank”>Switzerland’s Federal Statistical Office (FSO)</a> - Industries production account database.</p></li>
-<li><p><strong>Swiss pharma is highly productive</strong>: Data on gross value added is similar as before. In addition, we used labor force survey data on the number of employees from <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> database; firms survey data on the number of jobs from <a href = https://www.pxweb.bfs.admin.ch/pxweb/en/px-x-0602000000_101/px-x-0602000000_101/px-x-0602000000_101.px target = “_blank”>FSO</a>; and data on cross-border workers from <a href = https://www.pxweb.bfs.admin.ch/pxweb/de/px-x-0302010000_106/px-x-0302010000_106/px-x-0302010000_106.px target = “_blank”>FSO</a> database. The <a href = https://www.media-stat.admin.ch/web/apps/glossary/index.php?n=glo-165-en target = “_blank”>FSO</a> defines a job as follows: “The term “jobs” refers to all positions of employment that are filled. While largely covering the same concept, “jobs” and “employed persons” do not always coincide, given that an employed person may hold several jobs. In such cases, the employed person holds one primary job and one or more secondary jobs". In addition, ILO data on employment covers only the residents, given that this data is collected via local labor force surveys. We utilize these differences to create three distinct labor productivity indicators, primarily by assuming that ILO employment data represents a good approximation for jobs held by Swiss residents.</p></li>
+<li><p><strong>Swiss pharma is highly productive</strong>: Data on gross value added is similar as before. In addition, we used labor force survey data on the number of employees from <a href = https://ilostat.ilo.org/data/ target = “_blank”>ILOSTAT</a> database; firms survey data on the number of jobs from <a href = https://www.pxweb.bfs.admin.ch/pxweb/en/px-x-0602000000_101/px-x-0602000000_101/px-x-0602000000_101.px target = “_blank”>FSO</a>; and data on cross-border workers from <a href = https://www.pxweb.bfs.admin.ch/pxweb/de/px-x-0302010000_106/px-x-0302010000_106/px-x-0302010000_106.px target = “_blank”>FSO</a> database. The <a href = https://www.media-stat.admin.ch/web/apps/glossary/index.php?n=glo-165-en target = “_blank”>FSO</a> defines a job as follows: “The term “jobs” refers to all positions of employment that are filled. While largely covering the same concept, “jobs” and “employed persons” do not always coincide, given that an employed person may hold several jobs. In such cases, the employed person holds one primary job and one or more secondary jobs”. In addition, ILO data on employment covers only the residents, given that this data is collected via local labor force surveys. We utilize these differences to create three distinct labor productivity indicators, primarily by assuming that ILO employment data represents a good approximation for jobs held by Swiss residents.</p></li>
 <li><p><strong>Swiss pharmaceutical exports to each partner country over time</strong>: Data on exported goods is taken from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. Exports are measured using freight on board valuation methodology and are adjusted for re-export values (whenever possible). The values show Swiss pharmaceutical exports to each partner country in total Swiss pharmaceutical exports.</p></li>
 </ul>
 <!--
@@ -155,19 +162,18 @@ Your browser does not support iframes
 <div id="the-market-for-pharmaceuticals-is-global" class="section level2">
 <h2><strong>The market for pharmaceuticals is global</strong></h2>
 <p><br></p>
-<p>Access to skilled labor from abroad is important, but free international trade may be even more significant for the growth of the Swiss pharmaceutical industry. The market for pharmaceutical products is global and the home-market is limited in its size. Thus, Swiss pharmaceutical firms are required to nurture their export activities. Although Swiss pharmaceutical export figures have been rising steadily in the last 30 years, there are some potential caveats concerning these export trends. For example, back in 1990, pharmaceutical products comprised less than 10% of the total Swiss exports to most destinations. Yet, in 2019 the share of pharmaceutical exports made up almost 30% of the total exported goods in most of the destination countries, making the overall Swiss export performance increasingly dependent on a single sector (for a deeper investigation of potential risks associated with such an increased export concentration, see our report for the SECO in German language <a href = https://cieb.unibas.ch/fileadmin/user_upload/cieb/SECO_Strukturberichterstattung-2017_Nr-56_Band-1_Frankenaufwertung_und_Exportstruktur.pdf target = “_blank”>CIEB, 2017</a>).</p>
-<p>Furthermore, the geographical dispersion of export destinations is also changing. In 1990 around 8% of total Swiss pharmaceutical exports went to the USA, while in 2019 this share was roughly 26%. On the one hand, a larger export orientation towards the USA (and Germany) could produce certain concentration risks. But on the other hand, it may reveal important geographical innovation patterns and collaborations in facilitating new approaches in future research. In other words, the flow of pharmaceutical products may trail the flow of knowledge (more on this topic in our report on international research collaborations - coming out soon). Irrespective of this geographic pattern, the question generally arises as to whether the Swiss pharmaceutical industry`s extraordinary success story can be continued in the future. This depends to a large extent on its innovation activities, which is what we will discuss in what follows.</p>
+<p>Access to skilled labor from abroad is important, but free international trade may be even more significant for the growth of the Swiss pharmaceutical industry, since home-market is limited in its size. Thus, Swiss pharmaceutical firms are required to nurture their export activities. Although Swiss pharmaceutical export figures have been rising steadily in the last 30 years, there are some potential caveats concerning these export trends. For example, back in 1990, pharmaceutical products comprised less than 10% of the total Swiss exports to most destinations. Yet, in 2019 the share of pharmaceutical exports made up almost 30% of the total exported goods in most of the destination countries, making the overall Swiss export performance increasingly dependent on a single sector (for a deeper investigation of potential risks associated with such an increased export concentration, see our report for the SECO in German language <a href = https://cieb.unibas.ch/fileadmin/user_upload/cieb/SECO_Strukturberichterstattung-2017_Nr-56_Band-1_Frankenaufwertung_und_Exportstruktur.pdf target = “_blank”>CIEB, 2017</a>).</p>
 <p><br></p>
 <hr class="hr_red">
 <div id="swiss-pharmaceutical-exports-to-each-partner-country-over-time" class="section level4">
 <h4><strong>Swiss pharmaceutical exports to each partner country over time</strong></h4>
-	
+    
 
-	<script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
-	 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-	  
-	  
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js'></script>
+     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+      
+      
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
   
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -176,25 +182,25 @@ Your browser does not support iframes
   <style>
 
 * {
-	box-sizing: border-box;
-	padding: 0;
-	margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
 }    
 
 .w_map {
-	height: 100%;
-	width: 100%;
-	padding: 0rem 0rem 0rem 0rem;
+    height: 100%;
+    width: 100%;
+    padding: 0rem 0rem 0rem 0rem;
     top: -30;
     right: 100;
 }
 
 
 @media screen and (max-width: 700px) {
-	.w_map {
-		width:  100%;
-		height: 100%;
-	}
+    .w_map {
+        width:  100%;
+        height: 100%;
+    }
 }
 
 </style>
@@ -216,6 +222,7 @@ Your browser does not support iframes
 <p><span style="font-size:0.8em"><em>Notes and source: Currently not optimized for mobile views. CIEBs’ own estimations based on data from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=STANI4_2020 target = “_blank”>OECD</a>. The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><link rel="stylesheet" href="https://innoscape.de/pharma_intro/style.css" type="text/css" /></p>
 <p><br></p>
+<p>Furthermore, the geographical dispersion of export destinations is also changing. In 1990 around 8% of total Swiss pharmaceutical exports went to the USA, while in 2019 this share was roughly 26%. On the one hand, a larger export orientation towards the USA (and Germany) could produce certain concentration risks. But on the other hand, it may reveal important geographical innovation patterns and collaborations in facilitating new approaches in future research. In other words, the flow of pharmaceutical products may trail the flow of knowledge. Irrespective of this geographic pattern, the question generally arises as to whether the Swiss pharmaceutical industry`s extraordinary success story can be continued in the future. This depends to a large extent on its innovation activities, which is what we will discuss in what follows.</p>
 </div>
 </div>
 <div id="swiss-pharma-a-world-class-innovator" class="section level2">
@@ -229,7 +236,9 @@ Your browser does not support iframes
 <h5><strong>Patent Counts: the Output of Pharmaceutical R&amp;D</strong></h5>
 <div class="box_div">
 <details>
-<p><summary style="font-size:11pt"><em>Click here for details about patent counts</em></summary></p>
+<summary style="font-size:11pt">
+<em>Click here for details about patent counts</em>
+</summary>
 <p>Our patent counts include only the so-called triadic patents. They are registered by all three major patent offices (European Patent Office, Japan Patent Office and the US Patent and Trademark Office) and protect the same invention. By taking such patents into account, home advantage and the influence of geographical locations are significantly reduced. However, our triadic patent counts may differ somewhat from the <a href = https://stats.oecd.org/Index.aspx?DataSetCode=PATS_IPC# target = “_blank”> OECD </a> database in absolute values. This is because the OECD dataset is based on patent families while ours includes all distinct USPTO and EPO patents (i.e., the number of all non-equivalent patents) belonging to a triadic patent family. USPTO patents are derived from <a href = https://www.patentsview.org/download/ target = “_blank”>patentsview.org</a> (considering data till August 27, 2020) and EPO patents from the <a href = http://www.oecd.org/sti/inno/intellectual-property-statistics-and-analysis.htm target = “_blank”>OECD intellectual property (IP) statistics and analysis database</a> (considering data till January, 2020).</p>
 <p>In order to assign patents to geographical affiliations, we use the inventors’ residence. In the case of inventors coming from different countries, the geographical division is assigned and then summed as shares. For example, if one inventor comes from the USA and the other from Japan, the same patent will be assigned as 0.5 to the USA and 0.5 to Japan (for more information on how to determine the origins of patents see <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> Importance of cross-border commuters for inventions ‘Made in Switzerland’</a>). For Switzerland, we additionally take patents invented by cross-border commuters into account. For details, see our report on the <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland target = “_blank”> Importance of cross-border commuters for inventions ‘Made in Switzerland’</a>. To assign patents to years, we use a patent’s priority year and limit ourselves to considering only patents up to the priority year 2015 (for a detailed explanation, see the methodology box in <a href = https://innoscape.ch/en/publications/cross-border-commuting-and-inventions-made-in-switzerland/#pat_method target=“_blank”>Importance of cross-border commuters for inventions ‘Made in Switzerland’</a>).</p>
 <p>The indicator <em>absolute numbers</em> show pharmaceutical patent counts for each country. The indicator <em>% of total patents</em> represents the share of pharmaceutical patents in total patent applications across each country and <em>RCA of pharma patents</em> represents the so-called “revealed comparative advantage” in patenting pharmaceutical products. It is the share of pharmaceutical patents in total patents of a country divided by the share of worldwide pharmaceutical patents in total patents worldwide. Thus, it represents a measure of international innovativeness of an industry relative to the entire economy of a country.</p>
@@ -243,9 +252,14 @@ Your browser does not support iframes
 </iframe>
 <p><span style="font-size:0.8em"><em>Source: CIEBs’ own calculations. For details, see methodology box.The data used for this plot is available on <a href= "https://github.com/cieb-unibas/innoscape-part-II-descriptive-analysis" target="_blank">GitHub</a>.</em></span></p>
 <p><br></p>
-<p>Switzerland also enjoys a very high revealed comparative advantage (RCA) in creating pharma patents (among the top 10 countries worldwide). The RCA is a measure of the international innovativeness of a country’s specific industry relative to the entire economy. In other words, the high RCA of the Swiss pharmaceutical industry means that Switzerland possesses a particular strength in pharmaceutical innovations compared to the rest of the world. Interestingly, Spain is positioning itself as the world leader according to the RCA index. According to <a href = https://static.scientificamerican.com/wv/assets/2015_SAWorldView.pdf target = “_blank”>Scientific American Worldview</a>, in 2015 Spain ranked 4th globally according to the biotech innovation intensity indicator, which is specifically developed to identify the “outsized” sectoral activity among smaller countries. In this report it is also noted that Spain`s particularly high ranking is due mainly to its immense increase in the number of filed patent applications. Spanish patenting intensity was more resilient to the 2008 crisis than Swiss patenting, implying that in the future we may expect the rise of pharmaceutical industries in other countries, even among those considered to be untraditional pharma hubs. This could make the overall competition in the world healthcare market harsher.</p>
+<p>Switzerland also enjoys a very high revealed comparative advantage (RCA) in creating pharma patents (among the top 10 countries worldwide). The RCA is a measure of the international innovativeness of a country’s specific industry relative to the entire economy. In other words, the high RCA of the Swiss pharmaceutical industry means that Switzerland possesses a particular strength in pharmaceutical innovations compared to the rest of the world.</p>
+<!--Interestingly, Spain is positioning itself as the world leader according to the RCA index. According to <a href = https://static.scientificamerican.com/wv/assets/2015_SAWorldView.pdf target = “_blank”>Scientific American Worldview</a>, in 2015 Spain ranked 4th globally according to the biotech innovation intensity indicator, which is specifically developed to identify the "outsized" sectoral activity among smaller countries. In this report it is also noted that Spain`s particularly high ranking is due mainly to its immense increase in the number of filed patent applications. Spanish patenting intensity was more resilient to the 2008 crisis than Swiss patenting, implying that in the future we may expect the rise of pharmaceutical industries in other countries, even among those considered to be untraditional pharma hubs. This could make the overall competition in the world healthcare market harsher.
+-->
 <p>It is also interesting to explore the geographical concentration of innovations in the pharmaceutical industry within a country. For this purpose, you can click on the tab <em>regions</em> in the figure below and investigate the patent applications of the 76 most important pharma clusters worldwide. Not surprisingly, most Swiss innovations in the pharma industry are concentrated in the region of Northwestern Switzerland, with Basel as its center. Indeed, the region of Northwestern Switzerland ranks very high among the world’s most important pharma innovation regions. Being the home to Swiss (and the world’s) pharmaceutical giants - Novartis and Roche, it is a place to be if you are interested in healthcare innovations. Among the most important regions for pharmaceutical research worldwide, Northwestern Switzerland takes the 16th place (according to the patent rankings in 2000), leaving numerous US, Japanese, German and other regions behind. Some other regions in Europe, however, are ahead in terms of absolute numbers of patent applications, but taking into account relative terms and, thus, differences in size across the regions, Northwestern Switzerland ranks number one in Europe as shown by our RCA-index.</p>
-<p>Apart from investigating patent activities of countries and regions, the bigger view of continents is also interesting. America (predominantly North America) is still the world leading continent when it comes to the number of filed patent applications in the pharmaceutical sector. In addition, Asia surpassed Europe in 2014 and took its long-held place as the second most important pharma patenting hub, slowly approaching America’s numbers. Looking at the relative indicators, however, another rising-star continent appears on the horizon – Australia and Oceania, which has an extremely large share of pharma patents in its total patents, indicating a high degree of specialization in the pharmaceutical research that started in the late 90s. In fact, it is the continent with the highest and steadily increasing RCA index, which points out that Australia’s time as a pharma innovation power is most probably yet to come, and in the near future. Melbourne is Australia’s main life-sciences research hub and is primarily responsible for a robust growth of its pharmaceutical and other related industries. Australia is continuously ranked among the top five countries worldwide in biotechnology innovations, whose success stems from its “…educated population, strong academic institutions, favorable regulatory and R&amp;D environment and a supportive government” <a href = https://static.scientificamerican.com/wv/assets/2016_SciAmWorldView.pdf target = “_blank”>(Scientific American Worldview 2016, p.18)</a>. All in all, this analysis shows that the Swiss pharmaceutical sector, and, in particular the companies in the region of Basel, are still among the world leaders in innovation.</p>
+<p>Apart from investigating patent activities of countries and regions, the bigger view of continents is also interesting. America (predominantly North America) is still the world leading continent when it comes to the number of filed patent applications in the pharmaceutical sector. In addition, Asia surpassed Europe in 2014 and took its long-held place as the second most important pharma patenting hub, slowly approaching America’s numbers.</p>
+<!--Looking at the relative indicators, however, another rising-star continent appears on the horizon – Australia and Oceania, which has an extremely large share of pharma patents in its total patents, indicating a high degree of specialization in the pharmaceutical research that started in the late 90s. In fact, it is the continent with the highest and steadily increasing RCA index, which points out that Australia’s time as a pharma innovation power is most probably yet to come, and in the near future. Melbourne is Australia’s main life-sciences research hub and is primarily responsible for a robust growth of its pharmaceutical and other related industries. Australia is continuously ranked among the top five countries worldwide in biotechnology innovations, whose success stems from its “…educated population, strong academic institutions, favorable regulatory and R&D environment and a supportive government” <a href = https://static.scientificamerican.com/wv/assets/2016_SciAmWorldView.pdf target = “_blank”>(Scientific American Worldview 2016, p.18)</a>.
+-->
+<p>All in all, this analysis shows that the Swiss pharmaceutical sector, and, in particular the companies in the region of Basel, are still among the world leaders in innovation.</p>
 <!--  In order to maintain this extraordinarily high level, international connectivity and access to global knowledge might be one crucial factor for the pharmaceutical industry in Switzerland. These aspects are what we examine next. 
 
 <br>
@@ -337,36 +351,19 @@ $(document).ready(function(){
 </body>
 </div>
 
-<head>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-  <link rel="stylesheet" href="https://innoscape.de/pharma_intro/style.css" type="text/css" />
-
-
-<style>
- html, body {
-  font-size: 20px;
-  background: white;
-  font-family: "Helvetica Neue", "Neue Helvetica W05", Arial, sans-serif;
-}
-
-a {
-  color: inherit;
-}
-
-a:focus, a:hover {
-  text-decoration: none;
-  color: rgba(0, 0, 0, 0.7);
-} 
-</style>
-
-</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"/>
+<link rel="stylesheet" href="https://innoscape.de/general_stuff/style_footer.css" type="text/css" /> 
 
 
 &nbsp;
 <hr />
-<p style="text-align: center;"><a href="https://cieb.unibas.ch" target='_blank' style='color:black;text-decoration: none;'>Center for International Economics and Business | CIEB | University of Basel </a></p>
 
 <p style="text-align: center;">
+  <h_footer><a href="https://cieb.unibas.ch" target='_blank' style='color:black;text-decoration: none;'>CIEB | University of Basel </a> </h_footer>
+
+  <h_footer>| Follow us on Social Media </h_footer> &nbsp;&nbsp;
+    <br class='br_mobile'>
+
     <a href="https://twitter.com/cieb_unibas/" class="fa fa-twitter" style='color:black;text-decoration: none;' target='_blank'></a>
     &nbsp;&nbsp;
     <a href="https://www.linkedin.com/company/cieb-unibas" class="fa fa-linkedin" style='color:black;text-decoration: none;' target='_blank'></a>
@@ -375,6 +372,7 @@ a:focus, a:hover {
 </p>
 
 <br>
+<br class='br_mobile'>
 
 
 
